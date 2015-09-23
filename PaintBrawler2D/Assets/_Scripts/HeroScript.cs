@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class HeroScript : MonoBehaviour {
+public abstract class HeroScript : MonoBehaviour {
+
+    // List of attackers that are currently engaging the player
+    public List<GameObject> AttackerList = new List<GameObject>();
 
     // Stats
     [SerializeField]
@@ -43,11 +47,6 @@ public class HeroScript : MonoBehaviour {
 
 
     // Class specific stats
-    //private int _brawlerDamage = 15;
-    //private int _brawlerArmor = 5;
-    //private float _brawlerMoveSpeed = 8f;
-    //private float _brawlerAttackSpeed = 1.25f;
-    //private float _brawlerManaRegen = 5f;
 
     //private int _mageDamage = 10;
     //private int _mageArmor = 0;
@@ -55,28 +54,21 @@ public class HeroScript : MonoBehaviour {
     //private float _mageAttackSpeed = 1.25f;
     //private float _mageManaRegen = 15f;
 
-    //private int _sharpshooterDamage = 20;
-    //private int _sharpshooterArmor = 2;
-    //private float _sharpshooterMoveSpeed = 12f;
-    //private float _sharpshooterAttackSpeed = 1.5f;
-    //private float _sharpshooterManaRegen = 8f;
-
-
     // Color variables
     [SerializeField]
-    private Color[] _primaryColorArray = {new Color (255f/255f, 0f, 0f),
+    protected Color[] _primaryColorArray = {new Color (255f/255f, 0f, 0f),
                                           new Color (255f/255f, 215f/255f, 0f),
                                           new Color (0f, 0f, 255f/255f) };
 
     [SerializeField]
-    private Color[] _secondaryColorArray = {new Color (15f/255f, 148f/255f, 19f/255f),
+    protected Color[] _secondaryColorArray = {new Color (15f/255f, 148f/255f, 19f/255f),
                                             new Color (104f/255f, 25f/255f, 193f/255f),
                                             new Color(255f/255f, 137f/255f, 0f)};
 
 
     [SerializeField]
-    private string[] _primaryColorString = {"Red", "Yellow", "Blue" };
-    private string[] _secondaryColorString = { "Green", "Purple", "Orange" };
+    protected string[] _primaryColorString = {"Red", "Yellow", "Blue" };
+    protected string[] _secondaryColorString = { "Green", "Purple", "Orange" };
 
     [SerializeField]
     protected Color _primaryColor;
@@ -92,10 +84,13 @@ public class HeroScript : MonoBehaviour {
     private GameObject _deathAnimation;
 
     public virtual void Attack() { }
+    public virtual void SecondaryAttack() { }
 
     public GameObject GetCharacterObj() { return _characterObj; }
     public string GetPrimaryColorString() { return _currentPrimaryColor; }
     public string GetSecondaryColorString() { return _currentSecondaryColor; }
+
+    protected int _firingDirection = -1;
 
     protected void InitializeClass(int PlayerNumber) {
         // Setting Player Color
@@ -122,10 +117,12 @@ public class HeroScript : MonoBehaviour {
 
     public void ManageFlipSprite(Vector3 Direction) {
         if (Direction.x < 0) {
-            _characterObj.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+            _characterObj.transform.localEulerAngles = new Vector3(_characterObj.transform.localEulerAngles.x, 180f, 0f);
+            _firingDirection = 1;
         }
         else {
-            _characterObj.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+            _characterObj.transform.localEulerAngles = new Vector3(_characterObj.transform.localEulerAngles.x, 0f, 0f);
+            _firingDirection = -1;
         }
     }
 

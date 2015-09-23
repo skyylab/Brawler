@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         if (_pressAttack2) {
-
+            _heroScript.SecondaryAttack();
         }
 
         if (_pressJump) {

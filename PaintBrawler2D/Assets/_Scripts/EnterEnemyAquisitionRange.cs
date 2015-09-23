@@ -13,7 +13,10 @@ public class EnterEnemyAquisitionRange : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player") {
-            _parentScript.AddToTargetList(other.gameObject);
+            if (_parentScript._currentlyAttacking == false) { 
+                _parentScript.AddToTargetList(other.gameObject);
+                _parentScript.SawPlayer();
+            }
         }
     }
 

@@ -7,6 +7,9 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
     private GameObject _parent;
     private BrawlerClass _parentScript;
 
+    [SerializeField]
+    private GameObject _powPrefab;
+
     void Start() {
         _parentScript = _parent.GetComponent<BrawlerClass>();
     }
@@ -16,6 +19,8 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
             other.GetComponent<EnemyScript>().TakeDamage(_parentScript.GetBrawlerDamage(), 
                                                          _parentScript.GetPrimaryColorString(),
                                                          _parentScript.GetSecondaryColorString());
+
+            Instantiate(_powPrefab, transform.position + transform.right, transform.rotation);
             
             if (_parentScript.GetCharacterObj().transform.localEulerAngles.y != 0)
             {

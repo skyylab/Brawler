@@ -66,12 +66,17 @@ public class BrawlerClass : HeroScript {
             _comboCounter = 0;
         }
 
-        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") && 
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2") && 
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 3"))
+
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") &&
+        !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2") &&
+        !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 3"))
         {
             _fistDamageColliderLeft.SetActive(false);
             _fistDamageColliderRight.SetActive(false);
+        }
+        else {
+            _fistDamageColliderLeft.SetActive(true);
+            _fistDamageColliderRight.SetActive(true);
         }
     }
 
@@ -79,21 +84,22 @@ public class BrawlerClass : HeroScript {
         if (_attackReady == true) {
 
             _attackReady = false;
-
+            
             _comboTimer = _comboTimerReset;
+
             // TURN ON FISTS!
             switch (_comboCounter)
             {
                 case 0:
-                    _animator.CrossFade("Attack 1", 0.01f);
+                    _animator.Play("Attack 1");
                     _fistDamageColliderLeft.SetActive(true);
                     break;
                 case 1:
-                    _animator.CrossFade("Attack 2", 0.01f);
+                    _animator.Play("Attack 2");
                     _fistDamageColliderRight.SetActive(true);
                     break;
                 case 2:
-                    _animator.CrossFade("Attack 3", 0.01f);
+                    _animator.Play("Attack 3");
                     _fistDamageColliderLeft.SetActive(true);
                     _fistDamageColliderRight.SetActive(true);
                     _comboTimer = 0.5f;
