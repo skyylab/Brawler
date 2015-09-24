@@ -48,12 +48,6 @@ public abstract class HeroScript : MonoBehaviour {
 
     // Class specific stats
 
-    //private int _mageDamage = 10;
-    //private int _mageArmor = 0;
-    //private float _mageMoveSpeed = 10f;
-    //private float _mageAttackSpeed = 1.25f;
-    //private float _mageManaRegen = 15f;
-
     // Color variables
     [SerializeField]
     protected Color[] _primaryColorArray = {new Color (255f/255f, 0f, 0f),

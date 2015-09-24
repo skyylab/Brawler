@@ -13,9 +13,9 @@ public class SharpShooterClass : HeroScript {
     public int GetDamage() { return _damage; }
 
     [SerializeField]
-    private GameObject Bullet;
+    private GameObject _bullet;
     [SerializeField]
-    private GameObject Flash;
+    private GameObject _muzzleFlash;
     [SerializeField]
     private GameObject _firingPoint;
 
@@ -24,8 +24,6 @@ public class SharpShooterClass : HeroScript {
     {
         InitializeClass(_playerNumber);
         InitializeStats();
-
-        _animator = _characterObj.GetComponent<Animator>();
     }
 
     public void InitializeStats()
@@ -35,6 +33,7 @@ public class SharpShooterClass : HeroScript {
         _moveSpeed = _sharpshooterMoveSpeed;
         _attackSpeed = _sharpshooterAttackSpeed;
         _manaRegen = _sharpshooterManaRegen;
+        _animator = _characterObj.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -54,9 +53,9 @@ public class SharpShooterClass : HeroScript {
 
     public override void Attack() {
         if (_attackReady == true) {
-            GameObject BulletObj = Instantiate(Bullet, _firingPoint.transform.position, _firingPoint.transform.rotation) as GameObject;
+            GameObject BulletObj = Instantiate(_bullet, _firingPoint.transform.position, _firingPoint.transform.rotation) as GameObject;
             BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-            Instantiate(Flash, _firingPoint.transform.position, _firingPoint.transform.rotation);
+            Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
 
             _animator.Play("Shooting");
         }
@@ -66,9 +65,9 @@ public class SharpShooterClass : HeroScript {
     {
         if (_attackReady == true)
         {
-            GameObject BulletObj = Instantiate(Bullet, _firingPoint.transform.position, _firingPoint.transform.rotation) as GameObject;
+            GameObject BulletObj = Instantiate(_bullet, _firingPoint.transform.position, _firingPoint.transform.rotation) as GameObject;
             BulletObj.GetComponent<BulletScript>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-            Instantiate(Flash, _firingPoint.transform.position, _firingPoint.transform.rotation);
+            Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
             _animator.Play("Shooting");
         }
     }
