@@ -12,6 +12,8 @@ public abstract class HeroScriptSingleColor : MonoBehaviour {
     [SerializeField]
     protected int _hitPoints = 100;
     [SerializeField]
+    protected int _hitPointMax = 100;
+    [SerializeField]
     protected int _manaPoints = 100;
     [SerializeField]
     protected int _playerNumber;
@@ -82,7 +84,9 @@ public abstract class HeroScriptSingleColor : MonoBehaviour {
 
     [SerializeField]
     private GameObject _deathAnimation;
-    
+
+    [SerializeField]
+    protected GameObject _damageCounter;
 
     public virtual void Attack() { }
     public virtual void SecondaryAttack() { }
@@ -126,6 +130,8 @@ public abstract class HeroScriptSingleColor : MonoBehaviour {
     {
         _hitPoints -= Damage;
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
+        GameObject DamageCounter = Instantiate(_damageCounter, transform.position, transform.rotation) as GameObject;
+        DamageCounter.GetComponent<DamageText>().Initialize(Damage, "Red");
     }
 
     public void Jump() {

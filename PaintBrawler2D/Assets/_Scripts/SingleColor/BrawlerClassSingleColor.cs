@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class BrawlerClassSingleColor : HeroScriptSingleColor {
@@ -39,6 +40,22 @@ public class BrawlerClassSingleColor : HeroScriptSingleColor {
 
         _fistDamageColliderLeft.SetActive(false);
         _fistDamageColliderRight.SetActive(false);
+
+        _hitPointMax = _hitPoints;
+    }
+
+    public void AttackRegen()
+    {
+        if ((_hitPoints + _damage / 10) < _hitPointMax) { 
+            _hitPoints += _damage / 10;
+            GameObject DamageCounter = Instantiate(_damageCounter, transform.position, transform.rotation) as GameObject;
+            DamageCounter.GetComponent<DamageText>().Initialize(_damage / 10, "Green");
+        }
+        else{
+            _hitPoints = _hitPointMax;
+        }
+
+        _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
     }
 
 	// Update is called once per frame

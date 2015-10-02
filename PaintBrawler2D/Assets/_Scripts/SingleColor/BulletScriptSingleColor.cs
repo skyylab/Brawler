@@ -42,7 +42,8 @@ public class BulletScriptSingleColor : MonoBehaviour {
     {
         if (other.tag == "Enemy")
         {
-            other.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetPrimaryColorString());
+            other.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetDamage(),
+                                                                         _parentScript.GetPrimaryColorString());
             Instantiate(_bulletHit, transform.position, transform.rotation);
 
             if (transform.localEulerAngles.y != 0)

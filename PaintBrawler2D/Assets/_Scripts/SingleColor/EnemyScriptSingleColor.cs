@@ -44,6 +44,9 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
     [SerializeField]
     protected List<GameObject> _attackTargets = new List<GameObject>();
 
+    [SerializeField]
+    private GameObject _damageText;
+
     // Attacking variables
     protected bool _inAttackRange = false;
     protected bool _attackLanded = false;
@@ -155,7 +158,7 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
 
     public virtual void ManageMovement() { }
 
-    public void AccumulateColor(string PrimaryColor)
+    public void AccumulateColor(int Damage, string PrimaryColor)
     {
         if (_pastMixColor == "")
         {
@@ -166,13 +169,23 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
         else if (_pastMixColor != PrimaryColor)
         {
             _pastMixColor = "";
-            _particleGenerator.GetComponent<ParticleSystem>().startColor = MixColor(_pastMixColor, PrimaryColor);
+            Color MixedColor = MixColor(_pastMixColor, PrimaryColor);
+            _particleGenerator.GetComponent<ParticleSystem>().startColor = MixedColor;
+            _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
             GameObject ColorExplosion = Instantiate(_colorExplosion, transform.position, transform.rotation) as GameObject;
-            
+            ColorExplosion.GetComponent<ExplosionBirthTimer>().InitializeColor(MixedColor, Damage);
         }
+    }
 
-        //_hitPoints -= Damage;
-        //_healthSlider.GetComponent<Slider>().value = _hitPoints;
+    public void TakeDamage(int Damage, Color Color)
+    {
+        if (Color == _secondaryColor)
+        {
+            _hitPoints -= Damage;
+            _healthSlider.GetComponent<Slider>().value = _hitPoints;
+            GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
+            DamageText.GetComponent<DamageText>().Initialize(Damage, "Red");
+        }
     }
 
     public void TakeSplashDamage(int Damage) {

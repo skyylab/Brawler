@@ -50,7 +50,8 @@ public class FireballProjectileSingleColor : MonoBehaviour {
     {
         if (other.tag == "Enemy")
         {
-            other.transform.gameObject.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetPrimaryColorString());
+            other.transform.gameObject.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetDamage(),
+                                                                                              _parentScript.GetPrimaryColorString());
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScriptSingleColor>().Initialize(_color, _colorName, _parent);
             Destroy(gameObject);

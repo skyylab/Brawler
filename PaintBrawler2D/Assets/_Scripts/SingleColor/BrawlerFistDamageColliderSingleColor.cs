@@ -16,9 +16,11 @@ public class BrawlerFistDamageColliderSingleColor : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Enemy") {
-            other.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetPrimaryColorString());
+            other.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetBrawlerDamage(),
+                                                                         _parentScript.GetPrimaryColorString());
 
             Instantiate(_powPrefab, transform.position + transform.right, transform.rotation);
+            _parentScript.AttackRegen();
             
             if (_parentScript.GetCharacterObj().transform.localEulerAngles.y != 0)
             {
