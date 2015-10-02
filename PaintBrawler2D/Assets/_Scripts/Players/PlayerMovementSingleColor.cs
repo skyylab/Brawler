@@ -71,7 +71,23 @@ public class PlayerMovementSingleColor : MonoBehaviour {
         // Process movement
         if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
         {
-            transform.position += new Vector3(_moveVector.x, _moveVector.y, 0f) * moveSpeed;
+            if (transform.position.x < 18 && transform.position.x > -18)
+            {
+                transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+            }
+            else
+            {
+                transform.position -= new Vector3(_moveVector.x, 0f, 0f) * moveSpeed * 3;
+            }
+
+            if (transform.position.y < 4 && transform.position.y > -9)
+            {
+                transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed;
+            }
+            else
+            {
+                transform.position -= new Vector3(0, _moveVector.y, 0f) * moveSpeed * 3;
+            }
 
             _heroScript.ManageFlipSprite(_moveVector);
         }
