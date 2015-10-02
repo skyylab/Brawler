@@ -34,11 +34,11 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected GameObject _attackRange;
     [SerializeField]
-    private float _attackRangeValue;
+    protected float _attackRangeValue;
     [SerializeField]
     protected GameObject _circleRange;
     [SerializeField]
-    private float _circleRangeValue;
+    protected float _circleRangeValue;
     [SerializeField]
     protected List<GameObject> _aquiredTargets = new List<GameObject>();
     [SerializeField]
@@ -71,15 +71,14 @@ public abstract class EnemyScript : MonoBehaviour {
     private GameObject _animatedObj;
 
     // Color variables
-    [SerializeField]
-    private Color[] _primaryColorArray = {new Color (255f/255f, 0f, 0f),
-                                          new Color (255f/255f, 215f/255f, 0f),
-                                          new Color (0f, 0f, 255f/255f) };
+    // Color variables
+    protected Color[] _primaryColorArray = {new Color (217f/255f, 40f/255f, 46f/255f),
+                                          new Color (255f/255f, 209f/255f, 64/255f),
+                                          new Color (43f/255f, 125f/255f, 225f/255f) };
 
-    [SerializeField]
-    private Color[] _secondaryColorArray = {new Color (15f/255f, 148f/255f, 19f/255f),
-                                            new Color (255f/255f, 137f/255f, 0f),
-                                            new Color (104f/255f, 25f/255f, 193f/255f) };
+    protected Color[] _secondaryColorArray = {new Color (57f/255f, 212f/255f, 50f/255f),
+                                            new Color (130f/255f, 83f/255f, 137f/255f),
+                                            new Color(234f/255f, 123f/255f, 54f/255f)};
 
     [SerializeField]
     protected Color _primaryColor;
@@ -172,7 +171,7 @@ public abstract class EnemyScript : MonoBehaviour {
                 Damage *= 2;
             }
             else {
-                Damage = Damage / 4;
+                Damage = 0;
             }
         }
 

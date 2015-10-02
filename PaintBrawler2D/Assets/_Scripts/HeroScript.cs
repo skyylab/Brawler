@@ -29,6 +29,7 @@ public abstract class HeroScript : MonoBehaviour {
     protected float _manaRegen = 0f;
     [SerializeField]
     protected bool _attackReady = false;
+    private bool _playDeathOnce = false;
 
     // UI Purposes
     [SerializeField]
@@ -45,23 +46,28 @@ public abstract class HeroScript : MonoBehaviour {
     [SerializeField]
     protected GameObject[] _objectSpritesSecondary;
 
+    [SerializeField]
+    protected GameObject _deadPlayer;
+
+    [SerializeField]
+    protected GameObject _mainCamera;
+
 
     // Class specific stats
 
     // Color variables
-    [SerializeField]
-    protected Color[] _primaryColorArray = {new Color (255f/255f, 0f, 0f),
-                                          new Color (255f/255f, 215f/255f, 0f),
-                                          new Color (0f, 0f, 255f/255f) };
-
-    [SerializeField]
-    protected Color[] _secondaryColorArray = {new Color (15f/255f, 148f/255f, 19f/255f),
-                                            new Color (104f/255f, 25f/255f, 193f/255f),
-                                            new Color(255f/255f, 137f/255f, 0f)};
+    protected Color[] _primaryColorArray = {new Color (217f/255f, 40f/255f, 46f/255f),
+                                          new Color (255f/255f, 209f/255f, 64/255f),
+                                          new Color (43f/255f, 125f/255f, 225f/255f) };
+    
+    protected Color[] _secondaryColorArray = {new Color (57f/255f, 212f/255f, 50f/255f),
+                                            new Color (130f/255f, 83f/255f, 137f/255f),
+                                            new Color(234f/255f, 123f/255f, 54f/255f)};
 
 
     [SerializeField]
     protected string[] _primaryColorString = {"Red", "Yellow", "Blue" };
+    [SerializeField]
     protected string[] _secondaryColorString = { "Green", "Purple", "Orange" };
 
     [SerializeField]
@@ -76,6 +82,7 @@ public abstract class HeroScript : MonoBehaviour {
 
     [SerializeField]
     private GameObject _deathAnimation;
+    
 
     public virtual void Attack() { }
     public virtual void SecondaryAttack() { }
@@ -130,10 +137,21 @@ public abstract class HeroScript : MonoBehaviour {
         _animator.CrossFade("Jump", 0.01f);
     }
 
-    // Update is called once per frame
-    void Update () {
-	    if (_hitPoints <= 0) {
-            // Dead
+    protected void ManageDeath() {
+        if (_hitPoints <= 0)
+        {
+            _moveSpeed = 0;
+            if (!_playDeathOnce)
+            {
+                _animator.Play("Death");
+                _playDeathOnce = true;
+            }
+
+            if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Death")) {
+                Instantiate(_deadPlayer, transform.position, transform.rotation);
+                _mainCamera.GetComponent<CameraControls>().RemovePlayers(gameObject);
+                transform.position = new Vector3(300f, 300f, 300f);
+            }
         }
-	}
+    }
 }

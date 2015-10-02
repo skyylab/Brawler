@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour {
 
     private HeroScript _heroScript;
 
+    Vector3 newPosition;
+
     [System.NonSerialized] // Don't serialize this so the value is lost on an editor script recompile.
     private bool initialized;
 
@@ -27,6 +29,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         // Get the character controller
         _heroScript = GetComponent<HeroScript>();
+        newPosition = transform.position;
     }
 
     private void Initialize()

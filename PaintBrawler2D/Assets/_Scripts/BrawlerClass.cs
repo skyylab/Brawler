@@ -51,8 +51,9 @@ public class BrawlerClass : HeroScript {
             _attackReady = true;
             _coolDown = _attackSpeed;
         }
-
+        
         ManageCombo();
+        ManageDeath();
     }
 
     void ManageCombo()

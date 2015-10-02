@@ -39,7 +39,8 @@ public class SharpShooterClass : HeroScript {
     // Update is called once per frame
     void Update () {
         ManageAttack();
-	}
+        ManageDeath();
+    }
 
     private void ManageAttack() {
         _sharpshooterAttackSpeed -= Time.deltaTime;

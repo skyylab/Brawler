@@ -5,10 +5,16 @@ public class BasicEnemy : EnemyScript {
     
     int RandomNumber = 0;
     float RandomInterval = 0f;
+    float _angularMovement = 0;
+
+    Vector3 _currentPosition = new Vector3(0f, 0f, 0f);
+    [SerializeField]
+    private GameObject Spawner;
 
     void Start()
     {
         InitializeClass();
+        Spawner = GameObject.Find("EnemySpawner");
     }
 
     void Update()
@@ -20,6 +26,7 @@ public class BasicEnemy : EnemyScript {
         if (_hitPoints < 0)
         {
             // Die
+            Spawner.GetComponent<EnemySpawner>().RemoveObject(gameObject);
             Destroy(gameObject);
         }
     }
@@ -40,11 +47,18 @@ public class BasicEnemy : EnemyScript {
 
         RandomInterval -= Time.deltaTime;
         if (RandomInterval > 0) {
+            _angularMovement += Time.deltaTime * 0.1f;
+
+            float x = _aquiredTargets[0].transform.position.x + Mathf.Cos(_angularMovement * Mathf.PI) * _circleRangeValue;
+            float y = _aquiredTargets[0].transform.position.y + Mathf.Sin(_angularMovement * Mathf.PI) * _circleRangeValue;
+
+            transform.position = new Vector3(x, y, 0f);
             transform.position += Vector3.up * RandomNumber * Time.deltaTime * _moveSpeed;
         }
         else {
-            RandomNumber = Random.Range(-1, 3);
-            RandomInterval = Random.Range(3f, 5f);
+            RandomNumber = 2;
+            RandomInterval = Random.Range(1f, 2f);
+            _currentPosition = transform.position;
             if (RandomNumber == 2) {
                 _currentState = EnemyState.attacking;
             }

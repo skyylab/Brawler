@@ -1,2 +1,40 @@
+# =============== #
+# Unity generated #
+# =============== #
 
-PaintBrawler/Library/metadata/13/13d7ac5a37fe6d445b042e7871708d30.info
+*/[Ll]ibrary/
+*/[Tt]emp/
+*/[Oo]bj/
+*/[Bb]uild/
+
+#Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+*.sublime-workspace
+*.sublime-project

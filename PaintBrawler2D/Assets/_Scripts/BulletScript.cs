@@ -11,6 +11,9 @@ public class BulletScript : MonoBehaviour {
     private float _life = 2.0f;
     private string _colorName = "";
 
+    [SerializeField]
+    private GameObject _bulletHit;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -42,6 +45,7 @@ public class BulletScript : MonoBehaviour {
             other.GetComponent<EnemyScript>().TakeDamage(_parentScript.GetDamage(),
                                                          _parentScript.GetPrimaryColorString(),
                                                          _parentScript.GetSecondaryColorString());
+            Instantiate(_bulletHit, transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }
