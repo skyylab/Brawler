@@ -168,12 +168,12 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
         }
         else if (_pastMixColor != PrimaryColor)
         {
-            _pastMixColor = "";
             Color MixedColor = MixColor(_pastMixColor, PrimaryColor);
             _particleGenerator.GetComponent<ParticleSystem>().startColor = MixedColor;
             _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
             GameObject ColorExplosion = Instantiate(_colorExplosion, transform.position, transform.rotation) as GameObject;
             ColorExplosion.GetComponent<ExplosionBirthTimer>().InitializeColor(MixedColor, Damage);
+            _pastMixColor = "";
         }
     }
 
@@ -214,16 +214,16 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
     private Color MixColor(string Color1, string Color2) {
 
         if (Color1 == "Red" && Color2 == "Blue") {
-            return _secondaryColorArray[2];
+            return _secondaryColorArray[1];
         }
 
         if (Color1 == "Red" && Color2 == "Yellow") {
-            return _secondaryColorArray[1];
+            return _secondaryColorArray[2];
         }
 
         if (Color1 == "Yellow" && Color2 == "Red")
         {
-            return _secondaryColorArray[1];
+            return _secondaryColorArray[2];
         }
 
         if (Color1 == "Yellow" && Color2 == "Blue")
@@ -233,7 +233,7 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
 
         if (Color1 == "Blue" && Color2 == "Red")
         {
-            return _secondaryColorArray[2];
+            return _secondaryColorArray[1];
         }
 
         if (Color1 == "Blue" && Color2 == "Yellow")
