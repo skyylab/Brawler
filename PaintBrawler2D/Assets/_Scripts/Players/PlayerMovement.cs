@@ -3,7 +3,7 @@ using System.Collections;
 using Rewired;
 using RewiredConstants;
 
-public class PlayerMovementSingleColor : MonoBehaviour {
+public class PlayerMovement : MonoBehaviour {
 
     public int playerId = 0; // The Rewired player id of this character
 
@@ -18,7 +18,7 @@ public class PlayerMovementSingleColor : MonoBehaviour {
     private bool _pressAttack1;
     private bool _pressAttack2;
 
-    private HeroScriptSingleColor _heroScript;
+    private HeroScript _heroScript;
 
     Vector3 newPosition;
 
@@ -28,7 +28,7 @@ public class PlayerMovementSingleColor : MonoBehaviour {
     void Awake()
     {
         // Get the character controller
-        _heroScript = GetComponent<HeroScriptSingleColor>();
+        _heroScript = GetComponent<HeroScript>();
         newPosition = transform.position;
     }
 

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public abstract class EnemyScriptSingleColor : MonoBehaviour {
+public abstract class EnemyScript : MonoBehaviour {
     // Stats
     [SerializeField]
     protected int _hitPoints = 100;
@@ -74,7 +74,6 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
     private GameObject _animatedObj;
 
     // Color variables
-    // Color variables
     protected Color[] _primaryColorArray = {new Color (217f/255f, 40f/255f, 46f/255f),
                                           new Color (255f/255f, 209f/255f, 64/255f),
                                           new Color (43f/255f, 125f/255f, 225f/255f) };
@@ -112,8 +111,26 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
     [SerializeField]
     private GameObject _colorExplosion;
 
+    // Virtual functions
     public virtual void Attack(){ }
+    // Idle Animations
+    public virtual void Idle() { }
+    public virtual void SawPlayer() { }
+    // Start approach
+    public virtual void Chasing() { }
+    public virtual void Circling() { }
+    // Attack
+    public virtual void Attacking() { }
+    // Flee
+    public virtual void Fleeing() { }
 
+    public virtual void ManageMovement() { }
+
+    // Stay within range, but do not attack
+    public void ReachedCirclingDistance() { _currentState = EnemyState.circling; }
+    public void MovedOutCirclingDistance() { _currentState = EnemyState.chasing; }
+
+    // Accessors
     public int GetDamage() { return _damage; }
     public bool GetAttackLanded() { return _attackLanded; }
     public void SetAttackLanded(bool AttackLanded) { _attackLanded = AttackLanded; }
@@ -141,22 +158,6 @@ public abstract class EnemyScriptSingleColor : MonoBehaviour {
             _inAttackRange = false;
         }
     }
-
-    // Idle Animations
-    public virtual void Idle() {}
-    public virtual void SawPlayer() {}
-    // Start approach
-    public virtual void Chasing() {}
-    // Stay within range, but do not attack
-    public void ReachedCirclingDistance() { _currentState = EnemyState.circling; }
-    public void MovedOutCirclingDistance() { _currentState = EnemyState.chasing; }
-    public virtual void Circling() {}
-    // Attack
-    public virtual void Attacking() {}
-    // Flee
-    public virtual void Fleeing() {}
-
-    public virtual void ManageMovement() { }
 
     public void AccumulateColor(int Damage, string PrimaryColor)
     {

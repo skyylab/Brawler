@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnterEnemyAquisitionRangeSingleColor : MonoBehaviour {
+public class EnterEnemyAquisitionRange : MonoBehaviour {
 
     [SerializeField]
     private GameObject _parent;
-    private EnemyScriptSingleColor _parentScript;
+    private EnemyScript _parentScript;
 
     void Start() {
-        _parentScript = _parent.GetComponent<EnemyScriptSingleColor>();
+        _parentScript = _parent.GetComponent<EnemyScript>();
     }
 
 	void OnTriggerEnter2D(Collider2D other) {
@@ -26,11 +26,11 @@ public class EnterEnemyAquisitionRangeSingleColor : MonoBehaviour {
         {
             _parentScript.RemoveFromTargetList(other.gameObject);
             if (_parentScript._aquiredTargets.Count > 0) { 
-                _parentScript._currentState = EnemyScriptSingleColor.EnemyState.chasing;
+                _parentScript._currentState = EnemyScript.EnemyState.chasing;
             }
             else
             {
-                _parentScript._currentState = EnemyScriptSingleColor.EnemyState.idle;
+                _parentScript._currentState = EnemyScript.EnemyState.idle;
             }
         }
     }

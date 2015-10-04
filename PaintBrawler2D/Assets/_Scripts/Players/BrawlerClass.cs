@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class BrawlerClassSingleColor : HeroScriptSingleColor {
+public class BrawlerClass : HeroScript {
 
     // Class specific stats
     private int _brawlerDamage = 15;

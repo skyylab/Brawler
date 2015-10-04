@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BrawlerFistDamageColliderSingleColor : MonoBehaviour {
+public class BrawlerFistDamageCollider : MonoBehaviour {
 
     [SerializeField]
     private GameObject _parent;
-    private BrawlerClassSingleColor _parentScript;
+    private BrawlerClass _parentScript;
 
     [SerializeField]
     private GameObject _powPrefab;
 
     void Start() {
-        _parentScript = _parent.GetComponent<BrawlerClassSingleColor>();
+        _parentScript = _parent.GetComponent<BrawlerClass>();
     }
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Enemy") {
-            other.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetBrawlerDamage(),
+            other.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetBrawlerDamage(),
                                                                          _parentScript.GetPrimaryColorString());
 
             Instantiate(_powPrefab, transform.position + transform.right, transform.rotation);

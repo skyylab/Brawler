@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MageExplosionScriptSingleColor : MonoBehaviour {
+public class MageExplosionScript : MonoBehaviour {
 
     private GameObject _parent;
-    private MageClassSingleColor _parentScript;
+    private MageClass _parentScript;
     private string _colorName = "";
 
     private float _maxSize = 2.5f;
@@ -33,7 +33,7 @@ public class MageExplosionScriptSingleColor : MonoBehaviour {
     {
         _colorName = colorName;
         _parent = parent;
-        _parentScript = _parent.GetComponent<MageClassSingleColor>();
+        _parentScript = _parent.GetComponent<MageClass>();
         _fireballSprite.GetComponent<SpriteRenderer>().color = color;
     }
 
@@ -41,7 +41,7 @@ public class MageExplosionScriptSingleColor : MonoBehaviour {
     {
         if (other.tag == "Enemy")
         {
-            other.transform.gameObject.GetComponent<EnemyScriptSingleColor>().TakeSplashDamage(_parentScript.GetDamage()/2);
+            other.transform.gameObject.GetComponent<EnemyScript>().TakeSplashDamage(_parentScript.GetDamage()/2);
         }
     }
 }

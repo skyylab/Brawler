@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FireballProjectileSingleColor : MonoBehaviour {
+public class FireballProjectile : MonoBehaviour {
 
     private GameObject _parent;
-    private MageClassSingleColor _parentScript;
+    private MageClass _parentScript;
     private Color _color;
 
     private float _moveSpeed = 0.5f;
@@ -40,7 +40,7 @@ public class FireballProjectileSingleColor : MonoBehaviour {
     {
         _colorName = colorName;
         _parent = parent;
-        _parentScript = _parent.GetComponent<MageClassSingleColor>();
+        _parentScript = _parent.GetComponent<MageClass>();
         _fireballSprite.GetComponent<SpriteRenderer>().color = color;
         _color = color;
         _firingDirection = Direction;
@@ -50,10 +50,10 @@ public class FireballProjectileSingleColor : MonoBehaviour {
     {
         if (other.tag == "Enemy")
         {
-            other.transform.gameObject.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetDamage(),
+            other.transform.gameObject.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetDamage(),
                                                                                               _parentScript.GetPrimaryColorString());
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
-            Explosion.GetComponent<MageExplosionScriptSingleColor>().Initialize(_color, _colorName, _parent);
+            Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);
             Destroy(gameObject);
         }
     }

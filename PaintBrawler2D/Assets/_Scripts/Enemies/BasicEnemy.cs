@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BasicEnemySingleColor : EnemyScriptSingleColor {
+public class BasicEnemy : EnemyScript {
     
     int RandomNumber = 0;
     float RandomInterval = 0f;

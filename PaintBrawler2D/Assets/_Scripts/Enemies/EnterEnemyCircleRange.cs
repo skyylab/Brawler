@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnterEnemyCircleRangeSingleColor : MonoBehaviour {
+public class EnterEnemyCircleRange : MonoBehaviour {
 
     [SerializeField]
     private GameObject _parent;
-    private EnemyScriptSingleColor _parentScript;
+    private EnemyScript _parentScript;
 
     void Start()
     {
-        _parentScript = _parent.GetComponent<EnemyScriptSingleColor>();
+        _parentScript = _parent.GetComponent<EnemyScript>();
     }
 
     void OnTriggerEnter2D(Collider2D other)

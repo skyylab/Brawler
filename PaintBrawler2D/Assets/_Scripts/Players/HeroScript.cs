@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public abstract class HeroScriptSingleColor : MonoBehaviour {
+public abstract class HeroScript : MonoBehaviour {
 
     // List of attackers that are currently engaging the player
     public List<GameObject> AttackerList = new List<GameObject>();

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MageClassSingleColor : HeroScriptSingleColor {
+public class MageClass : HeroScript {
 
 
     private int _mageDamage = 20;
@@ -64,7 +64,7 @@ public class MageClassSingleColor : HeroScriptSingleColor {
         {
             _animator.Play("AttackRight");
             GameObject BulletObj = Instantiate(_projectile, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
-            BulletObj.GetComponent<FireballProjectileSingleColor>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+            BulletObj.GetComponent<FireballProjectile>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
             //Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
 
             _mageAttackSpeed = _attackSpeedReset;
@@ -77,7 +77,7 @@ public class MageClassSingleColor : HeroScriptSingleColor {
         {
             _animator.Play("AttackLeft");
             GameObject BulletObj = Instantiate(_projectile, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
-            BulletObj.GetComponent<FireballProjectileSingleColor>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+            BulletObj.GetComponent<FireballProjectile>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
             //Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
             
             _mageAttackSpeed = _attackSpeedReset;

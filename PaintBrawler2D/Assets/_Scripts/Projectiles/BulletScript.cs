@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BulletScriptSingleColor : MonoBehaviour {
+public class BulletScript : MonoBehaviour {
 
     private GameObject _parent;
-    private SharpShooterClassSingleColor _parentScript;
+    private SharpShooterClass _parentScript;
 
     private float _moveSpeed = 0.5f;
     private int _firingDirection = 1;
@@ -33,7 +33,7 @@ public class BulletScriptSingleColor : MonoBehaviour {
     public void Initialize(Color color, string colorName, int Direction, GameObject parent) {
         _colorName = colorName;
         _parent = parent;
-        _parentScript = _parent.GetComponent<SharpShooterClassSingleColor>();
+        _parentScript = _parent.GetComponent<SharpShooterClass>();
         GetComponent<SpriteRenderer>().color = color;
         _firingDirection = Direction;
     }
@@ -42,7 +42,7 @@ public class BulletScriptSingleColor : MonoBehaviour {
     {
         if (other.tag == "Enemy")
         {
-            other.GetComponent<EnemyScriptSingleColor>().AccumulateColor(_parentScript.GetDamage(),
+            other.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetDamage(),
                                                                          _parentScript.GetPrimaryColorString());
             Instantiate(_bulletHit, transform.position, transform.rotation);
 

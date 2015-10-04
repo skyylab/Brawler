@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SharpShooterClassSingleColor : HeroScriptSingleColor {
+public class SharpShooterClass : HeroScript {
 
     // Class specific stats
     private int _sharpshooterDamage = 30;
@@ -56,7 +56,7 @@ public class SharpShooterClassSingleColor : HeroScriptSingleColor {
     public override void Attack() {
         if (_attackReady == true) {
             GameObject BulletObj = Instantiate(_bullet, _firingPoint.transform.position, _firingPoint.transform.rotation) as GameObject;
-            BulletObj.GetComponent<BulletScriptSingleColor>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+            BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
             Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
 
             _animator.Play("Shooting");
@@ -69,7 +69,7 @@ public class SharpShooterClassSingleColor : HeroScriptSingleColor {
         if (_attackReady == true)
         {
             GameObject BulletObj = Instantiate(_bullet, _firingPoint.transform.position, _firingPoint.transform.rotation) as GameObject;
-            BulletObj.GetComponent<BulletScriptSingleColor>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+            BulletObj.GetComponent<BulletScript>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
             Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
             _animator.Play("Shooting");
         }
