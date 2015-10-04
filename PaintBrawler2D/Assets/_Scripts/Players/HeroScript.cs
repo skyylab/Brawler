@@ -45,8 +45,6 @@ public abstract class HeroScript : MonoBehaviour {
     // This might be not used later - for prototyping purposes only
     [SerializeField]
     protected GameObject[] _objectSpritesPrimary;
-    [SerializeField]
-    protected GameObject[] _objectSpritesSecondary;
 
     [SerializeField]
     protected GameObject _deadPlayer;

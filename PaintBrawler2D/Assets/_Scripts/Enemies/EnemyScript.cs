@@ -174,6 +174,7 @@ public abstract class EnemyScript : MonoBehaviour {
             _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
             GameObject ColorExplosion = Instantiate(_colorExplosion, transform.position, transform.rotation) as GameObject;
             ColorExplosion.GetComponent<ExplosionBirthTimer>().InitializeColor(MixedColor, Damage);
+            ColorExplosion.transform.parent = gameObject.transform;
             _pastMixColor = "";
         }
     }
@@ -191,13 +192,6 @@ public abstract class EnemyScript : MonoBehaviour {
 
     public void TakeSplashDamage(int Damage) {
         _hitPoints -= Damage;
-    }
-
-    private bool MatchedColor(string Color1, string Color2) {
-        if (Color1 == Color2) {
-            return true;
-        }
-        return false;
     }
 
     private Color returnPrimaryColor(string Color1) {

@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour {
 
             if (transform.position.y < 4 && transform.position.y > -9)
             {
-                transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed;
+                transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed*(0.65f);
             }
             else
             {

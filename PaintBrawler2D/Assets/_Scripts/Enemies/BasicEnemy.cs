@@ -34,9 +34,11 @@ public class BasicEnemy : EnemyScript {
 
     public override void Idle() {
     }
+
     public override void SawPlayer() {
         _currentState = EnemyState.chasing;
     }
+
     public override void Chasing() {
         if (_aquiredTargets.Count > 0)
         {
@@ -44,6 +46,7 @@ public class BasicEnemy : EnemyScript {
             transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeed);
         }
     }
+
     public override void Circling() {
 
         RandomInterval -= Time.deltaTime;
@@ -65,12 +68,14 @@ public class BasicEnemy : EnemyScript {
             }
         }
     }
+
     public override void Attacking() {
         _currentlyAttacking = true;
         _lastPosition = transform.position;
         transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeed);
         ManageAttack();
     }
+
     public override void Fleeing() {
     }
 
