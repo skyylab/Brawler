@@ -12,13 +12,26 @@ public class BrawlerClass : HeroScript {
     private float _brawlerManaRegen = 5f;
 
     private float _comboTimer = 2f;
-    private float _comboTimerReset = 2f;
+    private float _comboTimerReset = 0.5f;
     private int _comboCounter = 0;
+
+    private float _moveSpeedBrawlerSet = 0f;
 
     [SerializeField]
     private GameObject _fistDamageColliderLeft;
     [SerializeField]
     private GameObject _fistDamageColliderRight;
+
+    [SerializeField]
+    private AudioClip _attack1_SFX;
+    [SerializeField]
+    private AudioClip _attack2_SFX;
+    [SerializeField]
+    private AudioClip _attack3_SFX;
+
+    private float _audioVolume = 0.6f;
+
+    private AudioSource _audio;
 
 
     public int GetBrawlerDamage() { return _brawlerDamage; }
@@ -29,6 +42,9 @@ public class BrawlerClass : HeroScript {
         InitializeStats();
 
         _animator = _characterObj.GetComponent<Animator>();
+        _moveSpeedBrawlerSet = GetComponent<PlayerMovement>().moveSpeed;
+
+        _audio = GetComponent<AudioSource>();
     }
 	
     public void InitializeStats() {
@@ -84,10 +100,15 @@ public class BrawlerClass : HeroScript {
             _comboCounter = 0;
         }
 
+        //if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") &&
+        //    !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2")) {
+
+        //    GetComponent<PlayerMovement>().moveSpeed = _moveSpeedBrawlerSet;
+        //}
 
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") &&
-        !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2") &&
-        !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 3"))
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 3"))
         {
             _fistDamageColliderLeft.SetActive(false);
             _fistDamageColliderRight.SetActive(false);
@@ -95,6 +116,7 @@ public class BrawlerClass : HeroScript {
         else {
             _fistDamageColliderLeft.SetActive(true);
             _fistDamageColliderRight.SetActive(true);
+            //GetComponent<PlayerMovement>().moveSpeed = 0;
         }
     }
 
@@ -105,22 +127,24 @@ public class BrawlerClass : HeroScript {
             
             _comboTimer = _comboTimerReset;
 
+            _audio.pitch = Random.Range(0.8f, 1.2f);
+
             // TURN ON FISTS!
             switch (_comboCounter)
             {
                 case 0:
                     _animator.Play("Attack 1");
-                    GetComponent<AudioSource>().Play();
+                    _audio.PlayOneShot(_attack1_SFX, _audioVolume);
                     _fistDamageColliderLeft.SetActive(true);
                     break;
                 case 1:
                     _animator.Play("Attack 2");
-                    GetComponent<AudioSource>().Play();
+                    _audio.PlayOneShot(_attack2_SFX, _audioVolume);
                     _fistDamageColliderRight.SetActive(true);
                     break;
                 case 2:
                     _animator.Play("Attack 3");
-                    GetComponent<AudioSource>().Play();
+                    _audio.PlayOneShot(_attack3_SFX, _audioVolume);
                     _fistDamageColliderLeft.SetActive(true);
                     _fistDamageColliderRight.SetActive(true);
                     _comboTimer = 0.5f;
