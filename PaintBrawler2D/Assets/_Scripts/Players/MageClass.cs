@@ -75,7 +75,7 @@ public class MageClass : HeroScript {
     {
         if (_attackReady == true)
         {
-            _animator.Play("AttackLeft");
+            _animator.Play("AttackRight");
             GameObject BulletObj = Instantiate(_projectile, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
             BulletObj.GetComponent<FireballProjectile>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
             //Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);

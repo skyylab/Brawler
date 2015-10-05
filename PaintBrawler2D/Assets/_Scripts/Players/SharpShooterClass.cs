@@ -18,8 +18,11 @@ public class SharpShooterClass : HeroScript {
     [SerializeField]
     private GameObject _muzzleFlash;
     [SerializeField]
-    private GameObject _firingPoint;
+    private GameObject _firingPointLeft;
+    [SerializeField]
+    private GameObject _firingPointRight;
 
+    private bool _fireLeft = true;
     // Use this for initialization
     void Start()
     {
@@ -55,12 +58,27 @@ public class SharpShooterClass : HeroScript {
 
     public override void Attack() {
         if (_attackReady == true) {
-            GameObject BulletObj = Instantiate(_bullet, _firingPoint.transform.position, _firingPoint.transform.rotation) as GameObject;
-            BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-            Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
 
-            _animator.Play("Shooting");
-            _sharpshooterAttackSpeed = _attackSpeedReset;
+            if (_fireLeft)
+            {
+                GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
+                BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+                Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
+
+                _animator.Play("ShootLeft");
+                _sharpshooterAttackSpeed = _attackSpeedReset;
+                _fireLeft = false;
+            }
+            else
+            {
+                GameObject BulletObj = Instantiate(_bullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+                BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+                Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
+
+                _animator.Play("ShootRight");
+                _sharpshooterAttackSpeed = _attackSpeedReset;
+                _fireLeft = true;
+            }
         }
     }
 
@@ -68,9 +86,9 @@ public class SharpShooterClass : HeroScript {
     {
         if (_attackReady == true)
         {
-            GameObject BulletObj = Instantiate(_bullet, _firingPoint.transform.position, _firingPoint.transform.rotation) as GameObject;
+            GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
             BulletObj.GetComponent<BulletScript>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-            Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
+            Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
             _animator.Play("Shooting");
         }
     }
