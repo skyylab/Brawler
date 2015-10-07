@@ -7,6 +7,12 @@ public class EnterEnemyAttackRange : MonoBehaviour {
     private GameObject _parent;
     private EnemyScript _parentScript;
 
+
+    private GameObject _target;
+    private float _timerWaitBeforeTryAgain = 0f;
+    private float _timerReset;
+    private bool _inAttackRange;
+
     void Start()
     {
         _parentScript = _parent.GetComponent<EnemyScript>();
@@ -18,6 +24,7 @@ public class EnterEnemyAttackRange : MonoBehaviour {
         {
             _parentScript.AddToAttackList(other.gameObject);
             _parentScript.StopSpeed();
+            _inAttackRange = true;
         }
     }
 
@@ -27,6 +34,7 @@ public class EnterEnemyAttackRange : MonoBehaviour {
         {
             _parentScript.RemoveFromAttackList(other.gameObject);
             _parentScript.StartSpeed();
+            _inAttackRange = false;
         }
     }
 }

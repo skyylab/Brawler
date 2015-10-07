@@ -16,6 +16,7 @@ public class BasicEnemy : EnemyScript {
         InitializeClass();
         _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
         Spawner = GameObject.Find("EnemySpawner");
+        RandomCirclePoint = Random.insideUnitCircle;
     }
 
     void Update()
@@ -40,39 +41,36 @@ public class BasicEnemy : EnemyScript {
     }
 
     public override void Chasing() {
+        Debug.Log(gameObject.name + " is Chasing");
+
         if (_aquiredTargets.Count > 0)
         {
             _lastPosition = transform.position;
-            transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeed);
+            transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
         }
     }
 
     public override void Circling() {
 
-        RandomInterval -= Time.deltaTime;
-        if (RandomInterval > 0) {
-            //_angularMovement += Time.deltaTime * 0.1f;
+        Debug.Log(gameObject.name + " is Circling ");
+        transform.position = Vector2.MoveTowards(transform.position, RandomCirclePoint + (Vector2)_aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
 
-            //float x = _aquiredTargets[0].transform.position.x + Mathf.Cos(_angularMovement * Mathf.PI) * _circleRangeValue;
-            //float y = _aquiredTargets[0].transform.position.y + Mathf.Sin(_angularMovement * Mathf.PI) * _circleRangeValue;
+        //int RandomNumber = Random.Range(0, 2);
 
-            //transform.position = new Vector3(x, y, 0f);
-            //transform.position += Vector3.up * RandomNumber * Time.deltaTime * _moveSpeed;
-        }
-        else {
-            RandomNumber = 2;
-            RandomInterval = Random.Range(1f, 2f);
-            _currentPosition = transform.position;
-            if (RandomNumber == 2) {
-                _currentState = EnemyState.attacking;
-            }
-        }
+        //if (RandomNumber < 1) {
+        //    RandomNumber = -1;
+        //}
+
+        //transform.position += Vector3.up * _moveSpeedActual * RandomNumber * Time.deltaTime;
     }
 
     public override void Attacking() {
+
+        Debug.Log(gameObject.name + " is Attacking");
+
         _currentlyAttacking = true;
         _lastPosition = transform.position;
-        transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeed);
+        transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual * 1.5f);
         ManageAttack();
     }
 
@@ -136,9 +134,11 @@ public class BasicEnemy : EnemyScript {
             case EnemyState.sawPlayer:
                 SawPlayer();
                 break;
+            // Move close to the target
             case EnemyState.chasing:
                 Chasing();
                 break;
+            // Separate - start circling around the target
             case EnemyState.circling:
                 Circling();
                 break;

@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public abstract class HeroScript : MonoBehaviour {
 
     // List of attackers that are currently engaging the player
-    public List<GameObject> AttackerList = new List<GameObject>();
+    [SerializeField]
+    protected List<GameObject> AttackerList = new List<GameObject>();
+    protected int _maxAttackerNum = 2;
 
     // Stats
     [SerializeField]
@@ -73,15 +75,11 @@ public abstract class HeroScript : MonoBehaviour {
     [SerializeField]
     protected Color _primaryColor;
     [SerializeField]
-    protected Color _secondaryColor;
-    [SerializeField]
     protected string _currentPrimaryColor;
-    [SerializeField]
-    protected string _currentSecondaryColor;
-    protected Animator _animator;
 
     [SerializeField]
     private GameObject _deathAnimation;
+    protected Animator _animator;
 
     [SerializeField]
     protected GameObject _damageCounter;
@@ -91,17 +89,33 @@ public abstract class HeroScript : MonoBehaviour {
 
     public GameObject GetCharacterObj() { return _characterObj; }
     public string GetPrimaryColorString() { return _currentPrimaryColor; }
-    public string GetSecondaryColorString() { return _currentSecondaryColor; }
 
     protected int _firingDirection = -1;
+
+    public bool AddAttacker(GameObject Attacker) {
+        if (_maxAttackerNum > AttackerList.Count && !AttackerList.Contains(Attacker)) { 
+            AttackerList.Add(Attacker);
+            return true;
+        }
+        if (AttackerList.Contains(Attacker)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool RemoveAttacker(GameObject Attacker) {
+        if (AttackerList.Contains(Attacker)) { 
+            AttackerList.Remove(Attacker);
+            return true;
+        }
+        return false;
+    }
 
     protected void InitializeClass(int PlayerNumber) {
         // Setting Player Color
         _primaryColor = _primaryColorArray[PlayerNumber - 1];
-        _secondaryColor = _secondaryColorArray[PlayerNumber - 1];
-
         _currentPrimaryColor = _primaryColorString[PlayerNumber - 1];
-        _currentSecondaryColor = _secondaryColorString[PlayerNumber - 1];
 
         foreach (GameObject x in _objectSpritesPrimary) {
             x.GetComponent<SpriteRenderer>().color = _primaryColor;
