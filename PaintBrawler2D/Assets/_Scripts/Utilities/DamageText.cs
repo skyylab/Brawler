@@ -46,7 +46,7 @@ public class DamageText : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
-        transform.position += new Vector3(0f, 1f, 0f) * 0.01f;
+        transform.position += new Vector3(0f, 1f, 0f) * _speed;
         _showTimer -= Time.deltaTime;
         if (_showTimer < 0) { 
             foreach (GameObject x in _textFields)

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnterEnemyCircleRange : MonoBehaviour {
+public class EnterRangedEnemyCircleRange : MonoBehaviour {
 
     [SerializeField]
     private GameObject _parent;
@@ -22,38 +22,14 @@ public class EnterEnemyCircleRange : MonoBehaviour {
 
     void Update()
     {
-        _timerWaitBeforeTryAgain -= Time.deltaTime;
-
-        _target = _parentScript._aquiredTargets[0];
-
-        if (_inAttackRange && _timerWaitBeforeTryAgain < 0)
-        {
-            if (_target.GetComponent<HeroScript>().AddAttacker(_parent))
-            {
-                _parentScript._currentState = EnemyScript.EnemyState.attacking;
-            }
-            else
-            {
-                _parentScript._currentState = EnemyScript.EnemyState.circling;
-                _parentScript.RandomCirclePoint = _parentScript.GetRandomPointCircle(Random.Range(0f, 360f), 10f); ;
-                _timerWaitBeforeTryAgain = _timerReset;
-            }
-        }
-
-        if (_avoidEnemy != null && _parentScript._currentState != EnemyScript.EnemyState.attacking) {
-            _parentScript.Avoid(_avoidEnemy);
-        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
-            if (_parentScript._currentlyAttacking == false){
-                _parentScript.ReachedCirclingDistance();
-            }
-            
-            _inAttackRange = true;
+            _avoidEnemy = other.gameObject;
+            _target = other.gameObject;
         }
 
         if (other.tag == "Enemy") {

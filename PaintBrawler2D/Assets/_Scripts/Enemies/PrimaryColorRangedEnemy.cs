@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class PrimaryColorEnemy : EnemyScript {
+public class PrimaryColorRangedEnemy : EnemyScript {
     
     int RandomNumber = 0;
     float RandomInterval = 0f;
@@ -11,6 +11,13 @@ public class PrimaryColorEnemy : EnemyScript {
     Vector3 _currentPosition = new Vector3(0f, 0f, 0f);
     [SerializeField]
     private GameObject Spawner;
+
+    [SerializeField]
+    private GameObject _prefabBullet;
+    [SerializeField]
+    private GameObject _prefabMuzzleFlash;
+
+    private float _moveDirection;
 
     void Start()
     {
@@ -111,12 +118,6 @@ public class PrimaryColorEnemy : EnemyScript {
 
         _coolDown -= Time.deltaTime;
 
-        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-        {
-            _objectSprites[1].GetComponent<BoxCollider2D>().enabled = false;
-            _objectSprites[2].GetComponent<BoxCollider2D>().enabled = false;
-        }
-
         if (_inAttackRange && _coolDown < 0)
         {
             Attack();
@@ -131,12 +132,13 @@ public class PrimaryColorEnemy : EnemyScript {
             transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
         }
 
-        float moveDirection = transform.position.x - _lastPosition.x;
-        if (moveDirection > 0)
+        _moveDirection = transform.position.x - _lastPosition.x;
+
+        if (_moveDirection > 0)
         {
             _objectWholeSprite.transform.localEulerAngles = new Vector2(0f, 0f);
         }
-        else if (moveDirection < 0)
+        else if (_moveDirection < 0)
         {
             _objectWholeSprite.transform.localEulerAngles = new Vector2(0f, 180f);
         }
@@ -145,9 +147,21 @@ public class PrimaryColorEnemy : EnemyScript {
     public override void Attack()
     {
         _attackLanded = false;
-        _animator.CrossFade("Attack", 0.01f);
-        _objectSprites[1].GetComponent<BoxCollider2D>().enabled = true;
-        _objectSprites[2].GetComponent<BoxCollider2D>().enabled = true;
+        _animator.CrossFade("FireWeapon", 0.01f);
+        GameObject EnemyBullet = Instantiate(_prefabBullet, transform.position, transform.rotation) as GameObject;
+
+        int facingDirection = 0;
+
+        if (_moveDirection > 0)
+        {
+            facingDirection = -1;
+        }
+        else
+        {
+            facingDirection = 1;
+        }
+
+        EnemyBullet.GetComponent<BulletEnemyScript>().Initialize(_damage, facingDirection);
         _coolDown = _coolDownSet;
     }
 

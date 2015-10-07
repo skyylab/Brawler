@@ -138,6 +138,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public void SetAttackLanded(bool AttackLanded) { _attackLanded = AttackLanded; }
     public void StopSpeed() { _moveSpeedActual = 0f; }
     public void StartSpeed() { _moveSpeedActual = _moveSpeed; }
+    public int AttackListSize() { return _attackTargets.Count; }
 
     public void AddToTargetList(GameObject newTarget) {
         _aquiredTargets.Add(newTarget);
