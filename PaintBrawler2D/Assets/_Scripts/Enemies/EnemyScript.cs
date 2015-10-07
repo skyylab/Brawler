@@ -26,13 +26,13 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected bool _colorChanged = false;
     [SerializeField]
-    private GameObject _healthSlider;
+    protected GameObject _healthSlider;
 
     // Range finders
     [SerializeField]
     protected GameObject _aquisitionRange;
     [SerializeField]
-    private float _aquisitionRangeValue;
+    protected float _aquisitionRangeValue;
     [SerializeField]
     protected GameObject _attackRange;
     [SerializeField]
@@ -73,7 +73,7 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected GameObject _objectWholeSprite;
     [SerializeField]
-    private GameObject _animatedObj;
+    protected GameObject _animatedObj;
 
     // Color variables
     protected Color[] _primaryColorArray = {new Color (217f/255f, 40f/255f, 46f/255f),
@@ -107,11 +107,11 @@ public abstract class EnemyScript : MonoBehaviour {
     private GameObject _bigDamage;
 
     [SerializeField]
-    private string _pastMixColor = "";
+    protected string _pastMixColor = "";
     [SerializeField]
     protected GameObject _particleGenerator;
     [SerializeField]
-    private GameObject _colorExplosion;
+    protected GameObject _colorExplosion;
 
     // Virtual functions
     public virtual void Attack(){ }
@@ -161,24 +161,9 @@ public abstract class EnemyScript : MonoBehaviour {
         }
     }
 
-    public void AccumulateColor(int Damage, string PrimaryColor)
+    public virtual void AccumulateColor(int Damage, string PrimaryColor)
     {
-        if (_pastMixColor == "")
-        {
-            _pastMixColor = PrimaryColor;
-            _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 5;
-            _particleGenerator.GetComponent<ParticleSystem>().startColor = returnPrimaryColor(PrimaryColor);
-        }
-        else if (_pastMixColor != PrimaryColor)
-        {
-            Color MixedColor = MixColor(_pastMixColor, PrimaryColor);
-            _particleGenerator.GetComponent<ParticleSystem>().startColor = MixedColor;
-            _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
-            GameObject ColorExplosion = Instantiate(_colorExplosion, transform.position, transform.rotation) as GameObject;
-            ColorExplosion.GetComponent<ExplosionBirthTimer>().InitializeColor(MixedColor, Damage);
-            ColorExplosion.transform.parent = gameObject.transform;
-            _pastMixColor = "";
-        }
+        
     }
 
     public void TakeDamage(int Damage, Color Color)
@@ -196,7 +181,7 @@ public abstract class EnemyScript : MonoBehaviour {
         _hitPoints -= Damage;
     }
 
-    private Color returnPrimaryColor(string Color1) {
+    protected Color returnPrimaryColor(string Color1) {
         switch (Color1) {
             case "Red":
                 return _primaryColorArray[0];
@@ -208,7 +193,7 @@ public abstract class EnemyScript : MonoBehaviour {
         return new Color(0f, 0f, 0f);
     }
 
-    private Color MixColor(string Color1, string Color2) {
+    protected Color MixColor(string Color1, string Color2) {
 
         if (Color1 == "Red" && Color2 == "Blue") {
             return _secondaryColorArray[1];
@@ -277,38 +262,9 @@ public abstract class EnemyScript : MonoBehaviour {
         return "";
     }
 
-    protected void InitializeClass()
+    protected virtual void InitializeClass()
     {
-        int RandomNumber = Random.Range(0, 3);
-        // Setting Player Color
-        _secondaryColor = _secondaryColorArray[RandomNumber];
-
-        switch (RandomNumber) {
-            case 0:
-                _currentColor = "Green";
-                break;
-            case 1:
-                _currentColor = "Purple";
-                break;
-            case 2:
-                _currentColor = "Orange";
-                break;
-        }
-
-        foreach (GameObject x in _objectSprites) {
-            x.GetComponent<SpriteRenderer>().color = _secondaryColor;
-        }
-
-        // Setting range
-        _aquisitionRange.GetComponent<CircleCollider2D>().radius = _aquisitionRangeValue;
-        _attackRange.GetComponent<CircleCollider2D>().radius = _attackRangeValue;
-
-        _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
-        _healthSlider.GetComponent<Slider>().value = _hitPoints;
-
-        _animator = _animatedObj.GetComponent<Animator>();
-        _moveSpeedActual = _moveSpeed;
-        _coolDownSet = _coolDown;
+        
     }
 
     // This determines that the player and enemy unit are on the same plane

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
-public class BasicEnemy : EnemyScript {
+public class SecondaryColorEnemy : EnemyScript {
     
     int RandomNumber = 0;
     float RandomInterval = 0f;
@@ -33,6 +34,62 @@ public class BasicEnemy : EnemyScript {
         }
     }
 
+    protected override void InitializeClass() {
+        int RandomNumber = Random.Range(0, 3);
+        // Setting Player Color
+        _secondaryColor = _secondaryColorArray[RandomNumber];
+
+        switch (RandomNumber)
+        {
+            case 0:
+                _currentColor = "Green";
+                break;
+            case 1:
+                _currentColor = "Purple";
+                break;
+            case 2:
+                _currentColor = "Orange";
+                break;
+        }
+
+        foreach (GameObject x in _objectSprites)
+        {
+            x.GetComponent<SpriteRenderer>().color = _secondaryColor;
+        }
+
+        // Setting range
+        _aquisitionRange.GetComponent<CircleCollider2D>().radius = _aquisitionRangeValue;
+        _attackRange.GetComponent<CircleCollider2D>().radius = _attackRangeValue;
+
+        _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
+        _healthSlider.GetComponent<Slider>().value = _hitPoints;
+
+        _animator = _animatedObj.GetComponent<Animator>();
+        _moveSpeedActual = _moveSpeed;
+        _coolDownSet = _coolDown;
+    }
+
+    public override void AccumulateColor(int Damage, string PrimaryColor)
+    {
+        base.AccumulateColor(Damage, PrimaryColor);
+        if (_pastMixColor == "")
+        {
+            _pastMixColor = PrimaryColor;
+            _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 5;
+            _particleGenerator.GetComponent<ParticleSystem>().startColor = returnPrimaryColor(PrimaryColor);
+        }
+        else if (_pastMixColor != PrimaryColor)
+        {
+            Color MixedColor = MixColor(_pastMixColor, PrimaryColor);
+            _particleGenerator.GetComponent<ParticleSystem>().startColor = MixedColor;
+            _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
+            GameObject ColorExplosion = Instantiate(_colorExplosion, transform.position, transform.rotation) as GameObject;
+            ColorExplosion.GetComponent<ExplosionBirthTimer>().InitializeColor(MixedColor, Damage);
+            ColorExplosion.transform.parent = gameObject.transform;
+            _pastMixColor = "";
+        }
+    }
+
     public override void Idle() {
     }
 
@@ -54,14 +111,6 @@ public class BasicEnemy : EnemyScript {
 
         Debug.Log(gameObject.name + " is Circling ");
         transform.position = Vector2.MoveTowards(transform.position, RandomCirclePoint + (Vector2)_aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
-
-        //int RandomNumber = Random.Range(0, 2);
-
-        //if (RandomNumber < 1) {
-        //    RandomNumber = -1;
-        //}
-
-        //transform.position += Vector3.up * _moveSpeedActual * RandomNumber * Time.deltaTime;
     }
 
     public override void Attacking() {

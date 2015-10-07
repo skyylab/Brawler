@@ -25,7 +25,7 @@ public class ColorExplosionDealDamage : MonoBehaviour {
     {
         if (other.tag == "Enemy")
         {
-            other.gameObject.GetComponent<BasicEnemy>().TakeDamage(_damage, _explosionColor);
+            other.gameObject.GetComponent<EnemyScript>().TakeDamage(_damage, _explosionColor);
         }
     }
 }
