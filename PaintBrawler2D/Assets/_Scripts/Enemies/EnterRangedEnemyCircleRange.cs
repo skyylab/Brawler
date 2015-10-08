@@ -30,6 +30,12 @@ public class EnterRangedEnemyCircleRange : MonoBehaviour {
         {
             _avoidEnemy = other.gameObject;
             _target = other.gameObject;
+            if (_parentScript._currentState != EnemyScript.EnemyState.chasing)
+            {
+                _parentScript.SetFleeTarget(_target);
+                _parent.GetComponent<PrimaryColorRangedEnemy>().ResetFleeTimer();
+                _parentScript._currentState = EnemyScript.EnemyState.fleeing;
+            }
         }
 
         if (other.tag == "Enemy") {
@@ -41,12 +47,12 @@ public class EnterRangedEnemyCircleRange : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            if (_parentScript._currentlyAttacking == false){
+            if (_parentScript._currentlyAttacking == false) {
                 _parentScript.MovedOutCirclingDistance();
             }
             _target.GetComponent<HeroScript>().RemoveAttacker(_parent);
             _inAttackRange = false;
-            _parentScript._currentState = EnemyScript.EnemyState.chasing;
+            
         }
 
         if (other.tag == "Enemy")

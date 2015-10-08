@@ -51,6 +51,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
     // Attacking variables
     protected bool _inAttackRange = false;
+    protected bool _inCircleRange = false;
     protected bool _attackLanded = false;
     public bool _currentlyAttacking = false;
     public enum EnemyState {
@@ -113,6 +114,9 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected GameObject _colorExplosion;
 
+    [SerializeField]
+    protected GameObject _fleeTarget;
+
     // Virtual functions
     public virtual void Attack(){ }
     // Idle Animations
@@ -131,14 +135,22 @@ public abstract class EnemyScript : MonoBehaviour {
     // Stay within range, but do not attack
     public void ReachedCirclingDistance() { _currentState = EnemyState.circling; }
     public void MovedOutCirclingDistance() { _currentState = EnemyState.chasing; }
+    public void SetFleeTarget(GameObject FleeTarget) { _fleeTarget = FleeTarget; }
+
+    public void SetCircleRange(bool Set) { _inCircleRange = Set; }
+    public void SetAttackRange(bool Set) { _inAttackRange = Set; }
 
     // Accessors
-    public int GetDamage() { return _damage; }
+    public bool GetCircleRange() { return _inCircleRange; }
+    public bool GetAttackRange() { return _inAttackRange; }
     public bool GetAttackLanded() { return _attackLanded; }
+
     public void SetAttackLanded(bool AttackLanded) { _attackLanded = AttackLanded; }
     public void StopSpeed() { _moveSpeedActual = 0f; }
     public void StartSpeed() { _moveSpeedActual = _moveSpeed; }
+
     public int AttackListSize() { return _attackTargets.Count; }
+    public int GetDamage() { return _damage; }
 
     public void AddToTargetList(GameObject newTarget) {
         _aquiredTargets.Add(newTarget);

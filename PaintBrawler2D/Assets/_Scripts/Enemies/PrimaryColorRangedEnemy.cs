@@ -19,6 +19,10 @@ public class PrimaryColorRangedEnemy : EnemyScript {
 
     private float _moveDirection;
 
+    private float _fleeTimer = 1.5f;
+
+    public void ResetFleeTimer() { _fleeTimer = 1.5f;  }
+
     void Start()
     {
         InitializeClass();
@@ -112,13 +116,23 @@ public class PrimaryColorRangedEnemy : EnemyScript {
     }
 
     public override void Fleeing() {
+        _fleeTimer -= Time.deltaTime;
+
+        if (_fleeTimer > 0)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, _fleeTarget.transform.position, Time.deltaTime * _moveSpeed * -1);
+        }
+        else
+        {
+            _currentState = EnemyState.chasing;
+        }
     }
 
     public void ManageAttack() {
 
         _coolDown -= Time.deltaTime;
 
-        if (_inAttackRange && _coolDown < 0)
+        if (_coolDown < 0)
         {
             Attack();
         }

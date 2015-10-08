@@ -16,7 +16,7 @@ public class RangedUnitAttackSight : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            _parentScript.AddToAttackList(other.gameObject);
+            //_parentScript.AddToAttackList(other.gameObject);
             _parentScript.StopSpeed();
             _parentScript._currentState = EnemyScript.EnemyState.attacking;
         }
@@ -29,7 +29,7 @@ public class RangedUnitAttackSight : MonoBehaviour {
             _parentScript.RemoveFromAttackList(other.gameObject);
             _parentScript.StartSpeed();
 
-            if (_parentScript.AttackListSize() <= 0)
+            if (_parentScript.AttackListSize() <= 0 && _parentScript._currentState != EnemyScript.EnemyState.fleeing)
             {
                 _parentScript._currentState = EnemyScript.EnemyState.chasing;
             }
