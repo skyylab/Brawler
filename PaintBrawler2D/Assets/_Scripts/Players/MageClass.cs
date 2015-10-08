@@ -10,7 +10,6 @@ public class MageClass : HeroScript {
     private float _mageAttackSpeed = 0f;
     private float _attackSpeedReset = 1.25f;
     private float _mageManaRegen = 15f;
-    private float _splashRadius = 1.0f;
 
     public int GetDamage() { return _damage; }
 

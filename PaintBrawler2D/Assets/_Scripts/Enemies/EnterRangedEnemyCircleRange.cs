@@ -8,12 +8,6 @@ public class EnterRangedEnemyCircleRange : MonoBehaviour {
     private EnemyScript _parentScript;
 
     private GameObject _target;
-    private float _timerWaitBeforeTryAgain = 0f;
-    private float _timerReset = 2f;
-    private bool _inAttackRange = false;
-
-
-    private GameObject _avoidEnemy;
 
     void Start()
     {
@@ -28,7 +22,6 @@ public class EnterRangedEnemyCircleRange : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            _avoidEnemy = other.gameObject;
             _target = other.gameObject;
             if (_parentScript._currentState != EnemyScript.EnemyState.chasing)
             {
@@ -36,10 +29,6 @@ public class EnterRangedEnemyCircleRange : MonoBehaviour {
                 _parent.GetComponent<PrimaryColorRangedEnemy>().ResetFleeTimer();
                 _parentScript._currentState = EnemyScript.EnemyState.fleeing;
             }
-        }
-
-        if (other.tag == "Enemy") {
-            _avoidEnemy = other.gameObject;
         }
     }
 
@@ -51,13 +40,7 @@ public class EnterRangedEnemyCircleRange : MonoBehaviour {
                 _parentScript.MovedOutCirclingDistance();
             }
             _target.GetComponent<HeroScript>().RemoveAttacker(_parent);
-            _inAttackRange = false;
             
-        }
-
-        if (other.tag == "Enemy")
-        {
-            _avoidEnemy = null;
         }
     }
 }

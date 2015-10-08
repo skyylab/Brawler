@@ -9,9 +9,7 @@ public class EnterRangedEnemyAttackRange : MonoBehaviour {
 
 
     private GameObject _target;
-    private float _timerWaitBeforeTryAgain = 0f;
     private float _timerReset;
-    private bool _inAttackRange;
 
     void Start()
     {
@@ -24,7 +22,6 @@ public class EnterRangedEnemyAttackRange : MonoBehaviour {
         {
             _parentScript.AddToAttackList(other.gameObject);
             _parentScript.StopSpeed();
-            _inAttackRange = true;
         }
     }
 
@@ -34,7 +31,6 @@ public class EnterRangedEnemyAttackRange : MonoBehaviour {
         {
             _parentScript.RemoveFromAttackList(other.gameObject);
             _parentScript.StartSpeed();
-            _inAttackRange = false;
         }
     }
 }

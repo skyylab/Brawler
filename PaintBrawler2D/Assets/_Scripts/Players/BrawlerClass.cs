@@ -15,8 +15,6 @@ public class BrawlerClass : HeroScript {
     private float _comboTimerReset = 0.5f;
     private int _comboCounter = 0;
 
-    private float _moveSpeedBrawlerSet = 0f;
-
     [SerializeField]
     private GameObject _fistDamageColliderLeft;
     [SerializeField]
@@ -42,7 +40,6 @@ public class BrawlerClass : HeroScript {
         InitializeStats();
 
         _animator = _characterObj.GetComponent<Animator>();
-        _moveSpeedBrawlerSet = GetComponent<PlayerMovement>().moveSpeed;
 
         _audio = GetComponent<AudioSource>();
     }

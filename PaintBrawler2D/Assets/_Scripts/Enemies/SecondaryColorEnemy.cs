@@ -4,11 +4,6 @@ using System.Collections;
 
 public class SecondaryColorEnemy : EnemyScript {
     
-    int RandomNumber = 0;
-    float RandomInterval = 0f;
-    float _angularMovement = 0;
-
-    Vector3 _currentPosition = new Vector3(0f, 0f, 0f);
     [SerializeField]
     private GameObject Spawner;
 

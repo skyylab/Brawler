@@ -3,12 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PrimaryColorRangedEnemy : EnemyScript {
-    
-    int RandomNumber = 0;
-    float RandomInterval = 0f;
-    float _angularMovement = 0;
-
-    Vector3 _currentPosition = new Vector3(0f, 0f, 0f);
     [SerializeField]
     private GameObject Spawner;
 
@@ -16,8 +10,6 @@ public class PrimaryColorRangedEnemy : EnemyScript {
     private GameObject _prefabBullet;
     [SerializeField]
     private GameObject _prefabMuzzleFlash;
-
-    private float _moveDirection;
 
     private float _fleeTimer = 1.5f;
 
@@ -135,26 +127,6 @@ public class PrimaryColorRangedEnemy : EnemyScript {
         if (_coolDown < 0)
         {
             Attack();
-        }
-    }
-
-    public override void ManageMovement()
-    {
-        if (_aquiredTargets.Count > 0)
-        {
-            _lastPosition = transform.position;
-            transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
-        }
-
-        _moveDirection = transform.position.x - _lastPosition.x;
-
-        if (_moveDirection > 0)
-        {
-            _objectWholeSprite.transform.localEulerAngles = new Vector2(0f, 0f);
-        }
-        else if (_moveDirection < 0)
-        {
-            _objectWholeSprite.transform.localEulerAngles = new Vector2(0f, 180f);
         }
     }
 

@@ -75,6 +75,7 @@ public abstract class EnemyScript : MonoBehaviour {
     protected GameObject _objectWholeSprite;
     [SerializeField]
     protected GameObject _animatedObj;
+    protected float _moveDirection;
 
     // Color variables
     protected Color[] _primaryColorArray = {new Color (217f/255f, 40f/255f, 46f/255f),
@@ -96,13 +97,8 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     private GameObject _deathAnimation;
 
-
-    [SerializeField]
-    private List<string> ListOfAttacked = new List<string>();
-
     [SerializeField]
     private GameObject[] _mixSprites;
-    private int _mixSpriteIterator = 3;
 
     [SerializeField]
     private GameObject _bigDamage;
@@ -298,12 +294,17 @@ public abstract class EnemyScript : MonoBehaviour {
     }
 
     protected void ManageSpriteOrientation() {
-        float moveDirection = transform.position.x - _lastPosition.x;
-        if (moveDirection > 0)
+        float DeltaPosition = transform.position.x - _lastPosition.x;
+
+        if (Mathf.Abs(DeltaPosition) > 0)
+        {
+            _moveDirection = DeltaPosition;
+        }
+        if (_moveDirection > 0)
         {
             _objectWholeSprite.transform.localEulerAngles = new Vector2(0f, 0f);
         }
-        else if (moveDirection < 0)
+        else if (_moveDirection < 0)
         {
             _objectWholeSprite.transform.localEulerAngles = new Vector2(0f, 180f);
         }

@@ -9,7 +9,6 @@ public class BulletScript : MonoBehaviour {
     private float _moveSpeed = 0.5f;
     private int _firingDirection = 1;
     private float _life = 2.0f;
-    private string _colorName = "";
 
     [SerializeField]
     private GameObject _bulletHit;
@@ -31,7 +30,6 @@ public class BulletScript : MonoBehaviour {
 	}
 
     public void Initialize(Color color, string colorName, int Direction, GameObject parent) {
-        _colorName = colorName;
         _parent = parent;
         _parentScript = _parent.GetComponent<SharpShooterClass>();
         GetComponent<SpriteRenderer>().color = color;

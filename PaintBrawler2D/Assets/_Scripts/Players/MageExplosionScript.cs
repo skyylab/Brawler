@@ -5,7 +5,6 @@ public class MageExplosionScript : MonoBehaviour {
 
     private GameObject _parent;
     private MageClass _parentScript;
-    private string _colorName = "";
 
     private float _maxSize = 2.5f;
     private float _growSpeed = 0.15f;
@@ -31,7 +30,6 @@ public class MageExplosionScript : MonoBehaviour {
 
     public void Initialize(Color color, string colorName, GameObject parent)
     {
-        _colorName = colorName;
         _parent = parent;
         _parentScript = _parent.GetComponent<MageClass>();
         _fireballSprite.GetComponent<SpriteRenderer>().color = color;
