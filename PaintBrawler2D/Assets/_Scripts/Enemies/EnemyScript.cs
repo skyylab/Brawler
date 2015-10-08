@@ -28,6 +28,13 @@ public abstract class EnemyScript : MonoBehaviour {
     protected bool _colorChanged = false;
     [SerializeField]
     protected GameObject _healthSlider;
+    public enum ColorType
+    {
+        NonColored,
+        Primary,
+        Secondary
+    }
+    public ColorType _colorType;
 
     // Range finders
     [SerializeField]
@@ -79,6 +86,7 @@ public abstract class EnemyScript : MonoBehaviour {
     protected float _moveDirection;
 
     // Color variables
+    protected Color _whiteColor = new Color(1f, 1f, 1f);
     protected Color[] _primaryColorArray = {new Color (217f/255f, 40f/255f, 46f/255f),
                                           new Color (255f/255f, 209f/255f, 64/255f),
                                           new Color (43f/255f, 125f/255f, 225f/255f) };
@@ -110,6 +118,8 @@ public abstract class EnemyScript : MonoBehaviour {
 
     [SerializeField]
     protected GameObject _fleeTarget;
+    [SerializeField]
+    protected bool _notColored;
 
     // Virtual functions
     public virtual void Attack(){ }
@@ -168,13 +178,41 @@ public abstract class EnemyScript : MonoBehaviour {
         }
     }
 
-    public virtual void AccumulateColor(int Damage, string PrimaryColor)
+    public void AccumulateColor(int Damage, string PrimaryColor)
     {
-        
+        // Take Damage if hit by primary color and enemy is primary
+        if (_colorType == ColorType.Secondary)
+        {
+            if (_pastMixColor == "")
+            {
+                _pastMixColor = PrimaryColor;
+                _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 5;
+                _particleGenerator.GetComponent<ParticleSystem>().startColor = returnPrimaryColor(PrimaryColor);
+            }
+            else if (_pastMixColor != PrimaryColor)
+            {
+                Color MixedColor = MixColor(_pastMixColor, PrimaryColor);
+                _particleGenerator.GetComponent<ParticleSystem>().startColor = MixedColor;
+                _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
+                GameObject ColorExplosion = Instantiate(_colorExplosion, transform.position, transform.rotation) as GameObject;
+                ColorExplosion.GetComponent<ExplosionBirthTimer>().InitializeColor(MixedColor, Damage);
+                ColorExplosion.transform.parent = gameObject.transform;
+                _pastMixColor = "";
+            }
+        }
+        else
+        {
+            TakeDamage(Damage, returnPrimaryColor(PrimaryColor));
+        }
     }
 
     public void TakeDamage(int Damage, Color Color)
     {
+        if (_colorType == ColorType.NonColored)
+        {
+            _secondaryColor = Color;
+        }
+
         if (Color == _secondaryColor)
         {
             _hitPoints -= Damage;
@@ -269,9 +307,71 @@ public abstract class EnemyScript : MonoBehaviour {
         return "";
     }
 
-    protected virtual void InitializeClass()
+    protected void InitializeClass()
     {
-        
+        SetInitialColors(_colorType);
+        // Setting range
+        _aquisitionRange.GetComponent<CircleCollider2D>().radius = _aquisitionRangeValue;
+        _attackRange.GetComponent<CircleCollider2D>().radius = _attackRangeValue;
+
+        _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
+        _healthSlider.GetComponent<Slider>().value = _hitPoints;
+
+        _animator = _animatedObj.GetComponent<Animator>();
+        _moveSpeedActual = _moveSpeed;
+        _coolDownSet = _coolDown;
+    }
+
+    private void SetInitialColors(ColorType ColorType)
+    {
+        int RandomNumber = Random.Range(0, 3);
+        if (ColorType == ColorType.Primary)
+        {
+            // Setting Player Color
+            _secondaryColor = _primaryColorArray[RandomNumber];
+
+            switch (RandomNumber)
+            {
+                case 0:
+                    _currentColor = "Red";
+                    break;
+                case 1:
+                    _currentColor = "Yellow";
+                    break;
+                case 2:
+                    _currentColor = "Blue";
+                    break;
+            }
+        }
+        else if (ColorType == ColorType.Secondary)
+        {
+            // Setting Player Color
+            _secondaryColor = _secondaryColorArray[RandomNumber];
+
+            switch (RandomNumber)
+            {
+                case 0:
+                    _currentColor = "Green";
+                    break;
+                case 1:
+                    _currentColor = "Purple";
+                    break;
+                case 2:
+                    _currentColor = "Orange";
+                    break;
+            }
+        }
+        else
+        {
+            // Setting Player Color
+            _secondaryColor = _whiteColor;
+            _currentColor = "White";
+        }
+
+        foreach (GameObject x in _objectSprites)
+        {
+            x.GetComponent<SpriteRenderer>().color = _secondaryColor;
+        }
     }
 
     // This determines that the player and enemy unit are on the same plane

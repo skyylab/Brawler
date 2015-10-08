@@ -31,48 +31,6 @@ public class PrimaryColorSlugger : EnemyScript {
         }
     }
 
-    protected override void InitializeClass()
-    {
-        int RandomNumber = Random.Range(0, 3);
-        // Setting Player Color
-        _secondaryColor = _primaryColorArray[RandomNumber];
-
-        switch (RandomNumber)
-        {
-            case 0:
-                _currentColor = "Red";
-                break;
-            case 1:
-                _currentColor = "Yellow";
-                break;
-            case 2:
-                _currentColor = "Blue";
-                break;
-        }
-
-        foreach (GameObject x in _objectSprites)
-        {
-            x.GetComponent<SpriteRenderer>().color = _secondaryColor;
-        }
-
-        // Setting range
-        _aquisitionRange.GetComponent<CircleCollider2D>().radius = _aquisitionRangeValue;
-        _attackRange.GetComponent<CircleCollider2D>().radius = _attackRangeValue;
-
-        _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
-        _healthSlider.GetComponent<Slider>().value = _hitPoints;
-
-        _animator = _animatedObj.GetComponent<Animator>();
-        _moveSpeedActual = _moveSpeed;
-        _coolDownSet = _coolDown;
-    }
-
-
-    public override void AccumulateColor(int Damage, string PrimaryColor)
-    {
-        TakeDamage(Damage, returnPrimaryColor(PrimaryColor));
-    }
-
     public override void Idle() {
     }
 
