@@ -15,6 +15,7 @@ public abstract class EnemyScript : MonoBehaviour {
     protected int _armor = 0;
     [SerializeField]
     protected float _moveSpeed = 0f;
+    [SerializeField]
     protected float _moveSpeedActual = 0f;
     [SerializeField]
     protected float _coolDown = 0f;
@@ -99,9 +100,6 @@ public abstract class EnemyScript : MonoBehaviour {
 
     [SerializeField]
     private GameObject[] _mixSprites;
-
-    [SerializeField]
-    private GameObject _bigDamage;
 
     [SerializeField]
     protected string _pastMixColor = "";
