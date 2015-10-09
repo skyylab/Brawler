@@ -17,6 +17,9 @@ public class FireballProjectile : MonoBehaviour {
     [SerializeField]
     private GameObject _explosion;
 
+    private int _objectsHit = 0;
+    private int _maxObjectsHit = 3;
+
     // Use this for initialization
     void Start()
     {
@@ -55,6 +58,12 @@ public class FireballProjectile : MonoBehaviour {
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);
             //Destroy(gameObject);
+
+            _objectsHit++;
+
+            if (_objectsHit > _maxObjectsHit) {
+                gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            }
         }
     }
 }

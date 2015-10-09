@@ -6,10 +6,12 @@ public class PrimaryColorSlugger : EnemyScript {
     
     [SerializeField]
     private GameObject Spawner;
-
+    [SerializeField]
     private float _waitTimer = 1f;
+    [SerializeField]
     private float _chaseOffScreenTimer = 1f;
-    private float _attackTime = 5f;
+    [SerializeField]
+    private float _attackTime = 4f;
 
     private float _speedConstant = 2f;
 
@@ -67,7 +69,7 @@ public class PrimaryColorSlugger : EnemyScript {
             if (!_objectSprites[0].GetComponent<Renderer>().isVisible)
             {
                 _speedConstant *= -1;
-                _attackTime = 5f;
+                _attackTime = 4f;
                 _chaseOffScreenTimer = 1f;
             }
         }

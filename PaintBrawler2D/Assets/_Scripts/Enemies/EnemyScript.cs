@@ -124,6 +124,9 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected bool _notColored;
 
+    [SerializeField]
+    protected bool _isOffScreen;
+
     // Virtual functions
     public virtual void Attack(){ }
     // Idle Animations
@@ -186,6 +189,25 @@ public abstract class EnemyScript : MonoBehaviour {
         }
     }
 
+    protected void ManageOffScreenMovement() {
+
+        Debug.Log(_mixSprites[0].GetComponent<SpriteRenderer>().isVisible);
+
+        if (!_mixSprites[0].GetComponent<Renderer>().isVisible) {
+            _isOffScreen = false;
+            _moveSpeedActual = _moveSpeed;
+        }
+        else {
+            _isOffScreen = true;
+            _moveSpeedActual = 0f;
+            Vector3 centerCameraPosition = new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, transform.position.z);
+
+            transform.position = Vector3.MoveTowards(transform.position, centerCameraPosition, Time.deltaTime * _moveSpeed);
+        }
+
+
+    }
+
     public void AccumulateColor(int Damage, string PrimaryColor)
     {
         // Take Damage if hit by primary color and enemy is primary
@@ -239,7 +261,7 @@ public abstract class EnemyScript : MonoBehaviour {
     }
 
     public void TakeSplashDamage(int Damage) {
-        _hitPoints -= Damage;
+        
     }
 
     protected Color returnPrimaryColor(string Color1) {
