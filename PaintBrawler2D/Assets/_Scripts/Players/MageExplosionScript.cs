@@ -10,7 +10,9 @@ public class MageExplosionScript : MonoBehaviour {
     private float _growSpeed = 0.15f;
 
     [SerializeField]
-    private GameObject _fireballSprite;
+    private GameObject _particle1;
+    [SerializeField]
+    private GameObject _particle2;
     // Use this for initialization
     void Start () {
 	
@@ -21,7 +23,9 @@ public class MageExplosionScript : MonoBehaviour {
         transform.localScale += new Vector3(1f, 1f, 1f) * _growSpeed;	 
         if (transform.localScale.x > _maxSize) {
             GetComponent<CircleCollider2D>().enabled = false;
-            _fireballSprite.GetComponent<SpriteRenderer>().enabled = false;
+            _particle1.GetComponent<ParticleSystem>().emissionRate = 0f;
+            _particle2.GetComponent<ParticleSystem>().emissionRate = 0f;
+
             if (!GetComponent<AudioSource>().isPlaying) { 
                 Destroy(gameObject);
             }
@@ -32,7 +36,7 @@ public class MageExplosionScript : MonoBehaviour {
     {
         _parent = parent;
         _parentScript = _parent.GetComponent<MageClass>();
-        _fireballSprite.GetComponent<SpriteRenderer>().color = color;
+       _particle1.GetComponent<ParticleSystem>().startColor = color;
     }
 
     void OnTriggerEnter2D(Collider2D other)

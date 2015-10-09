@@ -76,42 +76,47 @@ public class PlayerMovement : MonoBehaviour {
 
     private void ProcessInput()
     {
-        // Process movement
-        if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
+        if (_heroScript.ReturnIsAlive())
         {
+            // Process movement
+            if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
+            {
 
-            if (transform.position.y > -6 && _moveVector.y < 0)
-            {
-                transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
-            }
-            if (transform.position.y < 4 && _moveVector.y > 0)
-            {
-                transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+                if (transform.position.y > -6 && _moveVector.y < 0)
+                {
+                    transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+                }
+                if (transform.position.y < 4 && _moveVector.y > 0)
+                {
+                    transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+                }
+
+                if (_mainCameraPosition.x - transform.position.x > -11 && _moveVector.x > 0)
+                {
+                    transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+                }
+
+                if (_mainCameraPosition.x - transform.position.x < 11 && _moveVector.x < 0)
+                {
+                    transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+                }
+                _heroScript.ManageFlipSprite(_moveVector);
             }
 
-            if (_mainCameraPosition.x - transform.position.x > -11 && _moveVector.x > 0)
+            if (_pressAttack1)
             {
-                transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+                _heroScript.Attack();
             }
 
-            if (_mainCameraPosition.x - transform.position.x < 11 && _moveVector.x < 0)
+            if (_pressAttack2)
             {
-                transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+                _heroScript.SecondaryAttack();
             }
-            _heroScript.ManageFlipSprite(_moveVector);
+
+            if (_pressJump)
+            {
+                _heroScript.Jump();
+            }
         }
-
-        if (_pressAttack1) {
-            _heroScript.Attack();
-        }
-
-        if (_pressAttack2)
-        {
-            _heroScript.SecondaryAttack();
-        }
-
-        if (_pressJump) {
-            _heroScript.Jump();
-        } 
     }
 }

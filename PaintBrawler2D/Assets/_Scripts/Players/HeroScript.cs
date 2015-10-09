@@ -91,6 +91,7 @@ public abstract class HeroScript : MonoBehaviour {
 
     public GameObject GetCharacterObj() { return _characterObj; }
     public string GetPrimaryColorString() { return _currentPrimaryColor; }
+    public bool ReturnIsAlive() { return _isAlive; }
 
     protected int _firingDirection = -1;
 
@@ -173,5 +174,18 @@ public abstract class HeroScript : MonoBehaviour {
                 _characterObj.SetActive(false);
             }
         }
+    }
+
+    public void RevivePlayer()
+    {
+        _hitPoints = _hitPointMax;
+        _manaPoints = 100;
+        _mainCamera.GetComponent<CameraControls>().AddPlayers(gameObject);
+        gameObject.tag = "Player";
+        _isAlive = true;
+        _deadPlayer.SetActive(false);
+        _characterObj.SetActive(true);
+        _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
+        _UIManaBar.GetComponent<Slider>().value = _manaPoints;
     }
 }

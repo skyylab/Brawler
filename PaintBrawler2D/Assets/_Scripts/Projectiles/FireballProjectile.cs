@@ -41,7 +41,7 @@ public class FireballProjectile : MonoBehaviour {
         _colorName = colorName;
         _parent = parent;
         _parentScript = _parent.GetComponent<MageClass>();
-        _fireballSprite.GetComponent<SpriteRenderer>().color = color;
+        _fireballSprite.GetComponent<ParticleSystem>().startColor = color;
         _color = color;
         _firingDirection = Direction;
     }
@@ -54,7 +54,7 @@ public class FireballProjectile : MonoBehaviour {
                                                                                               _parentScript.GetPrimaryColorString());
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 }
