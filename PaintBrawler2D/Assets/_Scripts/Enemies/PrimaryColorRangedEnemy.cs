@@ -28,13 +28,6 @@ public class PrimaryColorRangedEnemy : EnemyScript {
         ManageRayCast();
         ManageEnemyState();
         ManageSpriteOrientation();
-
-        if (_hitPoints < 0)
-        {
-            // Die
-            Spawner.GetComponent<EnemySpawner>().RemoveObject(gameObject);
-            Destroy(gameObject);
-        }
     }
 
     public override void Idle() {

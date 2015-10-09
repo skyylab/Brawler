@@ -8,6 +8,10 @@ public class PrimaryColorSlugger : EnemyScript {
     private GameObject Spawner;
 
     private float _waitTimer = 1f;
+    private float _chaseOffScreenTimer = 1f;
+    private float _attackTime = 5f;
+
+    private float _speedConstant = 2f;
 
     void Start()
     {
@@ -22,13 +26,6 @@ public class PrimaryColorSlugger : EnemyScript {
         ManageRayCast();
         ManageEnemyState();
         ManageSpriteOrientation();
-
-        if (_hitPoints < 0)
-        {
-            // Die
-            Spawner.GetComponent<EnemySpawner>().RemoveObject(gameObject);
-            Destroy(gameObject);
-        }
     }
 
     public override void Idle() {
@@ -55,19 +52,31 @@ public class PrimaryColorSlugger : EnemyScript {
     public override void Attacking() {
 
         _waitTimer -= Time.deltaTime;
+        _attackTime -= Time.deltaTime;
+        _chaseOffScreenTimer -= Time.deltaTime;
 
         if (_waitTimer < 0) { 
             _currentlyAttacking = true;
             _lastPosition = transform.position;
-            transform.position += Vector3.left * _moveSpeedActual * 2 * Time.deltaTime;
-            ManageAttack();
-        }
-    }
-
-    public void ManageAttack() {
-
-
+            transform.position += Vector3.left * _moveSpeedActual * _speedConstant * Time.deltaTime;
             Attack();
+        }
+
+        if (_attackTime < 0)
+        {
+            if (!_objectSprites[0].GetComponent<Renderer>().isVisible)
+            {
+                _speedConstant *= -1;
+                _attackTime = 5f;
+                _chaseOffScreenTimer = 1f;
+            }
+        }
+
+        if (_chaseOffScreenTimer > 0)
+        {
+            Vector3 TargetAhead = new Vector3(transform.position.x, _aquiredTargets[0].transform.position.y, 0f);
+            transform.position = Vector2.MoveTowards(transform.position, TargetAhead, Time.deltaTime * _moveSpeedActual);
+        }
     }
 
     public override void Attack()

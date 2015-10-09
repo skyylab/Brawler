@@ -57,6 +57,9 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     private GameObject _damageText;
 
+    [SerializeField]
+    private GameObject _mainCamera;
+
     // Attacking variables
     protected bool _inAttackRange = false;
     protected bool _inCircleRange = false;
@@ -156,6 +159,11 @@ public abstract class EnemyScript : MonoBehaviour {
     public int AttackListSize() { return _attackTargets.Count; }
     public int GetDamage() { return _damage; }
 
+    void Awake()
+    {
+        _mainCamera = Camera.main.gameObject;
+    }
+
     public void AddToTargetList(GameObject newTarget) {
         _aquiredTargets.Add(newTarget);
     }
@@ -219,6 +227,13 @@ public abstract class EnemyScript : MonoBehaviour {
             _healthSlider.GetComponent<Slider>().value = _hitPoints;
             GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
             DamageText.GetComponent<DamageText>().Initialize(Damage, "Red");
+        }
+
+        if (_hitPoints < 0)
+        {
+            // Die
+            _mainCamera.GetComponent<CameraControls>().EnemyKilled();
+            Destroy(gameObject);
         }
     }
 

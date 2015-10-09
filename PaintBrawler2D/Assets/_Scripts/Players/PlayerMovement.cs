@@ -23,10 +23,19 @@ public class PlayerMovement : MonoBehaviour {
     [System.NonSerialized] // Don't serialize this so the value is lost on an editor script recompile.
     private bool initialized;
 
+    [SerializeField]
+    private GameObject _mainCamera;
+    [SerializeField]
+    private Vector3 _mainCameraPosition;
+
+    private float _restrictXLeft;
+    private float _restrictXRight;
+
     void Awake()
     {
         // Get the character controller
         _heroScript = GetComponent<HeroScript>();
+        _mainCamera = GameObject.FindWithTag("MainCamera");
     }
 
     private void Initialize()
@@ -45,6 +54,8 @@ public class PlayerMovement : MonoBehaviour {
         if (!initialized){
             Initialize(); // Reinitialize after a recompile in the editor
         }
+
+        _mainCameraPosition = _mainCamera.transform.position;
 
         GetInput();
         ProcessInput();
@@ -68,24 +79,25 @@ public class PlayerMovement : MonoBehaviour {
         // Process movement
         if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
         {
-            if (transform.position.x < 18 && transform.position.x > -18)
+
+            if (transform.position.y > -6 && _moveVector.y < 0)
+            {
+                transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+            }
+            if (transform.position.y < 4 && _moveVector.y > 0)
+            {
+                transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+            }
+
+            if (_mainCameraPosition.x - transform.position.x > -11 && _moveVector.x > 0)
             {
                 transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
             }
-            else
-            {
-                transform.position -= new Vector3(_moveVector.x, 0f, 0f) * moveSpeed * 3;
-            }
 
-            if (transform.position.y < 4 && transform.position.y > -9)
+            if (_mainCameraPosition.x - transform.position.x < 11 && _moveVector.x < 0)
             {
-                transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed*(0.65f);
+                transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
             }
-            else
-            {
-                transform.position -= new Vector3(0, _moveVector.y, 0f) * moveSpeed * 3;
-            }
-
             _heroScript.ManageFlipSprite(_moveVector);
         }
 
