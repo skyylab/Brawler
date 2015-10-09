@@ -233,7 +233,7 @@ public abstract class EnemyScript : MonoBehaviour {
         {
             // Die
             _mainCamera.GetComponent<CameraControls>().EnemyKilled();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 

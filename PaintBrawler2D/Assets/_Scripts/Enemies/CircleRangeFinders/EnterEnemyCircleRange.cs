@@ -24,9 +24,11 @@ public class EnterEnemyCircleRange : MonoBehaviour {
     {
         _timerWaitBeforeTryAgain -= Time.deltaTime;
 
-        _target = _parentScript._aquiredTargets[0];
+        if (_parentScript._aquiredTargets.Count > 0) { 
+            _target = _parentScript._aquiredTargets[0];
+        }
 
-        if (_inAttackRange && _timerWaitBeforeTryAgain < 0)
+        if (_inAttackRange && _timerWaitBeforeTryAgain < 0 && _target != null)
         {
             if (_target.GetComponent<HeroScript>().AddAttacker(_parent))
             {
