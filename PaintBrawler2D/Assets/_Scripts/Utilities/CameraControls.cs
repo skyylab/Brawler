@@ -21,6 +21,8 @@ public class CameraControls : MonoBehaviour {
         Players.Add(Player);
     }
 
+    public void SetCameraLock(bool Set) { _cameraLock = Set; }
+
 	// Use this for initialization
 	void Start () {
         GameObject[] PlayerList = GameObject.FindGameObjectsWithTag("Player");
@@ -45,11 +47,6 @@ public class CameraControls : MonoBehaviour {
             NewCamPosition.x = transform.position.x;
             transform.position = Vector3.Slerp(transform.position, NewCamPosition, Time.deltaTime);
         }
-
-        if (EnemyCountOnScreen == 0)
-        {
-            _cameraLock = false;
-        }
     }
 
     Vector3 FindCenterPoint() {
@@ -69,7 +66,6 @@ public class CameraControls : MonoBehaviour {
         {
             _cameraLock = true;
             other.gameObject.GetComponent<EnemyHolder>().ActivateEnemies();
-            EnemyCountOnScreen = GameObject.FindGameObjectsWithTag("Enemy").Length;
             other.gameObject.SetActive(false);
         }
     }

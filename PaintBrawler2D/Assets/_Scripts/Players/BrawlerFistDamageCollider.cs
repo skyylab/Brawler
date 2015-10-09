@@ -34,10 +34,10 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
 
             if (_parentScript.GetCharacterObj().transform.localEulerAngles.y != 0)
             {
-                other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * -2000f);
+                //other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * -2000f);
             }
             else { 
-                other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * 2000f);
+                //other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * 2000f);
             }
         }
     }

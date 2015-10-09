@@ -5,7 +5,7 @@ using System.Collections;
 public class BrawlerClass : HeroScript {
 
     // Class specific stats
-    private int _brawlerDamage = 15;
+    private int _brawlerDamage = 10;
     private int _brawlerArmor = 5;
     private float _brawlerMoveSpeed = 8f;
     private float _brawlerAttackSpeed = 0.2f;

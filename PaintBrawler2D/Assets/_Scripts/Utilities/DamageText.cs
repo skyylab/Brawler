@@ -13,7 +13,8 @@ public class DamageText : MonoBehaviour {
     [SerializeField]
     private Color[] ColorArray = { new Color(217f/255f, 40f/255f, 46f/255f),
                                    new Color(255f/255f, 209f/255f, 64/255f),
-                                   new Color (57f/255f, 212f/255f, 50f/255f) };
+                                   new Color (57f/255f, 212f/255f, 50f/255f),
+                                   new Color (43f/255f, 125f/255f, 225f/255f)};
 
     public void Initialize(int Damage, string SetColor)
     {
@@ -30,10 +31,14 @@ public class DamageText : MonoBehaviour {
             case "Green":
                 color = ColorArray[2];
                 break;
+            case "Blue":
+                color = ColorArray[3];
+                break;
         }
+
+        _textFields[1].GetComponent<Text>().color = color;
         foreach(GameObject x in _textFields)
         {
-            x.GetComponent<Text>().color = color;
             if (SetColor == "Green")
             {
                 x.GetComponent<Text>().text = "+" + Damage.ToString();

@@ -4,7 +4,7 @@ using System.Collections;
 public class SharpShooterClass : HeroScript {
 
     // Class specific stats
-    private int _sharpshooterDamage = 30;
+    private int _sharpshooterDamage = 15;
     private int _sharpshooterArmor = 2;
     private float _sharpshooterMoveSpeed = 12f;
     private float _sharpshooterAttackSpeed = 0.25f;

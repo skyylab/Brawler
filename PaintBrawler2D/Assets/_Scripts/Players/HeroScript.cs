@@ -33,6 +33,8 @@ public abstract class HeroScript : MonoBehaviour {
     protected float _manaRegen = 0f;
     [SerializeField]
     protected bool _attackReady = false;
+    [SerializeField]
+    protected bool _isAlive = true;
     private bool _playDeathOnce = false;
 
     // UI Purposes
@@ -143,7 +145,7 @@ public abstract class HeroScript : MonoBehaviour {
         _hitPoints -= Damage;
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
         GameObject DamageCounter = Instantiate(_damageCounter, transform.position, transform.rotation) as GameObject;
-        DamageCounter.GetComponent<DamageText>().Initialize(Damage, "Red");
+        DamageCounter.GetComponent<DamageText>().Initialize(Damage, "Blue");
     }
 
     public void Jump() {
@@ -161,9 +163,14 @@ public abstract class HeroScript : MonoBehaviour {
             }
 
             if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Death")) {
-                Instantiate(_deadPlayer, transform.position, transform.rotation);
+                _deadPlayer.SetActive(true);
                 _mainCamera.GetComponent<CameraControls>().RemovePlayers(gameObject);
+                Vector3 currentPosition = transform.position;
                 transform.position = new Vector3(300f, 300f, 300f);
+                gameObject.tag = "Untagged";
+                transform.position = currentPosition;
+                _isAlive = false;
+                _characterObj.SetActive(false);
             }
         }
     }
