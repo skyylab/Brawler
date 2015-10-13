@@ -79,6 +79,8 @@ public abstract class EnemyScript : MonoBehaviour {
     // Movement - calculated for sprite direction
     [SerializeField]
     protected Vector2 _lastPosition;
+    [SerializeField]
+    protected float _stunDuration;
 
     [SerializeField]
     protected GameObject[] _objectSprites;
@@ -86,6 +88,7 @@ public abstract class EnemyScript : MonoBehaviour {
     protected GameObject _objectWholeSprite;
     [SerializeField]
     protected GameObject _animatedObj;
+    [SerializeField]
     protected float _moveDirection;
 
     // Color variables
@@ -167,6 +170,16 @@ public abstract class EnemyScript : MonoBehaviour {
         _mainCamera = Camera.main.gameObject;
     }
 
+    public virtual void Update() {
+        _stunDuration -= Time.deltaTime;
+
+        if (_stunDuration > 0) {
+            _animator.Play("Stunned");
+        }
+        else {
+        }
+    }
+
     public void AddToTargetList(GameObject newTarget) {
         _aquiredTargets.Add(newTarget);
     }
@@ -204,8 +217,6 @@ public abstract class EnemyScript : MonoBehaviour {
 
             transform.position = Vector3.MoveTowards(transform.position, centerCameraPosition, Time.deltaTime * _moveSpeed);
         }
-
-
     }
 
     public void AccumulateColor(int Damage, string PrimaryColor)
@@ -234,6 +245,10 @@ public abstract class EnemyScript : MonoBehaviour {
         {
             TakeDamage(Damage, returnPrimaryColor(PrimaryColor));
         }
+    }
+
+    public void Stun(float Duration) {
+        _stunDuration = Duration;
     }
 
     public void TakeDamage(int Damage, Color Color)

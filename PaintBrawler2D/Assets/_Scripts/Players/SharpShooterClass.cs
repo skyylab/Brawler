@@ -44,6 +44,10 @@ public class SharpShooterClass : HeroScript {
     void Update () {
         ManageAttack();
         ManageDeath();
+
+        if(_chargeButtonReleased) { 
+            _chargeAttackTime -= Time.deltaTime;
+        }
     }
 
     private void ManageAttack() {
@@ -53,6 +57,10 @@ public class SharpShooterClass : HeroScript {
         }
         else {
             _attackReady = false;
+        }
+
+        if (_chargeAttackTime > 0 && _chargeButtonReleased && _sharpshooterAttackSpeed < 0) {
+            UnleashChargeAttack();
         }
     }
 
@@ -82,14 +90,30 @@ public class SharpShooterClass : HeroScript {
         }
     }
 
+    private void UnleashChargeAttack() {
+
+        GameObject BulletObj = Instantiate(_bullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+        BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], -_firingDirection, gameObject);
+
+        BulletObj = Instantiate(_bullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+        BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+        Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
+        Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
+
+        _animator.Play("ShootLeft");
+        _animator.Play("ShootRight");
+
+        _sharpshooterAttackSpeed = _attackSpeedReset;
+    }
+
     public override void SecondaryAttack()
     {
-        if (_attackReady == true)
-        {
-            GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
-            BulletObj.GetComponent<BulletScript>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-            Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
-            _animator.Play("Shooting");
-        }
+        //if (_attackReady == true)
+        //{
+        //    GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
+        //    BulletObj.GetComponent<BulletScript>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+        //    Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
+        //    _animator.Play("Shooting");
+        //}
     }
 }

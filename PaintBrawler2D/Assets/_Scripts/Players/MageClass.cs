@@ -22,6 +22,11 @@ public class MageClass : HeroScript {
     [SerializeField]
     private GameObject _firingPointRight;
 
+    [SerializeField]
+    private GameObject _leftHandFire;
+    [SerializeField]
+    private GameObject _rightHandFire;
+
     void Start () {
         InitializeClass(_playerNumber);
         InitializeStats();
@@ -42,6 +47,11 @@ public class MageClass : HeroScript {
     void Update () {
         ManageAttack();
         ManageDeath();
+
+        if (_chargeButtonReleased)
+        {
+            _chargeAttackTime -= Time.deltaTime;
+        }
     }
 
     private void ManageAttack()
@@ -55,6 +65,11 @@ public class MageClass : HeroScript {
         {
             _attackReady = false;
         }
+
+        if (_chargeAttackTime > 0 && _chargeButtonReleased && _mageAttackSpeed < -1)
+        {
+            UnleashChargeAttack();
+        }
     }
 
     public override void Attack()
@@ -63,7 +78,12 @@ public class MageClass : HeroScript {
         {
             _animator.Play("AttackRight");
             GameObject BulletObj = Instantiate(_projectile, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
-            BulletObj.GetComponent<FireballProjectile>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+            BulletObj.GetComponent<FireballProjectile>().Initialize(_primaryColorArray[_playerNumber - 1],
+                                                                    _primaryColorString[_playerNumber - 1],
+                                                                    _firingDirection,
+                                                                    gameObject,
+                                                                    1f + _chargeAttackTime,
+                                                                    _damage);
             //Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
 
             _mageAttackSpeed = _attackSpeedReset;
@@ -76,10 +96,31 @@ public class MageClass : HeroScript {
         {
             _animator.Play("AttackRight");
             GameObject BulletObj = Instantiate(_projectile, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
-            BulletObj.GetComponent<FireballProjectile>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+            BulletObj.GetComponent<FireballProjectile>().Initialize(_primaryColorArray[_playerNumber - 1],
+                                                                    _primaryColorString[_playerNumber - 1],
+                                                                    _firingDirection,
+                                                                    gameObject,
+                                                                    1f + _chargeAttackTime,
+                                                                    _damage);
             //Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
-            
+
             _mageAttackSpeed = _attackSpeedReset;
         }
     }
+
+    private void UnleashChargeAttack()
+    {
+        GameObject BulletObj = Instantiate(_projectile, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+
+        BulletObj.GetComponent<FireballProjectile>().Initialize(_primaryColorArray[_playerNumber - 1], 
+                                                                _primaryColorString[_playerNumber - 1], 
+                                                                _firingDirection, 
+                                                                gameObject, 
+                                                                1f + _chargeAttackTime, 
+                                                                _damage * ((int)_chargeAttackTime + 1));
+        _animator.Play("AttackRight");
+
+        _mageAttackSpeed = _attackSpeedReset;
+    }
+
 }

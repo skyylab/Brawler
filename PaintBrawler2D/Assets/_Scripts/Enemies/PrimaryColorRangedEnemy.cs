@@ -23,11 +23,17 @@ public class PrimaryColorRangedEnemy : EnemyScript {
         RandomCirclePoint = Random.insideUnitCircle;
     }
 
-    void Update()
+    public override void Update()
     {
-        ManageRayCast();
-        ManageEnemyState();
-        ManageSpriteOrientation();
+        base.Update();
+        if (_stunDuration < 0) { 
+            ManageRayCast();
+            ManageEnemyState();
+            ManageSpriteOrientation();
+        }
+        else {
+            // PlayStunAnimation
+        }
     }
 
     public override void Idle() {

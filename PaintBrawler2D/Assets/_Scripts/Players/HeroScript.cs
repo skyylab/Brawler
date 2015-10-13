@@ -37,6 +37,20 @@ public abstract class HeroScript : MonoBehaviour {
     protected bool _isAlive = true;
     private bool _playDeathOnce = false;
 
+    [SerializeField]
+    private ParticleSystem _chargeParticleEffects;
+    [SerializeField]
+    private ParticleSystem _chargeParticleEffects2;
+    [SerializeField]
+    private float _chargeTimerMax = 3f;
+    [SerializeField]
+    private float _chargeTimerMaxReset = 3f;
+
+    [SerializeField]
+    protected float _chargeAttackTime;
+    [SerializeField]
+    protected bool _chargeButtonReleased = false;
+
     // UI Purposes
     [SerializeField]
     protected GameObject _UIHealthBar;
@@ -87,6 +101,28 @@ public abstract class HeroScript : MonoBehaviour {
     protected GameObject _damageCounter;
 
     public virtual void Attack() { }
+    public virtual void ChargeAttack() {
+        float MaxSize = 6f;
+        _chargeButtonReleased = false;
+
+        _chargeParticleEffects2.startSize = 1f;
+
+        if (_chargeParticleEffects.startSize < MaxSize) { 
+            _chargeParticleEffects.startSize += 0.05f;
+            _chargeAttackTime += Time.deltaTime;
+        }
+    }
+    public virtual void ResetChargeAttack()
+    {
+        _chargeParticleEffects2.startSize = 0f;
+        _chargeParticleEffects.startSize = 0f;
+        _chargeButtonReleased = true;
+    }
+
+    public void ChargeAttackReset() {
+        _chargeAttackTime = 0f;
+    }
+
     public virtual void SecondaryAttack() { }
 
     public GameObject GetCharacterObj() { return _characterObj; }

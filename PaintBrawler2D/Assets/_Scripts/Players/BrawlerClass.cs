@@ -5,7 +5,7 @@ using System.Collections;
 public class BrawlerClass : HeroScript {
 
     // Class specific stats
-    private int _brawlerDamage = 10;
+    private int _brawlerDamage = 6;
     private int _brawlerArmor = 5;
     private float _brawlerMoveSpeed = 8f;
     private float _brawlerAttackSpeed = 0.2f;
@@ -27,12 +27,15 @@ public class BrawlerClass : HeroScript {
     [SerializeField]
     private AudioClip _attack3_SFX;
 
+    [SerializeField]
+    private GameObject _stunningObj;
+
     private float _audioVolume = 0.6f;
 
     private AudioSource _audio;
 
 
-    public int GetBrawlerDamage() { return _brawlerDamage; }
+    public int GetBrawlerDamage() { return _damage; }
 
     // Use this for initialization
     void Start () {
@@ -40,7 +43,6 @@ public class BrawlerClass : HeroScript {
         InitializeStats();
 
         _animator = _characterObj.GetComponent<Animator>();
-
         _audio = GetComponent<AudioSource>();
     }
 	
@@ -57,8 +59,9 @@ public class BrawlerClass : HeroScript {
         _hitPointMax = _hitPoints;
     }
 
+    // Unused due to balance issues - may reimplement
     public void AttackRegen()
-    {
+    {   
         if ((_hitPoints + _damage / 10) < _hitPointMax) { 
             _hitPoints += _damage / 10;
             GameObject DamageCounter = Instantiate(_damageCounter, transform.position, transform.rotation) as GameObject;
@@ -84,6 +87,15 @@ public class BrawlerClass : HeroScript {
         
         ManageCombo();
         ManageDeath();
+
+        if (_chargeButtonReleased)
+        {
+            _chargeAttackTime -= Time.deltaTime;
+        }
+
+        if (_chargeAttackTime < 0) {
+            _stunningObj.SetActive(false);
+        }
     }
 
     void ManageCombo()
@@ -96,13 +108,7 @@ public class BrawlerClass : HeroScript {
         {
             _comboCounter = 0;
         }
-
-        //if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") &&
-        //    !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2")) {
-
-        //    GetComponent<PlayerMovement>().moveSpeed = _moveSpeedBrawlerSet;
-        //}
-
+        
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") &&
             !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2") &&
             !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 3"))
@@ -113,7 +119,11 @@ public class BrawlerClass : HeroScript {
         else {
             _fistDamageColliderLeft.SetActive(true);
             _fistDamageColliderRight.SetActive(true);
-            //GetComponent<PlayerMovement>().moveSpeed = 0;
+        }
+
+        if (_chargeAttackTime > 0 && _chargeButtonReleased)
+        {
+            UnleashChargeAttack();
         }
     }
 
@@ -131,16 +141,19 @@ public class BrawlerClass : HeroScript {
             {
                 case 0:
                     _animator.Play("Attack 1");
+                    _damage = _brawlerDamage;
                     _audio.PlayOneShot(_attack1_SFX, _audioVolume);
                     _fistDamageColliderLeft.SetActive(true);
                     break;
                 case 1:
                     _animator.Play("Attack 2");
+                    _damage = _brawlerDamage;
                     _audio.PlayOneShot(_attack2_SFX, _audioVolume);
                     _fistDamageColliderRight.SetActive(true);
                     break;
                 case 2:
                     _animator.Play("Attack 3");
+                    _damage = _brawlerDamage / 3;
                     _audio.PlayOneShot(_attack3_SFX, _audioVolume);
                     _fistDamageColliderLeft.SetActive(true);
                     _fistDamageColliderRight.SetActive(true);
@@ -154,5 +167,10 @@ public class BrawlerClass : HeroScript {
             _comboCounter++;
         }
     }
-    
+
+    private void UnleashChargeAttack()
+    {
+        _stunningObj.SetActive(true);
+    }
+
 }

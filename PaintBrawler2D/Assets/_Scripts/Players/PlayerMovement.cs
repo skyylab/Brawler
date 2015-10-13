@@ -31,11 +31,15 @@ public class PlayerMovement : MonoBehaviour {
     private float _restrictXLeft;
     private float _restrictXRight;
 
+    private float _chargeThresholdTimer = 0.2f;
+    private float _chargeThresholdTimerReset;
+
     void Awake()
     {
         // Get the character controller
         _heroScript = GetComponent<HeroScript>();
         _mainCamera = GameObject.FindWithTag("MainCamera");
+        _chargeThresholdTimerReset = _chargeThresholdTimer;
     }
 
     private void Initialize()
@@ -66,8 +70,8 @@ public class PlayerMovement : MonoBehaviour {
         // Get the input from the Rewired Player. All controllers that the Player owns will contribute, so it doesn't matter
         // whether the input is coming from a joystick, the keyboard, mouse, or a custom controller.
 
-        _pressAttack1 = _player.GetButtonDown(Actions.Default.PrimaryAttack);
-        _pressAttack2 = _player.GetButtonDown(Actions.Default.SecondaryAttack);
+        _pressAttack1 = _player.GetButton(Actions.Default.PrimaryAttack);
+        _pressAttack2 = _player.GetButton(Actions.Default.SecondaryAttack);
         _pressJump = _player.GetButtonDown(Actions.Default.Jump);
 
         _moveVector.x = _player.GetAxis(Actions.Default.MoveHoriz);
@@ -81,31 +85,26 @@ public class PlayerMovement : MonoBehaviour {
             // Process movement
             if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
             {
-
-                if (transform.position.y > -6 && _moveVector.y < 0)
-                {
-                    transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
-                }
-                if (transform.position.y < 4 && _moveVector.y > 0)
-                {
-                    transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
-                }
-
-                if (_mainCameraPosition.x - transform.position.x > -11 && _moveVector.x > 0)
-                {
-                    transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
-                }
-
-                if (_mainCameraPosition.x - transform.position.x < 11 && _moveVector.x < 0)
-                {
-                    transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
-                }
-                _heroScript.ManageFlipSprite(_moveVector);
+                ProcessMovement();
             }
 
             if (_pressAttack1)
             {
-                _heroScript.Attack();
+                _chargeThresholdTimer -= Time.deltaTime;
+
+                if (_chargeThresholdTimer < 0) {
+                    _heroScript.ChargeAttack();
+                }
+                else
+                {
+                    _heroScript.Attack();
+                    _heroScript.ChargeAttackReset();
+                }
+            }
+            else
+            {
+                _heroScript.ResetChargeAttack();
+                _chargeThresholdTimer = _chargeThresholdTimerReset;
             }
 
             if (_pressAttack2)
@@ -118,5 +117,27 @@ public class PlayerMovement : MonoBehaviour {
                 _heroScript.Jump();
             }
         }
+    }
+
+    private void ProcessMovement() {
+        if (transform.position.y > -6 && _moveVector.y < 0)
+        {
+            transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+        }
+        if (transform.position.y < 4 && _moveVector.y > 0)
+        {
+            transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+        }
+
+        if (_mainCameraPosition.x - transform.position.x > -11 && _moveVector.x > 0)
+        {
+            transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+        }
+
+        if (_mainCameraPosition.x - transform.position.x < 11 && _moveVector.x < 0)
+        {
+            transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+        }
+        _heroScript.ManageFlipSprite(_moveVector);
     }
 }

@@ -7,6 +7,8 @@ public class FireballProjectile : MonoBehaviour {
     private MageClass _parentScript;
     private Color _color;
 
+    private int _damage;
+
     private float _moveSpeed = 0.5f;
     private int _firingDirection = 1;
     private float _life = 2.0f;
@@ -14,6 +16,8 @@ public class FireballProjectile : MonoBehaviour {
 
     [SerializeField]
     private GameObject _fireballSprite;
+    [SerializeField]
+    private GameObject _fireballSpriteInner;
     [SerializeField]
     private GameObject _explosion;
 
@@ -39,7 +43,7 @@ public class FireballProjectile : MonoBehaviour {
         }
     }
 
-    public void Initialize(Color color, string colorName, int Direction, GameObject parent)
+    public void Initialize(Color color, string colorName, int Direction, GameObject parent, float size, int Damage)
     {
         _colorName = colorName;
         _parent = parent;
@@ -47,14 +51,20 @@ public class FireballProjectile : MonoBehaviour {
         _fireballSprite.GetComponent<ParticleSystem>().startColor = color;
         _color = color;
         _firingDirection = Direction;
+        transform.localScale *= size;
+
+        _damage = Damage;
+
+        _fireballSprite.GetComponent<ParticleSystem>().startSize *= size;
+        _fireballSpriteInner.GetComponent<ParticleSystem>().startSize *= size;
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Enemy")
         {
-            other.transform.gameObject.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetDamage(),
-                                                                                              _parentScript.GetPrimaryColorString());
+            other.transform.gameObject.GetComponent<EnemyScript>().AccumulateColor(_damage, _parentScript.GetPrimaryColorString());
+
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);
             //Destroy(gameObject);

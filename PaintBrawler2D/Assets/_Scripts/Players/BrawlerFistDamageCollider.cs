@@ -25,8 +25,6 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
                                                                          _parentScript.GetPrimaryColorString());
 
             Instantiate(_powPrefab, transform.position + transform.right, transform.rotation);
-            _parentScript.AttackRegen();
-
             
             int RandomNumber = Random.Range(0, 3);
             _audio.pitch = Random.Range(0.8f, 1.2f);
