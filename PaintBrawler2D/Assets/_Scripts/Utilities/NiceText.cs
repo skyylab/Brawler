@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class DamageText : MonoBehaviour {
+public class NiceText : MonoBehaviour {
     [SerializeField]
     private float _showTimer = 1f;
     [SerializeField]
@@ -17,7 +17,17 @@ public class DamageText : MonoBehaviour {
                                    new Color (43f/255f, 125f/255f, 225f/255f),
                                    new Color (130f/255f, 83f/255f, 137f/255f)};
 
-    public void Initialize(int Damage, string SetColor)
+    // 0 - bad sound, 1 - good sound, 2 - great sound
+    [SerializeField]
+    private AudioClip[] _audioSounds;
+    [SerializeField]
+    private AudioSource _audio;
+
+    void Awake() {
+        _audio = GetComponent<AudioSource>();
+    }
+
+    public void Initialize(string SetColor, string SetString, int soundIndex)
     {
 
         Color color = new Color(1f, 1f, 1f);
@@ -42,18 +52,13 @@ public class DamageText : MonoBehaviour {
                 color = ColorArray[5];
                 break;
         }
+        
+        _audio.PlayOneShot(_audioSounds[soundIndex], 0.4f);
 
         _textFields[1].GetComponent<Text>().color = color;
-        foreach(GameObject x in _textFields)
-        {
-            if (SetColor == "Green")
-            {
-                x.GetComponent<Text>().text = "+" + Damage.ToString();
-            }
-            else
-            {
-                x.GetComponent<Text>().text = Damage.ToString();
-            }
+
+        foreach(GameObject x in _textFields) {
+            x.GetComponent<Text>().text = SetString;
         }
     }
 	// Update is called once per frame

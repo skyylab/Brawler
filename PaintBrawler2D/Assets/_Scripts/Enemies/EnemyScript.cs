@@ -130,6 +130,9 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected bool _isOffScreen;
 
+    [SerializeField]
+    private GameObject _niceText;
+
     // Virtual functions
     public virtual void Attack(){ }
     // Idle Animations
@@ -247,6 +250,16 @@ public abstract class EnemyScript : MonoBehaviour {
         }
     }
 
+    public void GainStats(float scalingValue, int damageIncrease, int HPIncrease) {
+        transform.localScale *= scalingValue;
+        _damage += damageIncrease;
+        _hitPoints += HPIncrease;
+
+
+        GameObject Text = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
+        Text.GetComponent<NiceText>().Initialize("Red", "Absorbed!", 0);
+    }
+
     public void Stun(float Duration) {
         _stunDuration = Duration;
     }
@@ -264,6 +277,20 @@ public abstract class EnemyScript : MonoBehaviour {
             _healthSlider.GetComponent<Slider>().value = _hitPoints;
             GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
             DamageText.GetComponent<DamageText>().Initialize(Damage, "Red");
+
+            if (_colorType == ColorType.Primary) {
+                DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
+                DamageText.GetComponent<NiceText>().Initialize(returnColorString(Color), "Nice!", 1);
+            }
+
+            if (_colorType == ColorType.Secondary)
+            {
+                DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
+                DamageText.GetComponent<NiceText>().Initialize(returnColorString(Color), "Great!", 2);
+            }
+        }
+        else {
+            GainStats(1.1f, 5, 10);
         }
 
         if (_hitPoints < 0)
@@ -289,6 +316,18 @@ public abstract class EnemyScript : MonoBehaviour {
                 return _primaryColorArray[2];
         }
         return new Color(0f, 0f, 0f);
+    }
+
+    protected string returnColorString(Color Color1)
+    {
+        if (Color1 == new Color(217f / 255f, 40f / 255f, 46f / 255f)) { return "Red"; }
+        else if (Color1 == new Color(255f / 255f, 209f / 255f, 64 / 255f)) { return "Yellow"; }
+        else if (Color1 == new Color(43f / 255f, 125f / 255f, 225f / 255f)) { return "Blue"; }
+        else if (Color1 == new Color(57f / 255f, 212f / 255f, 50f / 255f)) { return "Green"; }
+        else if (Color1 == new Color(130f / 255f, 83f / 255f, 137f / 255f)) { return "Purple"; }
+        else if (Color1 == new Color(234f / 255f, 123f / 255f, 54f / 255f)) { return "Orange"; }
+        
+        return "";
     }
 
     protected Color MixColor(string Color1, string Color2) {
