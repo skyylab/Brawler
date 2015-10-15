@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour {
     private bool _pressJump;
     private bool _pressAttack1;
     private bool _pressAttack2;
+    private bool _pressSpecial;
 
     private HeroScript _heroScript;
 
@@ -73,6 +74,7 @@ public class PlayerMovement : MonoBehaviour {
         _pressAttack1 = _player.GetButton(Actions.Default.PrimaryAttack);
         _pressAttack2 = _player.GetButton(Actions.Default.SecondaryAttack);
         _pressJump = _player.GetButtonDown(Actions.Default.Jump);
+        _pressSpecial = _player.GetButtonDown(Actions.Default.SpecialAttack);
 
         _moveVector.x = _player.GetAxis(Actions.Default.MoveHoriz);
         _moveVector.y = _player.GetAxis(Actions.Default.MoveVert);
@@ -115,6 +117,11 @@ public class PlayerMovement : MonoBehaviour {
             if (_pressJump)
             {
                 _heroScript.Jump();
+            }
+
+            if (_pressSpecial && !_heroScript.GetSpecialStatus())
+            {
+                _heroScript.SpecialAttack();
             }
         }
     }

@@ -1,9 +1,11 @@
-// This file (RewiredConstants.cs) is auto-generated. Modifications are not saved.
+/* This file (RewiredConstants.cs) is auto-generated. Modifications are not saved. */
 
 namespace RewiredConstants {
     public static class Players {
         public const int System = 9999999;
         public const int Player0 = 0;
+        public const int Player1 = 1;
+        public const int Player2 = 2;
     }
 
     public static class Actions {
@@ -43,6 +45,12 @@ namespace RewiredConstants {
             /// Type: Button
             /// </summary>
             public const int Jump = 4;
+
+            /// <summary>
+            /// Descriptive Name: SpecialAttack
+            /// Type: Button
+            /// </summary>
+            public const int SpecialAttack = 5;
         }
     }
 }

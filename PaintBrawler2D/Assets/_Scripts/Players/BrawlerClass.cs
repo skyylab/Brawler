@@ -9,7 +9,11 @@ public class BrawlerClass : HeroScript {
     private int _brawlerArmor = 5;
     private float _brawlerMoveSpeed = 8f;
     private float _brawlerAttackSpeed = 0.2f;
-    private float _brawlerManaRegen = 5f;
+    private float _brawlerManaRegenTimer = 0.6f;
+    private float _brawlerManaRegenTimerReset;
+
+    private int _attackManaCost = 5;
+    private int _manaRegenValue = 1;
 
     private float _comboTimer = 2f;
     private float _comboTimerReset = 0.5f;
@@ -19,6 +23,10 @@ public class BrawlerClass : HeroScript {
     private GameObject _fistDamageColliderLeft;
     [SerializeField]
     private GameObject _fistDamageColliderRight;
+    [SerializeField]
+    private GameObject _fistStunColliderLeft;
+    [SerializeField]
+    private GameObject _fistStunColliderRight;
 
     [SerializeField]
     private AudioClip _attack1_SFX;
@@ -34,6 +42,12 @@ public class BrawlerClass : HeroScript {
 
     private AudioSource _audio;
 
+    // Special Attack Stuff
+    private float _specialAttackTimer = 20f;
+    private float _specialAttackTimerReset;
+    private int _addedHP = 50;
+    private int _addedDamage = 3;
+    private float _addedScale = 1.5f;
 
     public int GetBrawlerDamage() { return _damage; }
 
@@ -42,6 +56,8 @@ public class BrawlerClass : HeroScript {
         InitializeClass(_playerNumber);
         InitializeStats();
 
+        _specialAttackTimerReset = _specialAttackTimer;
+        _brawlerManaRegenTimerReset = _brawlerManaRegenTimer;
         _animator = _characterObj.GetComponent<Animator>();
         _audio = GetComponent<AudioSource>();
     }
@@ -51,7 +67,7 @@ public class BrawlerClass : HeroScript {
         _armor = _brawlerArmor;
         _moveSpeed = _brawlerMoveSpeed;
         _attackSpeed = _brawlerAttackSpeed;
-        _manaRegen = _brawlerManaRegen;
+        _manaRegen = _brawlerManaRegenTimer;
 
         _fistDamageColliderLeft.SetActive(false);
         _fistDamageColliderRight.SetActive(false);
@@ -76,6 +92,7 @@ public class BrawlerClass : HeroScript {
 
 	// Update is called once per frame
 	void Update () {
+
         if (_attackReady == false) {
             _coolDown -= Time.deltaTime;
         }
@@ -87,6 +104,7 @@ public class BrawlerClass : HeroScript {
         
         ManageCombo();
         ManageDeath();
+        ManageMana();
 
         if (_chargeButtonReleased)
         {
@@ -95,6 +113,33 @@ public class BrawlerClass : HeroScript {
 
         if (_chargeAttackTime < 0) {
             _stunningObj.SetActive(false);
+        }
+
+        if (_specialActive)
+        {
+            _specialAttackTimer -= Time.deltaTime;
+
+            if (_specialAttackTimer < 0)
+            {
+                DeactivateSpecial();
+                _specialAttackTimer = _specialAttackTimerReset;
+            }
+        }
+    }
+
+    void ManageMana()
+    {
+        _UIManaBar.GetComponent<Slider>().value = _manaPoints;
+
+        _manaRegen -= Time.deltaTime;
+
+        if (_manaRegen < 0)
+        {
+            if (_manaPoints + _manaRegenValue < _manaPointsMax)
+            {
+                _manaPoints += _manaRegenValue;
+                _manaRegen = _brawlerManaRegenTimerReset;
+            }
         }
     }
 
@@ -115,10 +160,22 @@ public class BrawlerClass : HeroScript {
         {
             _fistDamageColliderLeft.SetActive(false);
             _fistDamageColliderRight.SetActive(false);
+            _fistStunColliderLeft.SetActive(false);
+            _fistStunColliderRight.SetActive(false);
+
+            _secondaryAttackActive = false;
         }
         else {
-            _fistDamageColliderLeft.SetActive(true);
-            _fistDamageColliderRight.SetActive(true);
+            if (_secondaryAttackActive)
+            {
+                _fistStunColliderLeft.SetActive(true);
+                _fistStunColliderRight.SetActive(true);
+            }
+            else
+            {
+                _fistDamageColliderLeft.SetActive(true);
+                _fistDamageColliderRight.SetActive(true);
+            }
         }
 
         if (_chargeAttackTime > 0 && _chargeButtonReleased)
@@ -166,6 +223,73 @@ public class BrawlerClass : HeroScript {
             }
             _comboCounter++;
         }
+    }
+
+    public override void SecondaryAttack()
+    {
+        base.SecondaryAttack();
+
+        _secondaryAttackActive = true;
+
+        if (_attackReady == true && _manaPoints > 0)
+        {
+            _attackReady = false;
+
+            _comboTimer = _comboTimerReset;
+
+            _audio.pitch = Random.Range(0.8f, 1.2f);
+
+            _manaPoints -= 5;
+
+            _manaRegen = _brawlerManaRegenTimerReset;
+            // TURN ON FISTS!
+            switch (_comboCounter)
+            {
+                case 0:
+                    _animator.Play("Attack 1");
+                    _damage = _brawlerDamage;
+                    _audio.PlayOneShot(_attack1_SFX, _audioVolume);
+                    _fistStunColliderLeft.SetActive(true);
+                    break;
+                case 1:
+                    _animator.Play("Attack 2");
+                    _damage = _brawlerDamage;
+                    _audio.PlayOneShot(_attack2_SFX, _audioVolume);
+                    _fistStunColliderRight.SetActive(true);
+                    break;
+                case 2:
+                    _animator.Play("Attack 3");
+                    _damage = _brawlerDamage / 3;
+                    _audio.PlayOneShot(_attack3_SFX, _audioVolume);
+                    _fistStunColliderLeft.SetActive(true);
+                    _fistStunColliderRight.SetActive(true);
+                    _comboTimer = 0.5f;
+                    break;
+                default:
+                    _comboCounter = 0;
+                    _comboTimer = 0f;
+                    break;
+            }
+            _comboCounter++;
+        }
+    }
+
+    public override void SpecialAttack()
+    {
+        base.SpecialAttack();
+        transform.localScale *= _addedScale;
+        _damage += _addedDamage;
+        _hitPoints += _addedHP;
+        _hitPointMax += _addedHP;
+        _specialActive = true;
+    }
+
+    public void DeactivateSpecial()
+    {
+        transform.localScale = new Vector3(1f, 1f, 1f);
+        _damage = _brawlerDamage;
+        _hitPoints = 150;
+        _specialActive = false;
     }
 
     private void UnleashChargeAttack()

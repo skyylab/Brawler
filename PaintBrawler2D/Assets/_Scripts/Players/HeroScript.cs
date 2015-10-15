@@ -18,6 +18,8 @@ public abstract class HeroScript : MonoBehaviour {
     [SerializeField]
     protected int _manaPoints = 100;
     [SerializeField]
+    protected int _manaPointsMax = 100;
+    [SerializeField]
     protected int _playerNumber;
     [SerializeField]
     protected int _damage = 0;
@@ -100,6 +102,13 @@ public abstract class HeroScript : MonoBehaviour {
     [SerializeField]
     protected GameObject _damageCounter;
 
+    [SerializeField]
+    protected bool _secondaryAttackActive = false;
+    [SerializeField]
+    protected bool _specialActive = false;
+
+
+    public bool GetSpecialStatus() { return _specialActive; }
     public virtual void Attack() { }
     public virtual void ChargeAttack() {
         float MaxSize = 6f;
@@ -112,6 +121,7 @@ public abstract class HeroScript : MonoBehaviour {
             _chargeAttackTime += Time.deltaTime;
         }
     }
+
     public virtual void ResetChargeAttack()
     {
         _chargeParticleEffects2.startSize = 0f;
@@ -124,6 +134,8 @@ public abstract class HeroScript : MonoBehaviour {
     }
 
     public virtual void SecondaryAttack() { }
+
+    public virtual void SpecialAttack() { }
 
     public GameObject GetCharacterObj() { return _characterObj; }
     public string GetPrimaryColorString() { return _currentPrimaryColor; }
