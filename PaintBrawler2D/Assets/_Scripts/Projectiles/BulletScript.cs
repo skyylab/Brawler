@@ -6,6 +6,9 @@ public class BulletScript : MonoBehaviour {
     private GameObject _parent;
     private SharpShooterClass _parentScript;
 
+    [SerializeField]
+    private GameObject _particles;
+
     private float _moveSpeed = 0.5f;
     private int _firingDirection = 1;
     private float _life = 2.0f;
@@ -55,6 +58,7 @@ public class BulletScript : MonoBehaviour {
 
             GetComponent<BoxCollider2D>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
+            _particles.SetActive(false);
         }
     }
 }

@@ -105,35 +105,4 @@ public class PrimaryColorEnemy : EnemyScript {
         _coolDown = _coolDownSet;
     }
 
-    protected void ManageEnemyState()
-    {
-        switch (_currentState)
-        {
-            case EnemyState.initializing:
-                _currentState = EnemyState.idle;
-                break;
-            case EnemyState.idle:
-                Idle();
-                break;
-            case EnemyState.sawPlayer:
-                SawPlayer();
-                break;
-            // Move close to the target
-            case EnemyState.chasing:
-                Chasing();
-                break;
-            // Separate - start circling around the target
-            case EnemyState.circling:
-                Circling();
-                break;
-            case EnemyState.attacking:
-                Attacking();
-                break;
-            case EnemyState.fleeing:
-                Fleeing();
-                break;
-            default:
-                break;
-        }
-    }
 }

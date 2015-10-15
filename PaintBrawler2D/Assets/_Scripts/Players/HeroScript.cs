@@ -40,6 +40,15 @@ public abstract class HeroScript : MonoBehaviour {
     private bool _playDeathOnce = false;
 
     [SerializeField]
+    protected float _manaRegenTimer = 0.6f;
+    [SerializeField]
+    protected float _manaRegenTimerReset;
+    [SerializeField]
+    protected int _attackManaCost = 5;
+    [SerializeField]
+    protected int _manaRegenValue = 1;
+
+    [SerializeField]
     private ParticleSystem _chargeParticleEffects;
     [SerializeField]
     private ParticleSystem _chargeParticleEffects2;
@@ -143,6 +152,19 @@ public abstract class HeroScript : MonoBehaviour {
 
     protected int _firingDirection = -1;
 
+    public virtual void Start() {
+        _manaRegenTimerReset = _manaRegenTimer;
+    }
+
+    public virtual void Update() {
+        ManageMana();
+
+        if (_chargeButtonReleased)
+        {
+            _chargeAttackTime -= Time.deltaTime;
+        }
+    }
+
     public bool AddAttacker(GameObject Attacker) {
         if (_maxAttackerNum > AttackerList.Count && !AttackerList.Contains(Attacker)) { 
             AttackerList.Add(Attacker);
@@ -220,6 +242,25 @@ public abstract class HeroScript : MonoBehaviour {
                 transform.position = currentPosition;
                 _isAlive = false;
                 _characterObj.SetActive(false);
+            }
+        }
+    }
+
+    protected void ManageMana()
+    {
+        _UIManaBar.GetComponent<Slider>().value = _manaPoints;
+
+        _manaRegen -= Time.deltaTime;
+
+        if (_manaRegen < 0)
+        {
+            if (_manaPoints + _manaRegenValue < _manaPointsMax)
+            {
+                _manaPoints += _manaRegenValue;
+                _manaRegen = _manaRegenTimerReset;
+            }
+            else {
+                _manaPoints = _manaPointsMax;
             }
         }
     }

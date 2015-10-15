@@ -16,16 +16,28 @@ public class SharpShooterClass : HeroScript {
     [SerializeField]
     private GameObject _bullet;
     [SerializeField]
+    private GameObject _secondaryBullet;
+    [SerializeField]
     private GameObject _muzzleFlash;
+    [SerializeField]
+    private GameObject _secondaryMuzzleFlash;
     [SerializeField]
     private GameObject _firingPointLeft;
     [SerializeField]
     private GameObject _firingPointRight;
 
+    [SerializeField]
+    private float _specialAttackTimer = 5f;
+    private float _specialAttackTimerReset;
+    [SerializeField]
+    private float _specialAttackSpeed = 0.15f;
+    private float _specialAttackSpeedReset;
+
     private bool _fireLeft = true;
     // Use this for initialization
-    void Start()
+    public override void Start()
     {
+        base.Start();
         InitializeClass(_playerNumber);
         InitializeStats();
     }
@@ -38,20 +50,22 @@ public class SharpShooterClass : HeroScript {
         _attackSpeed = _sharpshooterAttackSpeed;
         _manaRegen = _sharpshooterManaRegen;
         _animator = _characterObj.GetComponent<Animator>();
+        _specialAttackTimerReset = _specialAttackTimer;
+        _specialAttackTimer = 0f;
+        _specialAttackSpeedReset = _specialAttackSpeed;
     }
 
     // Update is called once per frame
-    void Update () {
+    public override void Update () {
+        base.Update();
         ManageAttack();
         ManageDeath();
-
-        if(_chargeButtonReleased) { 
-            _chargeAttackTime -= Time.deltaTime;
-        }
     }
 
     private void ManageAttack() {
         _sharpshooterAttackSpeed -= Time.deltaTime;
+        _specialAttackSpeed -= Time.deltaTime;
+        _specialAttackTimer -= Time.deltaTime;
         if (_sharpshooterAttackSpeed < 0) {
             _attackReady = true;
         }
@@ -61,6 +75,10 @@ public class SharpShooterClass : HeroScript {
 
         if (_chargeAttackTime > 0 && _chargeButtonReleased && _sharpshooterAttackSpeed < 0) {
             UnleashChargeAttack();
+        }
+
+        if (_specialAttackTimer > 0 && _specialAttackSpeed < 0) {
+            SpecialAttackSingleFire();
         }
     }
 
@@ -108,12 +126,50 @@ public class SharpShooterClass : HeroScript {
 
     public override void SecondaryAttack()
     {
-        //if (_attackReady == true)
-        //{
-        //    GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
-        //    BulletObj.GetComponent<BulletScript>().Initialize(_secondaryColorArray[_playerNumber - 1], _secondaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-        //    Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
-        //    _animator.Play("Shooting");
-        //}
+        if (_attackReady == true)
+        {
+            if (_fireLeft)
+            {
+                GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
+                BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+                Instantiate(_secondaryMuzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
+
+                _animator.Play("ShootLeft");
+                _sharpshooterAttackSpeed = _attackSpeedReset;
+                _fireLeft = false;
+            }
+            else
+            {
+                GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+                BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+                Instantiate(_secondaryMuzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
+
+                _animator.Play("ShootRight");
+                _sharpshooterAttackSpeed = _attackSpeedReset;
+                _fireLeft = true;
+            }
+            _manaPoints -= _attackManaCost;
+        }
+    }
+
+    public override void SpecialAttack()
+    {
+        base.SpecialAttack();
+        _specialAttackTimer = _specialAttackTimerReset;
+    }
+
+    private void SpecialAttackSingleFire() {
+        GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+        BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+
+        BulletObj = Instantiate(_secondaryBullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+        BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+        Instantiate(_secondaryMuzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
+        Instantiate(_secondaryMuzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
+
+        _animator.Play("ShootLeft");
+        _animator.Play("ShootRight");
+
+        _specialAttackSpeed = _specialAttackSpeedReset;
     }
 }

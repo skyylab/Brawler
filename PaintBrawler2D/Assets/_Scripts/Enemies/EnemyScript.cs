@@ -72,9 +72,25 @@ public abstract class EnemyScript : MonoBehaviour {
         chasing,
         circling,
         attacking,
-        fleeing
+        fleeing,
+        pulled
     }
     public EnemyState _currentState = EnemyState.initializing;
+
+    // Status variables
+
+    [SerializeField]
+    protected GameObject _fleeTarget;
+    [SerializeField]
+    protected bool _notColored;
+    [SerializeField]
+    protected bool _currentlyPulled;
+    [SerializeField]
+    protected float _pullTimer = 2f;
+    protected float _pullTimerReset;
+
+    [SerializeField]
+    protected bool _isOffScreen;
 
     // Movement - calculated for sprite direction
     [SerializeField]
@@ -123,15 +139,10 @@ public abstract class EnemyScript : MonoBehaviour {
     protected GameObject _colorExplosion;
 
     [SerializeField]
-    protected GameObject _fleeTarget;
-    [SerializeField]
-    protected bool _notColored;
-
-    [SerializeField]
-    protected bool _isOffScreen;
-
-    [SerializeField]
     private GameObject _niceText;
+
+    [SerializeField]
+    private GameObject _pullLocation;
 
     // Virtual functions
     public virtual void Attack(){ }
@@ -145,6 +156,22 @@ public abstract class EnemyScript : MonoBehaviour {
     public virtual void Attacking() { }
     // Flee
     public virtual void Fleeing() { }
+    // Attack
+    public virtual void Pulling() {
+        _pullTimer -= Time.deltaTime;
+
+        if (_pullTimer > 0) {
+            transform.position = Vector2.MoveTowards(transform.position, _pullLocation.transform.position, Time.deltaTime * 30);
+
+            if (transform.position.x >= _pullLocation.transform.position.x - 1f && transform.position.x <= _pullLocation.transform.position.x + 1f) {
+                _pullTimer = -1;
+                Stun(2f);
+            }
+        }
+        else {
+            _currentState = EnemyState.chasing;
+        }
+    }
 
     public virtual void ManageMovement() { }
 
@@ -168,9 +195,12 @@ public abstract class EnemyScript : MonoBehaviour {
     public int AttackListSize() { return _attackTargets.Count; }
     public int GetDamage() { return _damage; }
 
+    public string GetColorString() { return ReturnColorString(_secondaryColor); }
+
     void Awake()
     {
         _mainCamera = Camera.main.gameObject;
+        _pullTimerReset = _pullTimer;
     }
 
     public virtual void Update() {
@@ -264,6 +294,22 @@ public abstract class EnemyScript : MonoBehaviour {
         _stunDuration = Duration;
     }
 
+    public void TakeFlatDamage(int Damage) {
+
+        GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
+        DamageText.GetComponent<DamageText>().Initialize(Damage, "Red");
+        _hitPoints -= Damage;
+        _healthSlider.GetComponent<Slider>().value = _hitPoints;
+
+        if (_hitPoints < 0)
+        {
+            // Die
+            _mainCamera.GetComponent<CameraControls>().EnemyKilled();
+            gameObject.transform.parent = GameObject.Find("UnusedObjects").transform;
+            gameObject.SetActive(false);
+        }
+    }
+
     public void TakeDamage(int Damage, Color Color)
     {
         if (_colorType == ColorType.NonColored)
@@ -280,13 +326,13 @@ public abstract class EnemyScript : MonoBehaviour {
 
             if (_colorType == ColorType.Primary) {
                 DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
-                DamageText.GetComponent<NiceText>().Initialize(returnColorString(Color), "Nice!", 1);
+                DamageText.GetComponent<NiceText>().Initialize(ReturnColorString(Color), "Nice!", 1);
             }
 
             if (_colorType == ColorType.Secondary)
             {
                 DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
-                DamageText.GetComponent<NiceText>().Initialize(returnColorString(Color), "Great!", 2);
+                DamageText.GetComponent<NiceText>().Initialize(ReturnColorString(Color), "Great!", 2);
             }
         }
         else {
@@ -318,7 +364,7 @@ public abstract class EnemyScript : MonoBehaviour {
         return new Color(0f, 0f, 0f);
     }
 
-    protected string returnColorString(Color Color1)
+    protected string ReturnColorString(Color Color1)
     {
         if (Color1 == new Color(217f / 255f, 40f / 255f, 46f / 255f)) { return "Red"; }
         else if (Color1 == new Color(255f / 255f, 209f / 255f, 64 / 255f)) { return "Yellow"; }
@@ -519,6 +565,47 @@ public abstract class EnemyScript : MonoBehaviour {
         _returnVector = new Vector2(_x, _y);
         // return the vector info
         return _returnVector;
+    }
+
+    public void PullObject(GameObject PullLocation) {
+        _currentState = EnemyState.pulled;
+        _pullTimer = _pullTimerReset;
+        _pullLocation = PullLocation.GetComponent<DrawSpots>().ReturnSpot(ReturnColorString(_secondaryColor));
+    }
+
+    protected void ManageEnemyState()
+    {
+        switch (_currentState)
+        {
+            case EnemyState.initializing:
+                _currentState = EnemyState.idle;
+                break;
+            case EnemyState.idle:
+                Idle();
+                break;
+            case EnemyState.sawPlayer:
+                SawPlayer();
+                break;
+            // Move close to the target
+            case EnemyState.chasing:
+                Chasing();
+                break;
+            // Separate - start circling around the target
+            case EnemyState.circling:
+                Circling();
+                break;
+            case EnemyState.attacking:
+                Attacking();
+                break;
+            case EnemyState.fleeing:
+                Fleeing();
+                break;
+            case EnemyState.pulled:
+                Pulling();
+                break;
+            default:
+                break;
+        }
     }
 
 }

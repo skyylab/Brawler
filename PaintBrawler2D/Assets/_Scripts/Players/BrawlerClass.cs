@@ -9,11 +9,6 @@ public class BrawlerClass : HeroScript {
     private int _brawlerArmor = 5;
     private float _brawlerMoveSpeed = 8f;
     private float _brawlerAttackSpeed = 0.2f;
-    private float _brawlerManaRegenTimer = 0.6f;
-    private float _brawlerManaRegenTimerReset;
-
-    private int _attackManaCost = 5;
-    private int _manaRegenValue = 1;
 
     private float _comboTimer = 2f;
     private float _comboTimerReset = 0.5f;
@@ -52,12 +47,12 @@ public class BrawlerClass : HeroScript {
     public int GetBrawlerDamage() { return _damage; }
 
     // Use this for initialization
-    void Start () {
+    public override void Start () {
+        base.Start();
         InitializeClass(_playerNumber);
         InitializeStats();
 
         _specialAttackTimerReset = _specialAttackTimer;
-        _brawlerManaRegenTimerReset = _brawlerManaRegenTimer;
         _animator = _characterObj.GetComponent<Animator>();
         _audio = GetComponent<AudioSource>();
     }
@@ -67,7 +62,6 @@ public class BrawlerClass : HeroScript {
         _armor = _brawlerArmor;
         _moveSpeed = _brawlerMoveSpeed;
         _attackSpeed = _brawlerAttackSpeed;
-        _manaRegen = _brawlerManaRegenTimer;
 
         _fistDamageColliderLeft.SetActive(false);
         _fistDamageColliderRight.SetActive(false);
@@ -91,7 +85,9 @@ public class BrawlerClass : HeroScript {
     }
 
 	// Update is called once per frame
-	void Update () {
+	public override void Update () {
+
+        base.Update();
 
         if (_attackReady == false) {
             _coolDown -= Time.deltaTime;
@@ -106,11 +102,6 @@ public class BrawlerClass : HeroScript {
         ManageDeath();
         ManageMana();
 
-        if (_chargeButtonReleased)
-        {
-            _chargeAttackTime -= Time.deltaTime;
-        }
-
         if (_chargeAttackTime < 0) {
             _stunningObj.SetActive(false);
         }
@@ -123,22 +114,7 @@ public class BrawlerClass : HeroScript {
             {
                 DeactivateSpecial();
                 _specialAttackTimer = _specialAttackTimerReset;
-            }
-        }
-    }
-
-    void ManageMana()
-    {
-        _UIManaBar.GetComponent<Slider>().value = _manaPoints;
-
-        _manaRegen -= Time.deltaTime;
-
-        if (_manaRegen < 0)
-        {
-            if (_manaPoints + _manaRegenValue < _manaPointsMax)
-            {
-                _manaPoints += _manaRegenValue;
-                _manaRegen = _brawlerManaRegenTimerReset;
+                _specialActive = false;
             }
         }
     }
@@ -239,9 +215,9 @@ public class BrawlerClass : HeroScript {
 
             _audio.pitch = Random.Range(0.8f, 1.2f);
 
-            _manaPoints -= 5;
+            _manaPoints -= _attackManaCost;
 
-            _manaRegen = _brawlerManaRegenTimerReset;
+            _manaRegen = _manaRegenTimerReset;
             // TURN ON FISTS!
             switch (_comboCounter)
             {
@@ -278,7 +254,7 @@ public class BrawlerClass : HeroScript {
     {
         base.SpecialAttack();
         transform.localScale *= _addedScale;
-        _damage += _addedDamage;
+        _brawlerDamage += _addedDamage;
         _hitPoints += _addedHP;
         _hitPointMax += _addedHP;
         _specialActive = true;
@@ -287,7 +263,7 @@ public class BrawlerClass : HeroScript {
     public void DeactivateSpecial()
     {
         transform.localScale = new Vector3(1f, 1f, 1f);
-        _damage = _brawlerDamage;
+        _brawlerDamage -= _addedDamage;
         _hitPoints = 150;
         _specialActive = false;
     }
