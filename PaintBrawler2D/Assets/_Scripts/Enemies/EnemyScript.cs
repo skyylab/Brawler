@@ -347,6 +347,7 @@ public abstract class EnemyScript : MonoBehaviour {
         {
             // Die
             _mainCamera.GetComponent<CameraControls>().EnemyKilled();
+            _aquiredTargets[0].GetComponent<HeroScript>().RemoveAttacker(gameObject);
             gameObject.transform.parent = GameObject.Find("UnusedObjects").transform;
             gameObject.SetActive(false);
         }
