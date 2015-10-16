@@ -29,14 +29,6 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
             int RandomNumber = Random.Range(0, 3);
             _audio.pitch = Random.Range(0.8f, 1.2f);
             _audio.PlayOneShot(_hitSFX[RandomNumber], 0.6f);
-
-            if (_parentScript.GetCharacterObj().transform.localEulerAngles.y != 0)
-            {
-                //other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * -2000f);
-            }
-            else { 
-                //other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * 2000f);
-            }
         }
     }
 
