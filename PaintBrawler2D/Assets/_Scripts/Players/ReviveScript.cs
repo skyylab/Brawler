@@ -29,7 +29,7 @@ public class ReviveScript : MonoBehaviour {
         }
     }
 
-	void OnTriggerStay2D(Collider2D other)
+	void OnTriggerStay(Collider other)
     {
         _playerReviving = true;
         if (other.tag == "Player")
@@ -44,7 +44,7 @@ public class ReviveScript : MonoBehaviour {
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit(Collider other)
     {
         _playerReviving = false;
     }

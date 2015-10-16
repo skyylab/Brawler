@@ -57,9 +57,14 @@ public class FireballProjectile : MonoBehaviour {
 
         _fireballSprite.GetComponent<ParticleSystem>().startSize *= size;
         _fireballSpriteInner.GetComponent<ParticleSystem>().startSize *= size;
+
+        if (_firingDirection == 1)
+        {
+            transform.localEulerAngles += new Vector3(0f, 180f, 0f);
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Enemy")
         {
@@ -67,12 +72,11 @@ public class FireballProjectile : MonoBehaviour {
 
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);
-            //Destroy(gameObject);
 
             _objectsHit++;
 
             if (_objectsHit > _maxObjectsHit) {
-                gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                gameObject.GetComponent<SphereCollider>().enabled = false;
             }
         }
     }

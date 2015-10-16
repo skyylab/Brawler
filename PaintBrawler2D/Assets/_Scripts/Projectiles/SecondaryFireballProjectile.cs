@@ -47,9 +47,14 @@ public class SecondaryFireballProjectile : MonoBehaviour {
         _parentScript = _parent.GetComponent<MageClass>();
         _firingDirection = Direction;
         _pullLocations = pullLocations;
+
+        if (_firingDirection == 1)
+        {
+            transform.localEulerAngles += new Vector3(0f, 180f, 0f);
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Enemy")
         {
@@ -62,7 +67,7 @@ public class SecondaryFireballProjectile : MonoBehaviour {
             _objectsHit++;
 
             if (_objectsHit > _maxObjectsHit) {
-                gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                gameObject.GetComponent<BoxCollider>().enabled = false;
             }
         }
     }

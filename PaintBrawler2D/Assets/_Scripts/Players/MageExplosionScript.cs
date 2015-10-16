@@ -22,7 +22,7 @@ public class MageExplosionScript : MonoBehaviour {
 	void Update () {
         transform.localScale += new Vector3(1f, 1f, 1f) * _growSpeed;	 
         if (transform.localScale.x > _maxSize) {
-            GetComponent<CircleCollider2D>().enabled = false;
+            GetComponent<SphereCollider>().enabled = false;
             _particle1.GetComponent<ParticleSystem>().emissionRate = 0f;
             _particle2.GetComponent<ParticleSystem>().emissionRate = 0f;
 
@@ -39,7 +39,7 @@ public class MageExplosionScript : MonoBehaviour {
        _particle1.GetComponent<ParticleSystem>().startColor = color;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Enemy")
         {

@@ -11,7 +11,7 @@ public class EnterSluggerAquisitionRange : MonoBehaviour {
         _parentScript = _parent.GetComponent<EnemyScript>();
     }
 
-	void OnTriggerEnter2D(Collider2D other) {
+	void OnTriggerEnter(Collider other) {
         if (other.tag == "Player") {
             if (_parentScript._currentlyAttacking == false) { 
                 _parentScript.AddToTargetList(other.gameObject);

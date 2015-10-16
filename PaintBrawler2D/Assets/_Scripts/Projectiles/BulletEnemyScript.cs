@@ -34,12 +34,12 @@ public class BulletEnemyScript : MonoBehaviour {
         _damage = Damage;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
             other.gameObject.GetComponent<HeroScript>().TakeDamage(_damage);
-            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<BoxCollider>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
         }
     }

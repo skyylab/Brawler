@@ -4,6 +4,8 @@ using System.Collections;
 public class BillboardScript : MonoBehaviour {
 
     public Camera m_Camera;
+    [SerializeField]
+    private int scaleFactor = 1;
 
     void Start() {
         m_Camera = Camera.main;
@@ -11,7 +13,7 @@ public class BillboardScript : MonoBehaviour {
 
     void Update()
     {
-        transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.back,
+        transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.back * -1,
             m_Camera.transform.rotation * Vector3.up);
     }
 }

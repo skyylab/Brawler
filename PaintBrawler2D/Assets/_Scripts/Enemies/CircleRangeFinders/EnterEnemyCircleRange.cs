@@ -47,12 +47,12 @@ public class EnterEnemyCircleRange : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
             if (_parentScript._currentlyAttacking == false){
-                _parentScript.ReachedCirclingDistance();
+                //_parentScript.ReachedCirclingDistance();
             }
             
             _inAttackRange = true;
@@ -63,7 +63,7 @@ public class EnterEnemyCircleRange : MonoBehaviour {
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player")
         {

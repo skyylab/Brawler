@@ -16,7 +16,7 @@ public class EnterEnemyAttackRange : MonoBehaviour {
         _parentScript = _parent.GetComponent<EnemyScript>();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
@@ -25,7 +25,7 @@ public class EnterEnemyAttackRange : MonoBehaviour {
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player")
         {

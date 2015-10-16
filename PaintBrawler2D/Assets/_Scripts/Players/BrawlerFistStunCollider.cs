@@ -19,7 +19,7 @@ public class BrawlerFistStunCollider : MonoBehaviour {
         _audio = GetComponent<AudioSource>();
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
+    void OnTriggerEnter(Collider other) {
         if (other.tag == "Enemy") {
             other.GetComponent<EnemyScript>().Stun(2f);
 

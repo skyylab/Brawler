@@ -48,7 +48,7 @@ public class PrimaryColorRangedEnemy : EnemyScript {
         if (_aquiredTargets.Count > 0)
         {
             _lastPosition = transform.position;
-            transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+            transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
         }
     }
 
@@ -56,7 +56,7 @@ public class PrimaryColorRangedEnemy : EnemyScript {
 
         _currentlyAttacking = true;
         _lastPosition = transform.position;
-        transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual * 1.5f);
+        transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual * 1.5f);
         ManageAttack();
     }
 
@@ -65,7 +65,7 @@ public class PrimaryColorRangedEnemy : EnemyScript {
 
         if (_fleeTimer > 0)
         {
-            transform.position = Vector2.MoveTowards(transform.position, _fleeTarget.transform.position, Time.deltaTime * _moveSpeed * -1);
+            transform.position = Vector3.MoveTowards(transform.position, _fleeTarget.transform.position, Time.deltaTime * _moveSpeed * -1);
         }
         else
         {

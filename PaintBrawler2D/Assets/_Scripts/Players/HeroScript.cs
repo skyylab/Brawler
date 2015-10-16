@@ -202,11 +202,23 @@ public abstract class HeroScript : MonoBehaviour {
 
     public void ManageFlipSprite(Vector3 Direction) {
         if (Direction.x < 0) {
-            _characterObj.transform.localEulerAngles = new Vector3(_characterObj.transform.localEulerAngles.x, 180f, 0f);
+            transform.localScale = new Vector3(_characterObj.transform.localScale.x * -1,
+                                               _characterObj.transform.localScale.y,
+                                               _characterObj.transform.localScale.z);
+
+            _chargeParticleEffects2.transform.localScale = new Vector3(_chargeParticleEffects2.transform.localScale.x,
+                                                                       _chargeParticleEffects2.transform.localScale.y,
+                                                                       _chargeParticleEffects2.transform.localScale.z);
             _firingDirection = 1;
         }
         else {
-            _characterObj.transform.localEulerAngles = new Vector3(_characterObj.transform.localEulerAngles.x, 0f, 0f);
+            transform.localScale = new Vector3 (_characterObj.transform.localScale.x,
+                                                _characterObj.transform.localScale.y,
+                                                _characterObj.transform.localScale.z);
+
+            _chargeParticleEffects2.transform.localScale = new Vector3(_chargeParticleEffects2.transform.localScale.x * -1,
+                                                                       _chargeParticleEffects2.transform.localScale.y,
+                                                                       _chargeParticleEffects2.transform.localScale.z);
             _firingDirection = -1;
         }
     }

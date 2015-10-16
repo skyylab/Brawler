@@ -127,13 +127,13 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void ProcessMovement() {
-        if (transform.position.y > -6 && _moveVector.y < 0)
+        if (transform.position.z > -12 && _moveVector.y < 0)
         {
-            transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+            transform.position += new Vector3(0f, 0f, _moveVector.y) * moveSpeed * (0.65f);
         }
-        if (transform.position.y < 4 && _moveVector.y > 0)
+        if (transform.position.z < 2 && _moveVector.y > 0)
         {
-            transform.position += new Vector3(0, _moveVector.y, 0f) * moveSpeed * (0.65f);
+            transform.position += new Vector3(0f, 0f, _moveVector.y) * moveSpeed * (0.65f);
         }
 
         if (_mainCameraPosition.x - transform.position.x > -11 && _moveVector.x > 0)

@@ -11,7 +11,7 @@ public class EnemyMeleeAttack : MonoBehaviour {
         _parentScript = _parent.GetComponent<EnemyScript>();
     }
 
-	void OnTriggerEnter2D (Collider2D other) {
+	void OnTriggerEnter (Collider other) {
         if (other.tag == "Player" && !_parentScript.GetAttackLanded())
         {
             other.gameObject.GetComponent<HeroScript>().TakeDamage(_parentScript.GetDamage());

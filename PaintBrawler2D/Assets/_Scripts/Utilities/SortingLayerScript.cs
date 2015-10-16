@@ -15,6 +15,6 @@ public class SortingLayerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        GetComponent<SpriteRenderer>().sortingOrder = SortingLayer + (int)(((100 - (_parent.transform.position.y + 9)) * 1000)/100);
+        GetComponent<SpriteRenderer>().sortingOrder = SortingLayer + (int)(((100 - (_parent.transform.position.z + 9)) * 1000)/100);
 	}
 }

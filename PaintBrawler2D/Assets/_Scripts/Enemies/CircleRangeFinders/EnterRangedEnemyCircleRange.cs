@@ -18,7 +18,7 @@ public class EnterRangedEnemyCircleRange : MonoBehaviour {
     {
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
@@ -32,7 +32,7 @@ public class EnterRangedEnemyCircleRange : MonoBehaviour {
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player")
         {

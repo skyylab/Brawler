@@ -71,8 +71,8 @@ public class SecondaryColorEnemy : EnemyScript {
 
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
-            _objectSprites[1].GetComponent<BoxCollider2D>().enabled = false;
-            _objectSprites[2].GetComponent<BoxCollider2D>().enabled = false;
+            _objectSprites[1].GetComponent<BoxCollider>().enabled = false;
+            _objectSprites[2].GetComponent<BoxCollider>().enabled = false;
         }
 
         if (_inAttackRange && _coolDown < 0)
@@ -104,8 +104,8 @@ public class SecondaryColorEnemy : EnemyScript {
     {
         _attackLanded = false;
         _animator.CrossFade("Attack", 0.01f);
-        _objectSprites[1].GetComponent<BoxCollider2D>().enabled = true;
-        _objectSprites[2].GetComponent<BoxCollider2D>().enabled = true;
+        _objectSprites[1].GetComponent<BoxCollider>().enabled = true;
+        _objectSprites[2].GetComponent<BoxCollider>().enabled = true;
         _coolDown = _coolDownSet;
     }
 

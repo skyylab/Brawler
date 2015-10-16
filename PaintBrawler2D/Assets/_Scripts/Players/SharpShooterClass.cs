@@ -87,21 +87,21 @@ public class SharpShooterClass : HeroScript {
 
             if (_fireLeft)
             {
+                _animator.Play("ShootLeft");
                 GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
                 BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
                 Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
 
-                _animator.Play("ShootLeft");
                 _sharpshooterAttackSpeed = _attackSpeedReset;
                 _fireLeft = false;
             }
             else
             {
+                _animator.Play("ShootRight");
                 GameObject BulletObj = Instantiate(_bullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
                 BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
                 Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
 
-                _animator.Play("ShootRight");
                 _sharpshooterAttackSpeed = _attackSpeedReset;
                 _fireLeft = true;
             }
@@ -109,6 +109,8 @@ public class SharpShooterClass : HeroScript {
     }
 
     private void UnleashChargeAttack() {
+        _animator.Play("ShootLeft");
+        _animator.Play("ShootRight");
 
         GameObject BulletObj = Instantiate(_bullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
         BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], -_firingDirection, gameObject);
@@ -117,9 +119,6 @@ public class SharpShooterClass : HeroScript {
         BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
         Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
         Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
-
-        _animator.Play("ShootLeft");
-        _animator.Play("ShootRight");
 
         _sharpshooterAttackSpeed = _attackSpeedReset;
     }
@@ -130,21 +129,21 @@ public class SharpShooterClass : HeroScript {
         {
             if (_fireLeft)
             {
+                _animator.Play("ShootLeft");
                 GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
                 BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
                 Instantiate(_secondaryMuzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
-
-                _animator.Play("ShootLeft");
+                
                 _sharpshooterAttackSpeed = _attackSpeedReset;
                 _fireLeft = false;
             }
             else
             {
+                _animator.Play("ShootRight");
                 GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
                 BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
                 Instantiate(_secondaryMuzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
-
-                _animator.Play("ShootRight");
+                
                 _sharpshooterAttackSpeed = _attackSpeedReset;
                 _fireLeft = true;
             }

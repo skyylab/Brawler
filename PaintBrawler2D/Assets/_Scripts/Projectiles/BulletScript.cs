@@ -37,9 +37,14 @@ public class BulletScript : MonoBehaviour {
         _parentScript = _parent.GetComponent<SharpShooterClass>();
         GetComponent<SpriteRenderer>().color = color;
         _firingDirection = Direction;
+
+        if (_firingDirection == 1)
+        {
+            transform.localEulerAngles += new Vector3(0f, 180f, 0f);
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Enemy")
         {
@@ -49,14 +54,14 @@ public class BulletScript : MonoBehaviour {
 
             if (transform.localEulerAngles.y != 0)
             {
-                other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * -2000f);
+                other.gameObject.GetComponent<Rigidbody>().AddForce(_parent.transform.right * -2000f);
             }
             else
             {
-                other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * 2000f);
+                other.gameObject.GetComponent<Rigidbody>().AddForce(_parent.transform.right * 2000f);
             }
 
-            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<SphereCollider>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
             _particles.SetActive(false);
         }

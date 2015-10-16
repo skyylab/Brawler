@@ -20,7 +20,7 @@ public class StunRange : MonoBehaviour {
         _audio = GetComponent<AudioSource>();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Enemy")
         {

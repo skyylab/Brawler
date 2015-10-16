@@ -42,19 +42,19 @@ public class PrimaryColorEnemy : EnemyScript {
         if (_aquiredTargets.Count > 0)
         {
             _lastPosition = transform.position;
-            transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+            transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
         }
     }
 
     public override void Circling() {
-        transform.position = Vector2.MoveTowards(transform.position, RandomCirclePoint + (Vector2)_aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+        //transform.position = Vector3.MoveTowards(transform.position, RandomCirclePoint + (Vector2)_aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+        _currentState = EnemyState.attacking;
     }
 
     public override void Attacking() {
-
         _currentlyAttacking = true;
         _lastPosition = transform.position;
-        transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual * 1.5f);
+        transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual * 1.5f);
         ManageAttack();
     }
 
@@ -67,8 +67,8 @@ public class PrimaryColorEnemy : EnemyScript {
 
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
-            _objectSprites[1].GetComponent<BoxCollider2D>().enabled = false;
-            _objectSprites[2].GetComponent<BoxCollider2D>().enabled = false;
+            _objectSprites[1].GetComponent<BoxCollider>().enabled = false;
+            _objectSprites[2].GetComponent<BoxCollider>().enabled = false;
         }
 
         if (_inAttackRange && _coolDown < 0)
@@ -82,7 +82,7 @@ public class PrimaryColorEnemy : EnemyScript {
         if (_aquiredTargets.Count > 0)
         {
             _lastPosition = transform.position;
-            transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+            transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
         }
 
         float moveDirection = transform.position.x - _lastPosition.x;
@@ -100,8 +100,8 @@ public class PrimaryColorEnemy : EnemyScript {
     {
         _attackLanded = false;
         _animator.CrossFade("Attack", 0.01f);
-        _objectSprites[1].GetComponent<BoxCollider2D>().enabled = true;
-        _objectSprites[2].GetComponent<BoxCollider2D>().enabled = true;
+        _objectSprites[1].GetComponent<BoxCollider>().enabled = true;
+        _objectSprites[2].GetComponent<BoxCollider>().enabled = true;
         _coolDown = _coolDownSet;
     }
 

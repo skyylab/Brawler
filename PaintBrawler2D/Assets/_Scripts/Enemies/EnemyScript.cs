@@ -94,7 +94,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
     // Movement - calculated for sprite direction
     [SerializeField]
-    protected Vector2 _lastPosition;
+    protected Vector3 _lastPosition;
     [SerializeField]
     protected float _stunDuration;
 
@@ -161,7 +161,7 @@ public abstract class EnemyScript : MonoBehaviour {
         _pullTimer -= Time.deltaTime;
 
         if (_pullTimer > 0) {
-            transform.position = Vector2.MoveTowards(transform.position, _pullLocation.transform.position, Time.deltaTime * 30);
+            transform.position = Vector3.MoveTowards(transform.position, _pullLocation.transform.position, Time.deltaTime * 30);
 
             if (transform.position.x >= _pullLocation.transform.position.x - 1f && transform.position.x <= _pullLocation.transform.position.x + 1f) {
                 _pullTimer = -1;
@@ -176,7 +176,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public virtual void ManageMovement() { }
 
     // Stay within range, but do not attack
-    public void ReachedCirclingDistance() { _currentState = EnemyState.circling; }
+    public void ReachedCirclingDistance() { _currentState = EnemyState.attacking; }
     public void MovedOutCirclingDistance() { _currentState = EnemyState.chasing; }
     public void SetFleeTarget(GameObject FleeTarget) { _fleeTarget = FleeTarget; }
 
@@ -449,8 +449,8 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         SetInitialColors(_colorType);
         // Setting range
-        _aquisitionRange.GetComponent<CircleCollider2D>().radius = _aquisitionRangeValue;
-        _attackRange.GetComponent<CircleCollider2D>().radius = _attackRangeValue;
+        _aquisitionRange.GetComponent<SphereCollider>().radius = _aquisitionRangeValue;
+        _attackRange.GetComponent<SphereCollider>().radius = _attackRangeValue;
 
         _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
         _healthSlider.GetComponent<Slider>().value = _hitPoints;
@@ -517,7 +517,7 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         Debug.DrawRay(transform.position + Vector3.left, Vector3.left * 50);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.left, Vector2.left);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.left, Vector3.left);
 
         if (hit.collider != null)
         {
@@ -547,7 +547,7 @@ public abstract class EnemyScript : MonoBehaviour {
     }
 
     public void Avoid(GameObject avoidObject) {
-        transform.position = Vector2.MoveTowards(transform.position, avoidObject.transform.position, -Time.deltaTime * _moveSpeedActual);
+        //transform.position = Vector3.MoveTowards(transform.position, avoidObject.transform.position, -Time.deltaTime * _moveSpeedActual);
     }
 
     public Vector2 GetRandomPointCircle(float angleDegrees, float radius) {

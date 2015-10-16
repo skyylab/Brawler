@@ -19,10 +19,6 @@ public class SecondaryBulletScript : MonoBehaviour {
     private GameObject _bulletHit;
     
     private string _colorName;
-	// Use this for initialization
-	void Start () {
-	
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -41,9 +37,14 @@ public class SecondaryBulletScript : MonoBehaviour {
         GetComponent<SpriteRenderer>().color = color;
         _firingDirection = Direction;
         _colorName = colorName;
+
+        if (_firingDirection == 1)
+        {
+            transform.localEulerAngles += new Vector3(0f, 180f, 0f);
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Enemy")
         {
@@ -58,14 +59,14 @@ public class SecondaryBulletScript : MonoBehaviour {
 
                 if (transform.localEulerAngles.y != 0)
                 {
-                    other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * -2000f);
+                    other.gameObject.GetComponent<Rigidbody>().AddForce(_parent.transform.right * -2000f);
                 }
                 else
                 {
-                    other.gameObject.GetComponent<Rigidbody2D>().AddForce(_parent.transform.right * 2000f);
+                    other.gameObject.GetComponent<Rigidbody>().AddForce(_parent.transform.right * 2000f);
                 }
 
-                GetComponent<BoxCollider2D>().enabled = false;
+                GetComponent<SphereCollider>().enabled = false;
                 GetComponent<SpriteRenderer>().enabled = false;
                 _particles.SetActive(false);
                 _particles2.SetActive(false);

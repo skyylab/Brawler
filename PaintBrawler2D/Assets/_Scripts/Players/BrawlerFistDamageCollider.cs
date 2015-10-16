@@ -19,7 +19,7 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
         _audio = GetComponent<AudioSource>();
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
+    void OnTriggerEnter(Collider other) {
         if (other.tag == "Enemy") {
             other.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetBrawlerDamage(),
                                                                          _parentScript.GetPrimaryColorString());

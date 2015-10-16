@@ -13,6 +13,9 @@ public class CameraControls : MonoBehaviour {
     [SerializeField]
     private int EnemyCountOnScreen;
 
+    private float _yAxisOffset = 0f;
+    private float _zAxisOffset = 0f;
+
     public void RemovePlayers(GameObject Player) {
         Players.Remove(Player);
     }
@@ -30,6 +33,9 @@ public class CameraControls : MonoBehaviour {
         {
             Players.Add(x);
         }
+
+        _yAxisOffset = transform.position.y;
+        _zAxisOffset = transform.position.z;
 	}
 	
 	// Update is called once per frame
@@ -37,15 +43,17 @@ public class CameraControls : MonoBehaviour {
         if (!_cameraLock)
         {
             Vector3 NewCamPosition = FindCenterPoint();
-            NewCamPosition.z = -12f;
-            transform.position = Vector3.Slerp(transform.position, NewCamPosition, Time.deltaTime);
+            NewCamPosition.y = _yAxisOffset;
+            NewCamPosition.z += _zAxisOffset;
+            transform.position = Vector3.Slerp(transform.position, NewCamPosition, Time.deltaTime * 2);
         }
         else
         {
             Vector3 NewCamPosition = FindCenterPoint();
-            NewCamPosition.z = -12f;
+            NewCamPosition.y = _yAxisOffset;
+            NewCamPosition.z += _zAxisOffset;
             NewCamPosition.x = transform.position.x;
-            transform.position = Vector3.Slerp(transform.position, NewCamPosition, Time.deltaTime);
+            transform.position = Vector3.Slerp(transform.position, NewCamPosition, Time.deltaTime * 2);
         }
     }
 
@@ -60,7 +68,7 @@ public class CameraControls : MonoBehaviour {
         return bounds.center;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "CameraPoint")
         {

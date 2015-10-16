@@ -51,7 +51,7 @@ public class PrimaryColorSlugger : EnemyScript {
             Vector3 TargetAhead = _aquiredTargets[0].transform.position + new Vector3(10f, 0f, 0f);
             
             _lastPosition = transform.position;
-            transform.position = Vector2.MoveTowards(transform.position, TargetAhead, Time.deltaTime * _moveSpeedActual);
+            transform.position = Vector3.MoveTowards(transform.position, TargetAhead, Time.deltaTime * _moveSpeedActual);
 
             if (transform.position == TargetAhead) {
                 _currentState = EnemyState.attacking;
@@ -85,7 +85,7 @@ public class PrimaryColorSlugger : EnemyScript {
         if (_chaseOffScreenTimer > 0)
         {
             Vector3 TargetAhead = new Vector3(transform.position.x, _aquiredTargets[0].transform.position.y, 0f);
-            transform.position = Vector2.MoveTowards(transform.position, TargetAhead, Time.deltaTime * _moveSpeedActual);
+            transform.position = Vector3.MoveTowards(transform.position, TargetAhead, Time.deltaTime * _moveSpeedActual);
         }
     }
 
@@ -93,8 +93,8 @@ public class PrimaryColorSlugger : EnemyScript {
     {
         _attackLanded = false;
         _animator.Play("Berserk");
-        _objectSprites[1].GetComponent<BoxCollider2D>().enabled = true;
-        _objectSprites[2].GetComponent<BoxCollider2D>().enabled = true;
+        _objectSprites[1].GetComponent<BoxCollider>().enabled = true;
+        _objectSprites[2].GetComponent<BoxCollider>().enabled = true;
     }
 
 
@@ -103,7 +103,7 @@ public class PrimaryColorSlugger : EnemyScript {
         if (_aquiredTargets.Count > 0)
         {
             _lastPosition = transform.position;
-            transform.position = Vector2.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+            transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
         }
 
         float moveDirection = transform.position.x - _lastPosition.x;
