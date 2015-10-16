@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public abstract class EnemyScript : MonoBehaviour {
     // Stats
-    public Vector2 RandomCirclePoint;
+    public Vector3 RandomSpherePoint;
 
     [SerializeField]
     protected int _hitPoints = 100;
@@ -106,6 +106,8 @@ public abstract class EnemyScript : MonoBehaviour {
     protected GameObject _animatedObj;
     [SerializeField]
     protected float _moveDirection;
+    [SerializeField]
+    protected GameObject _avoidEnemy;
 
     // Color variables
     protected Color _whiteColor = new Color(1f, 1f, 1f);
@@ -176,8 +178,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public virtual void ManageMovement() { }
 
     // Stay within range, but do not attack
-    public void ReachedCirclingDistance() { _currentState = EnemyState.attacking; }
-    public void MovedOutCirclingDistance() { _currentState = EnemyState.chasing; }
+    public void ReachedCirclingDistance() { _currentState = EnemyState.circling; }
+    public void MovedOutCirclingDistance() {  }
     public void SetFleeTarget(GameObject FleeTarget) { _fleeTarget = FleeTarget; }
 
     public void SetCircleRange(bool Set) { _inCircleRange = Set; }
@@ -205,12 +207,14 @@ public abstract class EnemyScript : MonoBehaviour {
 
     public virtual void Update() {
         _stunDuration -= Time.deltaTime;
+        GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
 
         if (_stunDuration > 0) {
             _animator.Play("Stunned");
         }
         else {
         }
+
     }
 
     public void AddToTargetList(GameObject newTarget) {
@@ -546,8 +550,9 @@ public abstract class EnemyScript : MonoBehaviour {
         }
     }
 
-    public void Avoid(GameObject avoidObject) {
+    public void AssignAvoid(GameObject avoidObject) {
         //transform.position = Vector3.MoveTowards(transform.position, avoidObject.transform.position, -Time.deltaTime * _moveSpeedActual);
+        _avoidEnemy = avoidObject;
     }
 
     public Vector2 GetRandomPointCircle(float angleDegrees, float radius) {

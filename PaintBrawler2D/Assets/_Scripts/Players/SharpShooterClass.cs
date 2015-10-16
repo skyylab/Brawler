@@ -60,6 +60,7 @@ public class SharpShooterClass : HeroScript {
         base.Update();
         ManageAttack();
         ManageDeath();
+
     }
 
     private void ManageAttack() {
@@ -80,6 +81,10 @@ public class SharpShooterClass : HeroScript {
         if (_specialAttackTimer > 0 && _specialAttackSpeed < 0) {
             SpecialAttackSingleFire();
         }
+
+        if (_specialAttackTimer < 0) {
+            _specialActive = false;
+        }
     }
 
     public override void Attack() {
@@ -88,6 +93,7 @@ public class SharpShooterClass : HeroScript {
             if (_fireLeft)
             {
                 _animator.Play("ShootLeft");
+                _animator.SetBool("Running", false);
                 GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
                 BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
                 Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
@@ -98,6 +104,7 @@ public class SharpShooterClass : HeroScript {
             else
             {
                 _animator.Play("ShootRight");
+                _animator.SetBool("Running", false);
                 GameObject BulletObj = Instantiate(_bullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
                 BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
                 Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
@@ -105,6 +112,26 @@ public class SharpShooterClass : HeroScript {
                 _sharpshooterAttackSpeed = _attackSpeedReset;
                 _fireLeft = true;
             }
+        }
+    }
+
+
+    public override void PlayIdleAnim()
+    {
+        base.PlayIdleAnim();
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootLeft") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootRight") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump")) { 
+            _animator.Play("Idle");
+        }
+    }
+    public override void PlayWalkAnim()
+    {
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootLeft") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootRight") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("ShooterJump"))
+        {
+            _animator.Play("RunFox");
         }
     }
 
@@ -154,6 +181,7 @@ public class SharpShooterClass : HeroScript {
     public override void SpecialAttack()
     {
         base.SpecialAttack();
+        _specialActive = true;
         _specialAttackTimer = _specialAttackTimerReset;
     }
 

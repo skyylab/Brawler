@@ -7,12 +7,18 @@ public class PrimaryColorEnemy : EnemyScript {
     [SerializeField]
     private GameObject Spawner;
 
+    private float _timerTagEnemySwitch = 10f;
+    private float _timerTagEnemySwitchReset;
+
+    private float _fleeTimer = 5f;
+
     void Start()
     {
         InitializeClass();
         _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
         Spawner = GameObject.Find("EnemySpawner");
-        RandomCirclePoint = Random.insideUnitCircle;
+        _timerTagEnemySwitchReset = _timerTagEnemySwitch;
+        _fleeTimer = Random.Range(4f, 7f);
     }
 
     public override void Update()
@@ -42,23 +48,55 @@ public class PrimaryColorEnemy : EnemyScript {
         if (_aquiredTargets.Count > 0)
         {
             _lastPosition = transform.position;
-            transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+            Vector3 move = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+            move.y = 0f;
+            transform.position = move;
         }
     }
 
     public override void Circling() {
-        //transform.position = Vector3.MoveTowards(transform.position, RandomCirclePoint + (Vector2)_aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
-        _currentState = EnemyState.attacking;
+        if (Vector3.Distance(transform.position, _aquiredTargets[0].transform.position) < 6f && _avoidEnemy != null) {
+
+            Vector3 move = Vector3.MoveTowards(transform.position, _avoidEnemy.transform.position, Time.deltaTime * -_moveSpeedActual);
+            move.y = 0f;
+            transform.position = move;
+        }
+        else {
+            _currentState = EnemyState.chasing;
+        }
+
+        if (_aquiredTargets[0].GetComponent<HeroScript>().AddAttacker(gameObject)) {
+            _currentState = EnemyState.attacking;
+        }
     }
 
     public override void Attacking() {
         _currentlyAttacking = true;
         _lastPosition = transform.position;
-        transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual * 1.5f);
+        Vector3 move = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual * 1.5f);
+        move.y = 0f;
+        transform.position = move;
+
+        _timerTagEnemySwitch -= Time.deltaTime;
+
+        if (_timerTagEnemySwitch < 0) {
+            _currentlyAttacking = false;
+            _timerTagEnemySwitch = _timerTagEnemySwitchReset;
+            _aquiredTargets[0].GetComponent<HeroScript>().RemoveAttacker(gameObject);
+            _currentState = EnemyState.fleeing;
+        }
+
         ManageAttack();
     }
 
     public override void Fleeing() {
+        _fleeTimer -= Time.deltaTime;
+
+        if (_fleeTimer < 0) {
+            _fleeTimer = Random.Range(4f, 7f);
+            _currentState = EnemyState.circling;
+        }
+        transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * -_moveSpeedActual);
     }
 
     public void ManageAttack() {

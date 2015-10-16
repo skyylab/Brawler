@@ -84,12 +84,6 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (_heroScript.ReturnIsAlive())
         {
-            // Process movement
-            if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
-            {
-                ProcessMovement();
-            }
-
             if (_pressAttack1)
             {
                 _chargeThresholdTimer -= Time.deltaTime;
@@ -119,10 +113,24 @@ public class PlayerMovement : MonoBehaviour {
                 _heroScript.Jump();
             }
 
-            if (_pressSpecial && !_heroScript.GetSpecialStatus())
+            if (_pressSpecial && !_heroScript.GetSpecialStatus() && _heroScript.CanActivateSpecial())
             {
                 _heroScript.SpecialAttack();
             }
+
+
+            // Process movement
+            if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
+            {
+                ProcessMovement();
+                _heroScript.PlayWalkAnim();
+            }
+            else
+            {
+
+                _heroScript.PlayIdleAnim();
+            }
+
         }
     }
 

@@ -11,6 +11,12 @@ public class DrawSpots : MonoBehaviour {
     public GameObject OrangeSpot;
     public GameObject ClearSpot;
 
+    public GameObject Mage;
+
+    void Update() {
+        transform.position = Mage.transform.position;
+    }
+
     public GameObject ReturnSpot(string ColorString) {
         switch(ColorString) {
             case "Red":

@@ -28,7 +28,7 @@ public class EnterEnemyCircleRange : MonoBehaviour {
             _target = _parentScript._aquiredTargets[0];
         }
 
-        if (_inAttackRange && _timerWaitBeforeTryAgain < 0 && _target != null)
+        if (_inAttackRange && _timerWaitBeforeTryAgain < 0 && _target != null && _parentScript._currentState != EnemyScript.EnemyState.fleeing)
         {
             if (_target.GetComponent<HeroScript>().AddAttacker(_parent))
             {
@@ -37,13 +37,12 @@ public class EnterEnemyCircleRange : MonoBehaviour {
             else
             {
                 _parentScript._currentState = EnemyScript.EnemyState.circling;
-                _parentScript.RandomCirclePoint = _parentScript.GetRandomPointCircle(Random.Range(0f, 360f), 10f); ;
                 _timerWaitBeforeTryAgain = _timerReset;
             }
         }
 
         if (_avoidEnemy != null && _parentScript._currentState != EnemyScript.EnemyState.attacking) {
-            _parentScript.Avoid(_avoidEnemy);
+            _parentScript.AssignAvoid(_avoidEnemy);
         }
     }
 
@@ -72,7 +71,7 @@ public class EnterEnemyCircleRange : MonoBehaviour {
             }
             _target.GetComponent<HeroScript>().RemoveAttacker(_parent);
             _inAttackRange = false;
-            _parentScript._currentState = EnemyScript.EnemyState.chasing;
+            //_parentScript._currentState = EnemyScript.EnemyState.chasing;
         }
 
         if (other.tag == "Enemy")

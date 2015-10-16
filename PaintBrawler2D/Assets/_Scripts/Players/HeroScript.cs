@@ -67,6 +67,8 @@ public abstract class HeroScript : MonoBehaviour {
     protected GameObject _UIHealthBar;
     [SerializeField]
     protected GameObject _UIManaBar;
+    [SerializeField]
+    protected GameObject _UISpecialBar;
 
     [SerializeField]
     protected GameObject _characterObj;
@@ -80,6 +82,8 @@ public abstract class HeroScript : MonoBehaviour {
 
     [SerializeField]
     protected GameObject _mainCamera;
+
+    protected float _beeSpecialScale = 1f;
 
 
     // Class specific stats
@@ -116,6 +120,9 @@ public abstract class HeroScript : MonoBehaviour {
     [SerializeField]
     protected bool _specialActive = false;
 
+    [SerializeField]
+    protected float _specialAttackCooldown = 60f;
+
 
     public bool GetSpecialStatus() { return _specialActive; }
     public virtual void Attack() { }
@@ -146,8 +153,13 @@ public abstract class HeroScript : MonoBehaviour {
 
     public virtual void SpecialAttack() { }
 
+    public virtual void Play() { }
+    public virtual void PlayWalkAnim() { }
+    public virtual void PlayIdleAnim() { }
+
     public GameObject GetCharacterObj() { return _characterObj; }
     public string GetPrimaryColorString() { return _currentPrimaryColor; }
+    public bool CanActivateSpecial () { return _specialAttackCooldown >= 60; }
     public bool ReturnIsAlive() { return _isAlive; }
 
     protected int _firingDirection = -1;
@@ -163,6 +175,18 @@ public abstract class HeroScript : MonoBehaviour {
         {
             _chargeAttackTime -= Time.deltaTime;
         }
+
+        if (_specialActive) {
+            _specialAttackCooldown = 0f;
+        }
+        else {
+            _specialAttackCooldown += Time.deltaTime;
+            if (_specialAttackCooldown > 60f) {
+                _specialAttackCooldown = 60;
+            }
+        }
+
+        _UISpecialBar.GetComponent<Slider>().value = _specialAttackCooldown;
     }
 
     public bool AddAttacker(GameObject Attacker) {
@@ -202,9 +226,9 @@ public abstract class HeroScript : MonoBehaviour {
 
     public void ManageFlipSprite(Vector3 Direction) {
         if (Direction.x < 0) {
-            transform.localScale = new Vector3(_characterObj.transform.localScale.x * -1,
-                                               _characterObj.transform.localScale.y,
-                                               _characterObj.transform.localScale.z);
+            transform.localScale = new Vector3(_characterObj.transform.localScale.x * -1 * _beeSpecialScale,
+                                               _characterObj.transform.localScale.y * _beeSpecialScale,
+                                               _characterObj.transform.localScale.z * _beeSpecialScale);
 
             _chargeParticleEffects2.transform.localScale = new Vector3(_chargeParticleEffects2.transform.localScale.x,
                                                                        _chargeParticleEffects2.transform.localScale.y,
@@ -212,9 +236,9 @@ public abstract class HeroScript : MonoBehaviour {
             _firingDirection = 1;
         }
         else {
-            transform.localScale = new Vector3 (_characterObj.transform.localScale.x,
-                                                _characterObj.transform.localScale.y,
-                                                _characterObj.transform.localScale.z);
+            transform.localScale = new Vector3 (_characterObj.transform.localScale.x * _beeSpecialScale,
+                                                _characterObj.transform.localScale.y * _beeSpecialScale,
+                                                _characterObj.transform.localScale.z * _beeSpecialScale);
 
             _chargeParticleEffects2.transform.localScale = new Vector3(_chargeParticleEffects2.transform.localScale.x * -1,
                                                                        _chargeParticleEffects2.transform.localScale.y,
@@ -232,7 +256,7 @@ public abstract class HeroScript : MonoBehaviour {
     }
 
     public void Jump() {
-        _animator.CrossFade("Jump", 0.01f);
+        _animator.Play("Jump");
     }
 
     protected void ManageDeath() {

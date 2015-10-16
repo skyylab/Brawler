@@ -20,7 +20,6 @@ public class PrimaryColorSlugger : EnemyScript {
         InitializeClass();
         _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
         Spawner = GameObject.Find("EnemySpawner");
-        RandomCirclePoint = Random.insideUnitCircle;
     }
 
     public override void Update()

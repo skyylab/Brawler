@@ -12,7 +12,6 @@ public class SecondaryColorEnemy : EnemyScript {
         InitializeClass();
         _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
         Spawner = GameObject.Find("EnemySpawner");
-        RandomCirclePoint = Random.insideUnitCircle;
     }
 
     void Update()
@@ -49,7 +48,6 @@ public class SecondaryColorEnemy : EnemyScript {
     public override void Circling() {
 
         Debug.Log(gameObject.name + " is Circling ");
-        transform.position = Vector2.MoveTowards(transform.position, RandomCirclePoint + (Vector2)_aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
     }
 
     public override void Attacking() {

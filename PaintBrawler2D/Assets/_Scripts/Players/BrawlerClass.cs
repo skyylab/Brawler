@@ -253,16 +253,17 @@ public class BrawlerClass : HeroScript {
     public override void SpecialAttack()
     {
         base.SpecialAttack();
-        transform.localScale *= _addedScale;
         _brawlerDamage += _addedDamage;
         _hitPoints += _addedHP;
         _hitPointMax += _addedHP;
         _specialActive = true;
+        _beeSpecialScale = _addedScale;
     }
 
     public void DeactivateSpecial()
     {
         transform.localScale = new Vector3(1f, 1f, 1f);
+        _beeSpecialScale = 1;
         _brawlerDamage -= _addedDamage;
         _hitPoints = 150;
         _specialActive = false;

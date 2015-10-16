@@ -17,17 +17,22 @@ public class SectionManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-	    if (_attackerWaves[_iterator].transform.childCount <= 0)
-        {
-            _iterator++;
-            if (_iterator < _attackerWaves.Length)
+        if (_iterator >= _attackerWaves.Length) {
+            _mainCamera.GetComponent<CameraControls>().SetCameraLock(false);
+        }
+        else { 
+	        if (_attackerWaves[_iterator].transform.childCount <= 0)
             {
-                _attackerWaves[_iterator].SetActive(true);
-            }
-            else
-            {
-                _mainCamera.GetComponent<CameraControls>().SetCameraLock(false);
-                gameObject.SetActive(false);
+                _iterator++;
+                if (_iterator < _attackerWaves.Length)
+                {
+                    _attackerWaves[_iterator].SetActive(true);
+                }
+                else
+                {
+                    _mainCamera.GetComponent<CameraControls>().SetCameraLock(false);
+                    gameObject.SetActive(false);
+                }
             }
         }
 	}

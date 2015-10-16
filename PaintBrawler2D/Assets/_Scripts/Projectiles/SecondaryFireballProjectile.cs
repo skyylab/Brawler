@@ -67,7 +67,7 @@ public class SecondaryFireballProjectile : MonoBehaviour {
             _objectsHit++;
 
             if (_objectsHit > _maxObjectsHit) {
-                gameObject.GetComponent<BoxCollider>().enabled = false;
+                gameObject.GetComponent<SphereCollider>().enabled = false;
             }
         }
     }

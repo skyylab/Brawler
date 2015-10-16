@@ -110,6 +110,7 @@ public class MageClass : HeroScript {
     public override void SpecialAttack()
     {
         base.SpecialAttack();
+        _specialAttackCooldown = 0f;
         GameObject[] AllEnemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         foreach (GameObject x in AllEnemies) {
