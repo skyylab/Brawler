@@ -4,7 +4,7 @@ using System.Collections;
 public class MageClass : HeroScript {
 
 
-    private int _mageDamage = 15;
+    private int _mageDamage = 20;
     private int _mageArmor = 0;
     private float _mageMoveSpeed = 10f;
     private float _mageAttackSpeed = 0f;

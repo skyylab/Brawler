@@ -5,13 +5,13 @@ using System.Collections;
 public class BrawlerClass : HeroScript {
 
     // Class specific stats
-    private int _brawlerDamage = 6;
+    private int _brawlerDamage = 9;
     private int _brawlerArmor = 5;
     private float _brawlerMoveSpeed = 8f;
-    private float _brawlerAttackSpeed = 0.2f;
+    private float _brawlerAttackSpeed = 0.3f;
 
     private float _comboTimer = 2f;
-    private float _comboTimerReset = 0.5f;
+    private float _comboTimerReset;
     private int _comboCounter = 0;
 
     [SerializeField]
@@ -62,6 +62,9 @@ public class BrawlerClass : HeroScript {
         _armor = _brawlerArmor;
         _moveSpeed = _brawlerMoveSpeed;
         _attackSpeed = _brawlerAttackSpeed;
+
+        _comboTimer = _brawlerAttackSpeed + 0.2f;
+        _comboTimerReset = _comboTimer;
 
         _fistDamageColliderLeft.SetActive(false);
         _fistDamageColliderRight.SetActive(false);
@@ -131,8 +134,9 @@ public class BrawlerClass : HeroScript {
         }
         
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") &&
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2") &&
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 3"))
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2") && 
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 3") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 4"))
         {
             _fistDamageColliderLeft.SetActive(false);
             _fistDamageColliderRight.SetActive(false);
@@ -162,8 +166,6 @@ public class BrawlerClass : HeroScript {
 
     public override void Attack() {
         if (_attackReady == true) {
-
-            _attackReady = false;
             
             _comboTimer = _comboTimerReset;
 
@@ -185,12 +187,13 @@ public class BrawlerClass : HeroScript {
                     _fistDamageColliderRight.SetActive(true);
                     break;
                 case 2:
-                    _animator.Play("Attack 3");
-                    _damage = _brawlerDamage / 3;
+                    _animator.Play("Attack 4");
+                    _damage = _brawlerDamage * 2;
                     _audio.PlayOneShot(_attack3_SFX, _audioVolume);
                     _fistDamageColliderLeft.SetActive(true);
                     _fistDamageColliderRight.SetActive(true);
-                    _comboTimer = 0.5f;
+                    _comboTimer = 1.2f;
+                    _coolDown = 1.2f;
                     break;
                 default:
                     _comboCounter = 0;
@@ -199,6 +202,8 @@ public class BrawlerClass : HeroScript {
             }
             _comboCounter++;
         }
+
+        _attackReady = false;
     }
 
     public override void SecondaryAttack()

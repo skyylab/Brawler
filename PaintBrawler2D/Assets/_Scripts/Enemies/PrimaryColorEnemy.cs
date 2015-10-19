@@ -44,7 +44,8 @@ public class PrimaryColorEnemy : EnemyScript {
     }
 
     public override void Chasing() {
-
+        base.Chasing();
+        _attackRange.SetActive(true);
         if (_aquiredTargets.Count > 0)
         {
             _lastPosition = transform.position;
@@ -141,6 +142,12 @@ public class PrimaryColorEnemy : EnemyScript {
         _objectSprites[1].GetComponent<BoxCollider>().enabled = true;
         _objectSprites[2].GetComponent<BoxCollider>().enabled = true;
         _coolDown = _coolDownSet;
+    }
+
+    public override void Fallen()
+    {
+        base.Fallen();
+        _attackRange.SetActive(false);
     }
 
 }

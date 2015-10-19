@@ -171,7 +171,7 @@ public abstract class HeroScript : MonoBehaviour {
     public virtual void Update() {
         ManageMana();
 
-        if (_chargeButtonReleased)
+        if (_chargeButtonReleased && _chargeAttackTime >= 0)
         {
             _chargeAttackTime -= Time.deltaTime;
         }
@@ -252,7 +252,7 @@ public abstract class HeroScript : MonoBehaviour {
         _hitPoints -= Damage;
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
         GameObject DamageCounter = Instantiate(_damageCounter, transform.position, transform.rotation) as GameObject;
-        DamageCounter.GetComponent<DamageText>().Initialize(Damage, "Blue");
+        DamageCounter.GetComponent<DamageText>().Initialize(Damage, "Black");
     }
 
     public void Jump() {

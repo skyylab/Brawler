@@ -14,6 +14,7 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
     private AudioClip[] _hitSFX;
 
     private AudioSource _audio;
+
     void Start() {
         _parentScript = _parent.GetComponent<BrawlerClass>();
         _audio = GetComponent<AudioSource>();
@@ -22,7 +23,8 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         if (other.tag == "Enemy") {
             other.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetBrawlerDamage(),
-                                                                         _parentScript.GetPrimaryColorString());
+                                                              _parentScript.GetPrimaryColorString(),
+                                                              _parent);
 
             Instantiate(_powPrefab, transform.position + transform.right, transform.rotation);
             

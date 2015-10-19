@@ -10,6 +10,8 @@ public class PrimaryColorRangedEnemy : EnemyScript {
     private GameObject _prefabBullet;
     [SerializeField]
     private GameObject _prefabMuzzleFlash;
+    [SerializeField]
+    private GameObject _attackRangeSight;
 
     private float _fleeTimer = 1.5f;
 
@@ -25,6 +27,11 @@ public class PrimaryColorRangedEnemy : EnemyScript {
     public override void Update()
     {
         base.Update();
+
+        if (_invincibleTimer < 0) {
+            _attackRangeSight.SetActive(true);
+        }
+
         if (_stunDuration < 0) { 
             ManageRayCast();
             ManageEnemyState();
@@ -43,7 +50,8 @@ public class PrimaryColorRangedEnemy : EnemyScript {
     }
 
     public override void Chasing() {
-
+        base.Chasing();
+        _attackRangeSight.SetActive(true);
         if (_aquiredTargets.Count > 0)
         {
             _lastPosition = transform.position;
@@ -102,4 +110,11 @@ public class PrimaryColorRangedEnemy : EnemyScript {
         EnemyBullet.GetComponent<BulletEnemyScript>().Initialize(_damage, facingDirection);
         _coolDown = Random.Range(_coolDownSet, _coolDownSet + 1f);
     }
+
+    public override void Fallen()
+    {
+        base.Fallen();
+        _attackRangeSight.SetActive(false);
+    }
+
 }

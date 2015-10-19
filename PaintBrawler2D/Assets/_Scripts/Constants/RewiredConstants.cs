@@ -47,7 +47,7 @@ namespace RewiredConstants {
             public const int Jump = 4;
 
             /// <summary>
-            /// Descriptive Name: SpecialAttack
+            /// Descriptive Name: Action0
             /// Type: Button
             /// </summary>
             public const int SpecialAttack = 5;

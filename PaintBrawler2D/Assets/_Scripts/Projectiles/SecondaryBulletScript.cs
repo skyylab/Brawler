@@ -54,7 +54,8 @@ public class SecondaryBulletScript : MonoBehaviour {
                 other.GetComponent<EnemyScript>().GetColorString() == "Orange")
             { 
                 other.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetDamage(),
-                                                                             _parentScript.GetPrimaryColorString());
+                                                                  _parentScript.GetPrimaryColorString(),
+                                                                  _parent);
                 Instantiate(_bulletHit, transform.position, transform.rotation);
 
                 if (transform.localEulerAngles.y != 0)

@@ -9,15 +9,14 @@ public class FireballProjectile : MonoBehaviour {
 
     private int _damage;
 
-    private float _moveSpeed = 0.5f;
+    private float _moveSpeed = 0.25f;
     private int _firingDirection = 1;
     private float _life = 2.0f;
     private string _colorName = "";
 
     [SerializeField]
-    private GameObject _fireballSprite;
-    [SerializeField]
-    private GameObject _fireballSpriteInner;
+    private GameObject _sprite;
+
     [SerializeField]
     private GameObject _explosion;
 
@@ -48,19 +47,18 @@ public class FireballProjectile : MonoBehaviour {
         _colorName = colorName;
         _parent = parent;
         _parentScript = _parent.GetComponent<MageClass>();
-        _fireballSprite.GetComponent<ParticleSystem>().startColor = color;
         _color = color;
         _firingDirection = Direction;
+
+        size = size / 1.5f;
+
         transform.localScale *= size;
 
         _damage = Damage;
 
-        _fireballSprite.GetComponent<ParticleSystem>().startSize *= size;
-        _fireballSpriteInner.GetComponent<ParticleSystem>().startSize *= size;
-
         if (_firingDirection == 1)
         {
-            transform.localEulerAngles += new Vector3(0f, 180f, 0f);
+            _sprite.transform.localEulerAngles += new Vector3(0f, 180f, 0f);
         }
     }
 
@@ -68,7 +66,9 @@ public class FireballProjectile : MonoBehaviour {
     {
         if (other.tag == "Enemy")
         {
-            other.transform.gameObject.GetComponent<EnemyScript>().AccumulateColor(_damage, _parentScript.GetPrimaryColorString());
+            other.transform.gameObject.GetComponent<EnemyScript>().AccumulateColor(_damage, 
+                                                                                   _parentScript.GetPrimaryColorString(),
+                                                                                   _parent);
 
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);

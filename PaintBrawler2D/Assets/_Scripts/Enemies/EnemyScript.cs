@@ -73,7 +73,8 @@ public abstract class EnemyScript : MonoBehaviour {
         circling,
         attacking,
         fleeing,
-        pulled
+        pulled,
+        fallen
     }
     public EnemyState _currentState = EnemyState.initializing;
 
@@ -88,6 +89,14 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected float _pullTimer = 2f;
     protected float _pullTimerReset;
+    
+    [SerializeField]
+    protected float _invincibleTimer = 2f;
+    protected float _invincibleTimerReset;
+
+    protected int _hitKnockOverCounter = 45;
+    protected int _hitKnockOverCountMax = 90;
+    protected int _hitKnockOverCountMin = 20;
 
     [SerializeField]
     protected bool _isOffScreen;
@@ -97,6 +106,9 @@ public abstract class EnemyScript : MonoBehaviour {
     protected Vector3 _lastPosition;
     [SerializeField]
     protected float _stunDuration;
+    [SerializeField]
+    protected float _damageCooldown = 0.1f;
+    protected float _damageCooldownReset;
 
     [SerializeField]
     protected GameObject[] _objectSprites;
@@ -126,6 +138,8 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected Color _changedColor;
     protected Animator _animator;
+    [SerializeField]
+    protected Animation _fallAnimation;
 
     [SerializeField]
     private GameObject _deathAnimation;
@@ -146,18 +160,34 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     private GameObject _pullLocation;
 
+    private float _gainStatsTimer = 1f;
+    private float _gainStatsTimerReset;
     // Virtual functions
     public virtual void Attack(){ }
     // Idle Animations
     public virtual void Idle() { }
     public virtual void SawPlayer() { }
     // Start approach
-    public virtual void Chasing() { }
+    public virtual void Chasing() {
+        GetComponent<BoxCollider>().enabled = true;
+        GetComponent<SphereCollider>().enabled = true;
+        _aquisitionRange.SetActive(true);
+        _circleRange.SetActive(true);
+        _moveSpeedActual = _moveSpeed;
+    }
     public virtual void Circling() { }
     // Attack
     public virtual void Attacking() { }
     // Flee
     public virtual void Fleeing() { }
+    // Fallen
+    public virtual void Fallen() {
+        GetComponent<BoxCollider>().enabled = false;
+        GetComponent<SphereCollider>().enabled = false;
+        _aquisitionRange.SetActive(false);
+        _circleRange.SetActive(false);
+    }
+
     // Attack
     public virtual void Pulling() {
         _pullTimer -= Time.deltaTime;
@@ -203,26 +233,46 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         _mainCamera = Camera.main.gameObject;
         _pullTimerReset = _pullTimer;
+        _invincibleTimerReset = _invincibleTimer;
+        _damageCooldownReset = _damageCooldown;
+        _invincibleTimer = 0f;
+        _gainStatsTimerReset = _gainStatsTimer;
+        _gainStatsTimer = 0f;
     }
 
     public virtual void Update() {
         _stunDuration -= Time.deltaTime;
-        GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
+        _invincibleTimer -= Time.deltaTime;
+        _damageCooldown -= Time.deltaTime;
+        _gainStatsTimer -= Time.deltaTime;
+        
+        if (_invincibleTimer < 0 && _currentState == EnemyState.fallen) {
+            _currentState = EnemyState.chasing;
+        }
+
+        if (_invincibleTimer > 0) {
+            _currentState = EnemyState.fallen;
+        }
 
         if (_stunDuration > 0) {
             _animator.Play("Stunned");
         }
         else {
         }
-
     }
 
     public void AddToTargetList(GameObject newTarget) {
-        _aquiredTargets.Add(newTarget);
+        if (!_aquiredTargets.Contains(newTarget)) {
+            _aquiredTargets.Add(newTarget);
+        }
     }
 
-    public void RemoveFromTargetList(GameObject newTarget) {
-        _aquiredTargets.Remove(newTarget);
+    public void RemoveFromTargetList(GameObject newTarget)
+    {
+        if (_aquiredTargets.Contains(newTarget))
+        {
+            _aquiredTargets.Remove(newTarget);
+        }
     }
 
     public void AddToAttackList(GameObject newTarget)
@@ -256,50 +306,62 @@ public abstract class EnemyScript : MonoBehaviour {
         }
     }
 
-    public void AccumulateColor(int Damage, string PrimaryColor)
-    {
-        // Take Damage if hit by primary color and enemy is primary
-        if (_colorType == ColorType.Secondary)
-        {
-            if (_pastMixColor == "")
+    public void AccumulateColor(int Damage, string PrimaryColor, GameObject Player)
+    {   
+        if (_damageCooldown < 0) { 
+            // Take Damage if hit by primary color and enemy is primary
+            if (_colorType == ColorType.Secondary)
             {
-                _pastMixColor = PrimaryColor;
-                _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 5;
-                _particleGenerator.GetComponent<ParticleSystem>().startColor = returnPrimaryColor(PrimaryColor);
+                if (_pastMixColor == "")
+                {
+                    _pastMixColor = PrimaryColor;
+                    _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 5;
+                    _particleGenerator.GetComponent<ParticleSystem>().startColor = returnPrimaryColor(PrimaryColor);
+                }
+                else if (_pastMixColor != PrimaryColor)
+                {
+                    Color MixedColor = MixColor(_pastMixColor, PrimaryColor);
+                    _particleGenerator.GetComponent<ParticleSystem>().startColor = MixedColor;
+                    _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
+                    GameObject ColorExplosion = Instantiate(_colorExplosion, transform.position, transform.rotation) as GameObject;
+                    ColorExplosion.GetComponent<ExplosionBirthTimer>().InitializeColor(MixedColor, Damage);
+                    ColorExplosion.transform.parent = gameObject.transform;
+                    _pastMixColor = "";
+                }
             }
-            else if (_pastMixColor != PrimaryColor)
+            else
             {
-                Color MixedColor = MixColor(_pastMixColor, PrimaryColor);
-                _particleGenerator.GetComponent<ParticleSystem>().startColor = MixedColor;
-                _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
-                GameObject ColorExplosion = Instantiate(_colorExplosion, transform.position, transform.rotation) as GameObject;
-                ColorExplosion.GetComponent<ExplosionBirthTimer>().InitializeColor(MixedColor, Damage);
-                ColorExplosion.transform.parent = gameObject.transform;
-                _pastMixColor = "";
+                TakeDamage(Damage, returnPrimaryColor(PrimaryColor), Player);
             }
         }
-        else
-        {
-            TakeDamage(Damage, returnPrimaryColor(PrimaryColor));
-        }
+
+        _damageCooldown = _damageCooldownReset;
     }
 
     public void GainStats(float scalingValue, int damageIncrease, int HPIncrease) {
-        transform.localScale *= scalingValue;
-        _damage += damageIncrease;
-        _hitPoints += HPIncrease;
 
+        if (_gainStatsTimer < 0) { 
+            transform.localScale *= scalingValue;
+            _damage += damageIncrease;
+            _hitPoints += HPIncrease;
 
-        GameObject Text = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
-        Text.GetComponent<NiceText>().Initialize("Red", "Absorbed!", 0);
+            _gainStatsTimer = _gainStatsTimerReset;
+
+            GameObject Text = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
+            Text.GetComponent<NiceText>().Initialize("Red", "Bad Color!", 0);
+        }
     }
 
     public void Stun(float Duration) {
+        if (_stunDuration < 0) {
+            GameObject Text = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
+            Text.GetComponent<NiceText>().Initialize("Red", "Stunned!", 0);
+        }
         _stunDuration = Duration;
     }
 
     public void TakeFlatDamage(int Damage) {
-
+        
         GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
         DamageText.GetComponent<DamageText>().Initialize(Damage, "Red");
         _hitPoints -= Damage;
@@ -314,7 +376,7 @@ public abstract class EnemyScript : MonoBehaviour {
         }
     }
 
-    public void TakeDamage(int Damage, Color Color)
+    public void TakeDamage(int Damage, Color Color, GameObject Player)
     {
         if (_colorType == ColorType.NonColored)
         {
@@ -326,7 +388,25 @@ public abstract class EnemyScript : MonoBehaviour {
             _hitPoints -= Damage;
             _healthSlider.GetComponent<Slider>().value = _hitPoints;
             GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
-            DamageText.GetComponent<DamageText>().Initialize(Damage, "Red");
+            DamageText.GetComponent<DamageText>().Initialize(Damage, Player.GetComponent<HeroScript>().GetPrimaryColorString());
+
+            _hitKnockOverCounter-= Damage;
+
+            if (_hitKnockOverCounter <= 0) {
+                _damageCooldown = 1f;
+                _hitKnockOverCounter = Random.Range(_hitKnockOverCountMin, _hitKnockOverCountMax);
+                _invincibleTimer = _invincibleTimerReset;
+
+                if (_moveDirection < 0) { 
+                    GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * 20000);
+                }
+                else
+                {
+                    GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * -20000);
+                }
+                _currentState = EnemyState.fallen;
+                _animator.Play("Fall");
+            }
 
             if (_colorType == ColorType.Primary) {
                 DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
@@ -608,6 +688,9 @@ public abstract class EnemyScript : MonoBehaviour {
                 break;
             case EnemyState.pulled:
                 Pulling();
+                break;
+            case EnemyState.fallen:
+                Fallen();
                 break;
             default:
                 break;

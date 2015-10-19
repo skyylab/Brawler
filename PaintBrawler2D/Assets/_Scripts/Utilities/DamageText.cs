@@ -19,7 +19,6 @@ public class DamageText : MonoBehaviour {
 
     public void Initialize(int Damage, string SetColor)
     {
-
         Color color = new Color(1f, 1f, 1f);
         switch (SetColor)
         {
@@ -40,6 +39,9 @@ public class DamageText : MonoBehaviour {
                 break;
             case "Purple":
                 color = ColorArray[5];
+                break;
+            case "Black":
+                color = new Color(0.5f, 0.5f, 0.5f);
                 break;
         }
 

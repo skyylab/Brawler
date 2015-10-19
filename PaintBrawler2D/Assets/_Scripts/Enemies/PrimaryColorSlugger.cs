@@ -45,6 +45,7 @@ public class PrimaryColorSlugger : EnemyScript {
     }
 
     public override void Chasing() {
+        base.Chasing();
         if (_aquiredTargets.Count > 0)
         {
             Vector3 TargetAhead = _aquiredTargets[0].transform.position + new Vector3(10f, 0f, 0f);
