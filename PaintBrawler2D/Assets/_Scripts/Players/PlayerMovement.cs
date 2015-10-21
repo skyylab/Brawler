@@ -82,55 +82,57 @@ public class PlayerMovement : MonoBehaviour {
 
     private void ProcessInput()
     {
-        if (_heroScript.ReturnIsAlive())
-        {
-            if (_pressAttack1)
+        if (_heroScript.ShouldMove()) { 
+            if (_heroScript.ReturnIsAlive())
             {
-                _chargeThresholdTimer -= Time.deltaTime;
+                if (_pressAttack1)
+                {
+                    _chargeThresholdTimer -= Time.deltaTime;
 
-                if (_chargeThresholdTimer < 0) {
-                    _heroScript.ChargeAttack();
+                    if (_chargeThresholdTimer < 0) {
+                        _heroScript.ChargeAttack();
+                    }
+                    else
+                    {
+                        _heroScript.Attack();
+                        _heroScript.ChargeAttackReset();
+                    }
                 }
                 else
                 {
-                    _heroScript.Attack();
-                    _heroScript.ChargeAttackReset();
+                    _heroScript.ResetChargeAttack();
+                    _chargeThresholdTimer = _chargeThresholdTimerReset;
                 }
-            }
-            else
-            {
-                _heroScript.ResetChargeAttack();
-                _chargeThresholdTimer = _chargeThresholdTimerReset;
-            }
 
-            if (_pressAttack2)
-            {
-                _heroScript.SecondaryAttack();
-            }
+                if (_pressAttack2)
+                {
+                    _heroScript.SecondaryAttack();
+                }
 
-            if (_pressJump)
-            {
-                _heroScript.Jump();
-            }
+                if (_pressJump)
+                {
+                    _heroScript.Jump();
+                }
 
-            if (_pressSpecial && !_heroScript.GetSpecialStatus() && _heroScript.CanActivateSpecial())
-            {
-                _heroScript.SpecialAttack();
-            }
+                if (_pressSpecial && !_heroScript.GetSpecialStatus() && _heroScript.CanActivateSpecial())
+                {
+                    _heroScript.SpecialAttack();
+                }
 
 
-            // Process movement
-            if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
-            {
-                ProcessMovement();
-                _heroScript.PlayWalkAnim();
-            }
-            else
-            {
+                // Process movement
+                if (_moveVector.x != 0.0f || _moveVector.y != 0.0f)
+                {
+                    ProcessMovement();
+                    _heroScript.PlayWalkAnim();
+                }
+                else
+                {
 
-                _heroScript.PlayIdleAnim();
-            }
+                    _heroScript.PlayIdleAnim();
+                }
 
+            }
         }
     }
 

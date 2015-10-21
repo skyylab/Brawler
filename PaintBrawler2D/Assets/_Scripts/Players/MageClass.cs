@@ -52,9 +52,11 @@ public class MageClass : HeroScript {
 
     // Update is called once per frame
     public override void Update () {
-        base.Update();
-        ManageAttack();
-        ManageDeath();
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage")) { 
+            base.Update();
+            ManageAttack();
+            ManageDeath();
+        }
     }
 
     private void ManageAttack()

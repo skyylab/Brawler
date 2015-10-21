@@ -139,8 +139,6 @@ public class PrimaryColorEnemy : EnemyScript {
     {
         _attackLanded = false;
         _animator.CrossFade("Attack", 0.01f);
-        _objectSprites[1].GetComponent<BoxCollider>().enabled = true;
-        _objectSprites[2].GetComponent<BoxCollider>().enabled = true;
         _coolDown = _coolDownSet;
     }
 

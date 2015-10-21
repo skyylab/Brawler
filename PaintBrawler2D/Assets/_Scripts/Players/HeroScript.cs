@@ -131,6 +131,16 @@ public abstract class HeroScript : MonoBehaviour {
 
 
     public bool GetSpecialStatus() { return _specialActive; }
+    public bool ShouldMove() {
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage")) {
+            return false;
+        }
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Death")) {
+            return false;
+        }
+        return true;
+    }
+
     public virtual void Attack() { }
     public virtual void ChargeAttack() {
         float MaxSize = 6f;
@@ -254,7 +264,7 @@ public abstract class HeroScript : MonoBehaviour {
         }
     }
 
-    public void TakeDamage(int Damage)
+    public void TakeDamage(int Damage, GameObject attacker)
     {
         _hitPoints -= Damage;
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
@@ -263,6 +273,8 @@ public abstract class HeroScript : MonoBehaviour {
 
         _audio.pitch = Random.Range(0.8f, 1.2f);
         _audio.PlayOneShot(_getHit[Random.Range(0, _getHit.Length)], 0.4f);
+
+        GetComponent<Rigidbody>().AddForce(Vector3.MoveTowards(transform.position, attacker.transform.position, -500));
 
         if (_hitPoints > 0) { 
             _animator.Play("TakeDamage");

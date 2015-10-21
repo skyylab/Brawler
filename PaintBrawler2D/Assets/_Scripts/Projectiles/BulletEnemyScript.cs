@@ -38,7 +38,7 @@ public class BulletEnemyScript : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            other.gameObject.GetComponent<HeroScript>().TakeDamage(_damage);
+            other.gameObject.GetComponent<HeroScript>().TakeDamage(_damage, _parent);
             GetComponent<BoxCollider>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
         }
