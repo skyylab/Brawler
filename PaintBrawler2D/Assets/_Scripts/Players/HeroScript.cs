@@ -38,6 +38,7 @@ public abstract class HeroScript : MonoBehaviour {
     [SerializeField]
     protected bool _isAlive = true;
     private bool _playDeathOnce = false;
+    private float _deathAnimTimer = 1f;
 
     [SerializeField]
     protected float _manaRegenTimer = 0.6f;
@@ -123,6 +124,11 @@ public abstract class HeroScript : MonoBehaviour {
     [SerializeField]
     protected float _specialAttackCooldown = 60f;
 
+    // Audio
+    [SerializeField]
+    private AudioClip[] _getHit;
+    private AudioSource _audio;
+
 
     public bool GetSpecialStatus() { return _specialActive; }
     public virtual void Attack() { }
@@ -166,6 +172,7 @@ public abstract class HeroScript : MonoBehaviour {
 
     public virtual void Start() {
         _manaRegenTimerReset = _manaRegenTimer;
+        _audio = GetComponent<AudioSource>();
     }
 
     public virtual void Update() {
@@ -253,6 +260,13 @@ public abstract class HeroScript : MonoBehaviour {
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
         GameObject DamageCounter = Instantiate(_damageCounter, transform.position, transform.rotation) as GameObject;
         DamageCounter.GetComponent<DamageText>().Initialize(Damage, "Black");
+
+        _audio.pitch = Random.Range(0.8f, 1.2f);
+        _audio.PlayOneShot(_getHit[Random.Range(0, _getHit.Length)], 0.4f);
+
+        if (_hitPoints > 0) { 
+            _animator.Play("TakeDamage");
+        }
     }
 
     public void Jump() {
@@ -262,21 +276,26 @@ public abstract class HeroScript : MonoBehaviour {
     protected void ManageDeath() {
         if (_hitPoints <= 0)
         {
+            _deathAnimTimer -= Time.deltaTime;
             _moveSpeed = 0;
-            if (!_playDeathOnce)
-            {
-                _animator.Play("Death");
-                _playDeathOnce = true;
-            }
+            _animator.Play("Death");
 
-            if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Death")) {
+            if (_deathAnimTimer < 0) {
                 _deadPlayer.SetActive(true);
                 _mainCamera.GetComponent<CameraControls>().RemovePlayers(gameObject);
+                GameObject [] AllEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+                foreach (GameObject x in AllEnemies) {
+                    x.GetComponent<EnemyScript>().RemoveFromAttackList(gameObject);
+                    x.GetComponent<EnemyScript>().RemoveFromTargetList(gameObject);
+                }
+
                 Vector3 currentPosition = transform.position;
                 transform.position = new Vector3(300f, 300f, 300f);
                 gameObject.tag = "Untagged";
                 transform.position = currentPosition;
                 _isAlive = false;
+                _playDeathOnce = false;
                 _characterObj.SetActive(false);
             }
         }
@@ -312,5 +331,6 @@ public abstract class HeroScript : MonoBehaviour {
         _characterObj.SetActive(true);
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
         _UIManaBar.GetComponent<Slider>().value = _manaPoints;
+        _deathAnimTimer = 1f;
     }
 }

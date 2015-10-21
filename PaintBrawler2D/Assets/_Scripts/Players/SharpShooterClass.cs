@@ -120,7 +120,9 @@ public class SharpShooterClass : HeroScript {
         base.PlayIdleAnim();
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootLeft") &&
             !_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootRight") &&
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump")) { 
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage") &&
+            _hitPoints > 0) { 
             _animator.Play("Idle");
         }
     }
@@ -128,7 +130,9 @@ public class SharpShooterClass : HeroScript {
     {
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootLeft") &&
             !_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootRight") &&
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("ShooterJump"))
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage") &&
+            _hitPoints > 0)
         {
             _animator.Play("RunFox");
         }

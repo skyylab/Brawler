@@ -40,6 +40,7 @@ public class ReviveScript : MonoBehaviour {
 
         if (_reviveThreshold > _reviveThresholdMax)
         {
+            _reviveThreshold = 0;
             _player.GetComponent<HeroScript>().RevivePlayer();
         }
     }
