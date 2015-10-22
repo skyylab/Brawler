@@ -94,9 +94,11 @@ public abstract class EnemyScript : MonoBehaviour {
     protected float _invincibleTimer = 2f;
     protected float _invincibleTimerReset;
 
-    protected int _hitKnockOverCounter = 45;
-    protected int _hitKnockOverCountMax = 90;
+    protected int _hitKnockOverCounter = 75;
+    protected int _hitKnockOverCountMax = 150;
     protected int _hitKnockOverCountMin = 20;
+
+    private float _deathAnimationTimer = 3f;
 
     [SerializeField]
     protected bool _isOffScreen;
@@ -259,12 +261,43 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         else {
         }
+
+        if (_hitPoints < 0)
+        {
+            ManageDeath();
+        }
     }
 
     public void AddToTargetList(GameObject newTarget) {
         if (!_aquiredTargets.Contains(newTarget)) {
             _aquiredTargets.Add(newTarget);
         }
+    }
+
+    public void ManageDeath()
+    {
+        _moveSpeedActual = 0f;
+        _moveSpeed = 0f;
+        _deathAnimationTimer -= Time.deltaTime;
+        GetComponent<SphereCollider>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
+        _animator.Play("Death");
+        // Die
+        if (_deathAnimationTimer < 0)
+        {
+            _mainCamera.GetComponent<CameraControls>().EnemyKilled();
+            _aquiredTargets[0].GetComponent<HeroScript>().RemoveAttacker(gameObject);
+            gameObject.transform.parent = GameObject.Find("UnusedObjects").transform;
+            gameObject.SetActive(false);
+        }
+    }
+
+    protected bool CanMove() {
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage") ||
+            _animator.GetCurrentAnimatorStateInfo(0).IsName("Death")) {
+            return false;
+        }
+        return true;
     }
 
     public void RemoveFromTargetList(GameObject newTarget)
@@ -378,58 +411,60 @@ public abstract class EnemyScript : MonoBehaviour {
 
     public void TakeDamage(int Damage, Color Color, GameObject Player)
     {
-        if (_colorType == ColorType.NonColored)
-        {
-            _secondaryColor = Color;
-        }
-
-        if (Color == _secondaryColor)
-        {
-            _hitPoints -= Damage;
-            _healthSlider.GetComponent<Slider>().value = _hitPoints;
-            GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
-            DamageText.GetComponent<DamageText>().Initialize(Damage, Player.GetComponent<HeroScript>().GetPrimaryColorString());
-
-            _hitKnockOverCounter-= Damage;
-
-            if (_hitKnockOverCounter <= 0) {
-                _damageCooldown = 1f;
-                _hitKnockOverCounter = Random.Range(_hitKnockOverCountMin, _hitKnockOverCountMax);
-                _invincibleTimer = _invincibleTimerReset;
-
-                if (_moveDirection < 0) { 
-                    GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * 20000);
-                }
-                else
-                {
-                    GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * -20000);
-                }
-                _currentState = EnemyState.fallen;
-                _animator.Play("Fall");
-            }
-
-            if (_colorType == ColorType.Primary) {
-                DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
-                DamageText.GetComponent<NiceText>().Initialize(ReturnColorString(Color), "Nice!", 1);
-            }
-
-            if (_colorType == ColorType.Secondary)
+        if (_hitPoints > 0) { 
+            if (_colorType == ColorType.NonColored)
             {
-                DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
-                DamageText.GetComponent<NiceText>().Initialize(ReturnColorString(Color), "Great!", 2);
+                _secondaryColor = Color;
             }
-        }
-        else {
-            GainStats(1.1f, 5, 10);
-        }
 
-        if (_hitPoints < 0)
-        {
-            // Die
-            _mainCamera.GetComponent<CameraControls>().EnemyKilled();
-            _aquiredTargets[0].GetComponent<HeroScript>().RemoveAttacker(gameObject);
-            gameObject.transform.parent = GameObject.Find("UnusedObjects").transform;
-            gameObject.SetActive(false);
+            if (Color == _secondaryColor)
+            {
+                _hitPoints -= Damage;
+                _healthSlider.GetComponent<Slider>().value = _hitPoints;
+                GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
+                DamageText.GetComponent<DamageText>().Initialize(Damage, Player.GetComponent<HeroScript>().GetPrimaryColorString());
+
+                _hitKnockOverCounter-= Damage;
+
+                _animator.Play("TakeDamage");
+                if (_moveDirection < 0)
+                {
+                    GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * 5000);
+                }
+                else {
+                    GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * -5000);
+                }
+
+                if (_hitKnockOverCounter <= 0) {
+                    _damageCooldown = 1f;
+                    _hitKnockOverCounter = Random.Range(_hitKnockOverCountMin, _hitKnockOverCountMax);
+                    _invincibleTimer = _invincibleTimerReset;
+
+                    if (_moveDirection < 0) { 
+                        GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * 20000);
+                    }
+                    else
+                    {
+                        GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * -20000);
+                    }
+                    _currentState = EnemyState.fallen;
+                    _animator.Play("Fall");
+                }
+
+                if (_colorType == ColorType.Primary) {
+                    DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
+                    DamageText.GetComponent<NiceText>().Initialize(ReturnColorString(Color), "Nice!", 1);
+                }
+
+                if (_colorType == ColorType.Secondary)
+                {
+                    DamageText = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
+                    DamageText.GetComponent<NiceText>().Initialize(ReturnColorString(Color), "Great!", 2);
+                }
+            }
+            else {
+                GainStats(1.1f, 5, 10);
+            }
         }
     }
 

@@ -29,9 +29,10 @@ public class BulletEnemyScript : MonoBehaviour {
         }
 	}
 
-    public void Initialize(int Damage, int Direction) {
+    public void Initialize(int Damage, int Direction, GameObject parent) {
         _firingDirection = Direction;
         _damage = Damage;
+        _parent = parent;
     }
 
     void OnTriggerEnter(Collider other)

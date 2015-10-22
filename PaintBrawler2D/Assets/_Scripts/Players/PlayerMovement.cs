@@ -145,7 +145,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             transform.position += new Vector3(0f, 0f, _moveVector.y) * moveSpeed * (0.65f);
         }
-
+        
         if (_mainCameraPosition.x - transform.position.x > -11 && _moveVector.x > 0)
         {
             transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
@@ -153,7 +153,9 @@ public class PlayerMovement : MonoBehaviour {
 
         if (_mainCameraPosition.x - transform.position.x < 11 && _moveVector.x < 0)
         {
-            transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+            if (transform.position.x > -31) { 
+                transform.position += new Vector3(_moveVector.x, 0f, 0f) * moveSpeed;
+            }
         }
         _heroScript.ManageFlipSprite(_moveVector);
     }

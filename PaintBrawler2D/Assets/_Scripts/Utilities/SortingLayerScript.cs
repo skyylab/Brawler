@@ -10,7 +10,7 @@ public class SortingLayerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+        SortingLayer = GetComponent<SpriteRenderer>().sortingOrder;
 	}
 	
 	// Update is called once per frame

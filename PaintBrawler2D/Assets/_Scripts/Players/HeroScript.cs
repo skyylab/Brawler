@@ -127,7 +127,7 @@ public abstract class HeroScript : MonoBehaviour {
     // Audio
     [SerializeField]
     private AudioClip[] _getHit;
-    private AudioSource _audio;
+    protected AudioSource _audio;
 
 
     public bool GetSpecialStatus() { return _specialActive; }

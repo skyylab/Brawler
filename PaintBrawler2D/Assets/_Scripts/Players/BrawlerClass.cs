@@ -35,8 +35,6 @@ public class BrawlerClass : HeroScript {
 
     private float _audioVolume = 0.6f;
 
-    private AudioSource _audio;
-
     // Special Attack Stuff
     private float _specialAttackTimer = 20f;
     private float _specialAttackTimerReset;
@@ -54,7 +52,6 @@ public class BrawlerClass : HeroScript {
 
         _specialAttackTimerReset = _specialAttackTimer;
         _animator = _characterObj.GetComponent<Animator>();
-        _audio = GetComponent<AudioSource>();
     }
 	
     public void InitializeStats() {

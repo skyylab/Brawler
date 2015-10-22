@@ -56,6 +56,9 @@ public class PrimaryColorRangedEnemy : EnemyScript {
         {
             _lastPosition = transform.position;
             transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * _moveSpeedActual);
+            if (transform.position != _aquiredTargets[0].transform.position && CanMove()) {
+                _animator.Play("Walk");
+            }
         }
     }
 
@@ -73,6 +76,9 @@ public class PrimaryColorRangedEnemy : EnemyScript {
         if (_fleeTimer > 0)
         {
             transform.position = Vector3.MoveTowards(transform.position, _fleeTarget.transform.position, Time.deltaTime * _moveSpeed * -1);
+            if (CanMove()) { 
+                _animator.Play("Walk");
+            }
         }
         else
         {
@@ -107,7 +113,7 @@ public class PrimaryColorRangedEnemy : EnemyScript {
             facingDirection = 1;
         }
 
-        EnemyBullet.GetComponent<BulletEnemyScript>().Initialize(_damage, facingDirection);
+        EnemyBullet.GetComponent<BulletEnemyScript>().Initialize(_damage, facingDirection, gameObject);
         _coolDown = Random.Range(_coolDownSet, _coolDownSet + 1f);
     }
 
