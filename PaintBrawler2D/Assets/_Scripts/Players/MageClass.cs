@@ -18,6 +18,8 @@ public class MageClass : HeroScript {
     [SerializeField]
     private GameObject _secondaryProjectile;
     [SerializeField]
+    private GameObject _finisherProjectile;
+    [SerializeField]
     private GameObject _muzzleFlash;
     [SerializeField]
     private GameObject _firingPointLeft;
@@ -79,19 +81,33 @@ public class MageClass : HeroScript {
 
     public override void Attack()
     {
-        if (_attackReady == true)
-        {
+        if (!_finisherReady) { 
+            if (_attackReady == true)
+            {
+                _animator.Play("AttackRight");
+                GameObject BulletObj = Instantiate(_projectile, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+                BulletObj.GetComponent<FireballProjectile>().Initialize(_primaryColorArray[_playerNumber - 1],
+                                                                        _primaryColorString[_playerNumber - 1],
+                                                                        _firingDirection,
+                                                                        gameObject,
+                                                                        1f + _chargeAttackTime,
+                                                                        _damage);
+                //Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
+
+                _mageAttackSpeed = _attackSpeedReset;
+            }
+        }
+        else {
             _animator.Play("AttackRight");
-            GameObject BulletObj = Instantiate(_projectile, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
-            BulletObj.GetComponent<FireballProjectile>().Initialize(_primaryColorArray[_playerNumber - 1],
-                                                                    _primaryColorString[_playerNumber - 1],
-                                                                    _firingDirection,
-                                                                    gameObject,
-                                                                    1f + _chargeAttackTime,
-                                                                    _damage);
-            //Instantiate(_muzzleFlash, _firingPoint.transform.position, _firingPoint.transform.rotation);
+            GameObject BulletObj = Instantiate(_finisherProjectile, _finisherObj.transform.position, _finisherObj.transform.rotation) as GameObject;
+            BulletObj.GetComponent<FinisherFireballProjectile>().Initialize(_firingDirection,
+                                                                            gameObject,
+                                                                            1f + _chargeAttackTime,
+                                                                            300,
+                                                                            _finisherObj);
 
             _mageAttackSpeed = _attackSpeedReset;
+            _finisherReady = false;
         }
     }
 
