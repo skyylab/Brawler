@@ -3,9 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PrimaryColorEnemy : EnemyScript {
-    
-    [SerializeField]
-    private GameObject Spawner;
 
     private float _timerTagEnemySwitch = 10f;
     private float _timerTagEnemySwitchReset;
@@ -14,9 +11,6 @@ public class PrimaryColorEnemy : EnemyScript {
 
     void Start()
     {
-        InitializeClass();
-        _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
-        Spawner = GameObject.Find("EnemySpawner");
         _timerTagEnemySwitchReset = _timerTagEnemySwitch;
         _fleeTimer = Random.Range(4f, 7f);
     }

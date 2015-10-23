@@ -3,8 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PrimaryColorRangedEnemy : EnemyScript {
-    [SerializeField]
-    private GameObject Spawner;
 
     [SerializeField]
     private GameObject _prefabBullet;
@@ -16,13 +14,6 @@ public class PrimaryColorRangedEnemy : EnemyScript {
     private float _fleeTimer = 1.5f;
 
     public void ResetFleeTimer() { _fleeTimer = 1.5f;  }
-
-    void Start()
-    {
-        InitializeClass();
-        _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
-        Spawner = GameObject.Find("EnemySpawner");
-    }
 
     public override void Update()
     {

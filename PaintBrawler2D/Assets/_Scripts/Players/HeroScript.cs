@@ -39,6 +39,8 @@ public abstract class HeroScript : MonoBehaviour {
     protected bool _isAlive = true;
     private bool _playDeathOnce = false;
     private float _deathAnimTimer = 1f;
+    protected bool _finisherReady;
+    protected GameObject _finisherObj;
 
     [SerializeField]
     protected float _manaRegenTimer = 0.6f;
@@ -131,6 +133,8 @@ public abstract class HeroScript : MonoBehaviour {
 
 
     public bool GetSpecialStatus() { return _specialActive; }
+    public void SetFinisher (bool Set, GameObject FinisherObj) { _finisherReady = Set; _finisherObj = FinisherObj; }
+
     public bool ShouldMove() {
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage")) {
             return false;

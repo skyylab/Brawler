@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public abstract class EnemyScript : MonoBehaviour {
-    // Stats
-    public Vector3 RandomSpherePoint;
 
     [SerializeField]
     protected int _hitPoints = 100;
@@ -27,14 +25,30 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected bool _colorChanged = false;
     [SerializeField]
+    protected bool _enableFinisher = false;
+    [SerializeField]
     protected GameObject _healthSlider;
     public enum ColorType
     {
         NonColored,
         Primary,
-        Secondary
+        Secondary,
+        Swapper
     }
+
     public ColorType _colorType;
+
+    public enum ColorHue
+    {
+        Random,
+        Red,
+        Yellow,
+        Blue,
+        Green,
+        Purple,
+        Orange
+    }
+    public ColorHue _colorHue;
 
     // Range finders
     [SerializeField]
@@ -189,8 +203,7 @@ public abstract class EnemyScript : MonoBehaviour {
         _aquisitionRange.SetActive(false);
         _circleRange.SetActive(false);
     }
-
-    // Attack
+    
     public virtual void Pulling() {
         _pullTimer -= Time.deltaTime;
 
@@ -228,10 +241,19 @@ public abstract class EnemyScript : MonoBehaviour {
 
     public int AttackListSize() { return _attackTargets.Count; }
     public int GetDamage() { return _damage; }
+    public void SetFinisher (bool Set) {
+        _enableFinisher = Set;
+    }
 
     public string GetColorString() { return ReturnColorString(_secondaryColor); }
 
+    // Other Functions
     void Awake()
+    {
+        InitializeClass();
+    }
+
+    protected void InitializeClass()
     {
         _mainCamera = Camera.main.gameObject;
         _pullTimerReset = _pullTimer;
@@ -240,6 +262,99 @@ public abstract class EnemyScript : MonoBehaviour {
         _invincibleTimer = 0f;
         _gainStatsTimerReset = _gainStatsTimer;
         _gainStatsTimer = 0f;
+        _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
+
+        SetInitialColors(_colorType, _colorHue);
+        // Setting range
+        _aquisitionRange.GetComponent<SphereCollider>().radius = _aquisitionRangeValue;
+        _attackRange.GetComponent<SphereCollider>().radius = _attackRangeValue;
+
+        _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
+        _healthSlider.GetComponent<Slider>().value = _hitPoints;
+
+        _animator = _animatedObj.GetComponent<Animator>();
+        _moveSpeedActual = _moveSpeed;
+        _coolDownSet = _coolDown;
+    }
+
+    public int ReturnColorInt(ColorHue ColorHue) {
+        switch (ColorHue) {
+            case ColorHue.Red:
+                return 0;
+            case ColorHue.Yellow:
+                return 1;
+            case ColorHue.Blue:
+                return 2;
+            case ColorHue.Green:
+                return 0;
+            case ColorHue.Purple:
+                return 0;
+            case ColorHue.Orange:
+                return 1;
+            case ColorHue.Random:
+                return 2;
+        }
+        return -1;
+    }
+
+    private void SetInitialColors(ColorType ColorType, ColorHue ColorHue)
+    {
+        if (ColorType == ColorType.Primary)
+        {
+            // Setting Player Color
+            int ColorIndex = ReturnColorInt(ColorHue);
+            if (ColorIndex < 0)
+            {
+                ColorIndex = Random.Range(0, 3);
+            }
+            _secondaryColor = _primaryColorArray[ColorIndex];
+
+            switch (ColorIndex)
+            {
+                case 0:
+                    _currentColor = "Red";
+                    break;
+                case 1:
+                    _currentColor = "Yellow";
+                    break;
+                case 2:
+                    _currentColor = "Blue";
+                    break;
+            }
+        }
+        else if (ColorType == ColorType.Secondary)
+        {
+            // Setting Player Color
+            int ColorIndex = ReturnColorInt(ColorHue);
+            if (ColorIndex < 0) {
+                ColorIndex = Random.Range(0, 3);
+            }
+            _secondaryColor = _secondaryColorArray[ColorIndex];
+
+            switch (ColorIndex)
+            {
+                case 0:
+                    _currentColor = "Green";
+                    break;
+                case 1:
+                    _currentColor = "Purple";
+                    break;
+                case 2:
+                    _currentColor = "Orange";
+                    break;
+            }
+        }
+        else
+        {
+            // Setting Player Color
+            _secondaryColor = _whiteColor;
+            _currentColor = "White";
+        }
+
+        foreach (GameObject x in _objectSprites)
+        {
+            x.GetComponent<SpriteRenderer>().color = _secondaryColor;
+        }
     }
 
     public virtual void Update() {
@@ -262,7 +377,7 @@ public abstract class EnemyScript : MonoBehaviour {
         else {
         }
 
-        if (_hitPoints < 0)
+        if (_hitPoints <= 0)
         {
             ManageDeath();
         }
@@ -374,7 +489,9 @@ public abstract class EnemyScript : MonoBehaviour {
     public void GainStats(float scalingValue, int damageIncrease, int HPIncrease) {
 
         if (_gainStatsTimer < 0) { 
-            transform.localScale *= scalingValue;
+            if (transform.localScale.x < 2) { 
+                transform.localScale *= scalingValue;
+            }
             _damage += damageIncrease;
             _hitPoints += HPIncrease;
 
@@ -563,73 +680,6 @@ public abstract class EnemyScript : MonoBehaviour {
         }
 
         return "";
-    }
-
-    protected void InitializeClass()
-    {
-        SetInitialColors(_colorType);
-        // Setting range
-        _aquisitionRange.GetComponent<SphereCollider>().radius = _aquisitionRangeValue;
-        _attackRange.GetComponent<SphereCollider>().radius = _attackRangeValue;
-
-        _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
-        _healthSlider.GetComponent<Slider>().value = _hitPoints;
-
-        _animator = _animatedObj.GetComponent<Animator>();
-        _moveSpeedActual = _moveSpeed;
-        _coolDownSet = _coolDown;
-    }
-
-    private void SetInitialColors(ColorType ColorType)
-    {
-        int RandomNumber = Random.Range(0, 3);
-        if (ColorType == ColorType.Primary)
-        {
-            // Setting Player Color
-            _secondaryColor = _primaryColorArray[RandomNumber];
-
-            switch (RandomNumber)
-            {
-                case 0:
-                    _currentColor = "Red";
-                    break;
-                case 1:
-                    _currentColor = "Yellow";
-                    break;
-                case 2:
-                    _currentColor = "Blue";
-                    break;
-            }
-        }
-        else if (ColorType == ColorType.Secondary)
-        {
-            // Setting Player Color
-            _secondaryColor = _secondaryColorArray[RandomNumber];
-
-            switch (RandomNumber)
-            {
-                case 0:
-                    _currentColor = "Green";
-                    break;
-                case 1:
-                    _currentColor = "Purple";
-                    break;
-                case 2:
-                    _currentColor = "Orange";
-                    break;
-            }
-        }
-        else
-        {
-            // Setting Player Color
-            _secondaryColor = _whiteColor;
-            _currentColor = "White";
-        }
-
-        foreach (GameObject x in _objectSprites)
-        {
-            x.GetComponent<SpriteRenderer>().color = _secondaryColor;
-        }
     }
 
     // This determines that the player and enemy unit are on the same plane

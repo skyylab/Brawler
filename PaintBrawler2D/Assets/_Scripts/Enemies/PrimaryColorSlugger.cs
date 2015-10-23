@@ -3,9 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PrimaryColorSlugger : EnemyScript {
-    
-    [SerializeField]
-    private GameObject Spawner;
     [SerializeField]
     private float _waitTimer = 1f;
     [SerializeField]
@@ -14,13 +11,6 @@ public class PrimaryColorSlugger : EnemyScript {
     private float _attackTime = 4f;
 
     private float _speedConstant = 2f;
-
-    void Start()
-    {
-        InitializeClass();
-        _particleGenerator.GetComponent<ParticleSystem>().emissionRate = 0;
-        Spawner = GameObject.Find("EnemySpawner");
-    }
 
     public override void Update()
     {
