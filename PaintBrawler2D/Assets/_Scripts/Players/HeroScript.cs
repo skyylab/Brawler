@@ -72,6 +72,8 @@ public abstract class HeroScript : MonoBehaviour {
     protected GameObject _UIManaBar;
     [SerializeField]
     protected GameObject _UISpecialBar;
+    [SerializeField]
+    protected GameObject _finishTextUI;
 
     [SerializeField]
     protected GameObject _characterObj;
@@ -207,6 +209,14 @@ public abstract class HeroScript : MonoBehaviour {
             }
         }
 
+        if (_finisherReady) {
+            _finishTextUI.SetActive(true);
+        }
+        else
+        {
+            _finishTextUI.SetActive(false);
+        }
+
         _UISpecialBar.GetComponent<Slider>().value = _specialAttackCooldown;
     }
 
@@ -247,9 +257,10 @@ public abstract class HeroScript : MonoBehaviour {
 
     public void ManageFlipSprite(Vector3 Direction) {
         if (Direction.x < 0) {
-            transform.localScale = new Vector3(_characterObj.transform.localScale.x * -1 * _beeSpecialScale,
-                                               _characterObj.transform.localScale.y * _beeSpecialScale,
-                                               _characterObj.transform.localScale.z * _beeSpecialScale);
+            transform.localScale = new Vector3(1 * -1 * _beeSpecialScale,
+                                               1* _beeSpecialScale,
+                                               1 * _beeSpecialScale);
+            _finishTextUI.transform.localScale = new Vector3(-0.015f, 0.015f, 0.015f);
 
             _chargeParticleEffects2.transform.localScale = new Vector3(_chargeParticleEffects2.transform.localScale.x,
                                                                        _chargeParticleEffects2.transform.localScale.y,
@@ -257,9 +268,11 @@ public abstract class HeroScript : MonoBehaviour {
             _firingDirection = 1;
         }
         else {
-            transform.localScale = new Vector3 (_characterObj.transform.localScale.x * _beeSpecialScale,
-                                                _characterObj.transform.localScale.y * _beeSpecialScale,
-                                                _characterObj.transform.localScale.z * _beeSpecialScale);
+            transform.localScale = new Vector3 (1 * _beeSpecialScale,
+                                                1 * _beeSpecialScale,
+                                                1 * _beeSpecialScale);
+
+            _finishTextUI.transform.localScale = new Vector3(0.015f, 0.015f, 0.015f);
 
             _chargeParticleEffects2.transform.localScale = new Vector3(_chargeParticleEffects2.transform.localScale.x * -1,
                                                                        _chargeParticleEffects2.transform.localScale.y,

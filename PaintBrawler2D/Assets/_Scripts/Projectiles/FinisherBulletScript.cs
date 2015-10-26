@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FinisherBulletScript : MonoBehaviour {
-
-    private GameObject _parent;
-    private SharpShooterClass _parentScript;
+public class FinisherBulletScript : Finisher {
 
     [SerializeField]
     private GameObject _particles;
@@ -16,11 +13,7 @@ public class FinisherBulletScript : MonoBehaviour {
     [SerializeField]
     private GameObject _bulletHit;
     private GameObject _target;
-
-	// Use this for initialization
-	void Start () {
-	
-	}
+    
 	
 	// Update is called once per frame
 	void Update () {
@@ -35,7 +28,7 @@ public class FinisherBulletScript : MonoBehaviour {
 
     public void Initialize(Color color, string colorName, int Direction, GameObject parent, GameObject target) {
         _parent = parent;
-        _parentScript = _parent.GetComponent<SharpShooterClass>();
+        _parentScript = _parent.GetComponent<HeroScript>();
         GetComponent<SpriteRenderer>().color = color;
         _firingDirection = Direction;
         _target = target;

@@ -58,7 +58,7 @@ public class SecondaryFireballProjectile : MonoBehaviour {
     {
         if (other.tag == "Enemy")
         {
-            other.transform.gameObject.GetComponent<EnemyScript>().PullObject(_pullLocations);
+            other.transform.gameObject.GetComponent<EnemyScript>().Stun(3f);
 
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(new Color(1f, 1f, 1f), "Blue", _parent);

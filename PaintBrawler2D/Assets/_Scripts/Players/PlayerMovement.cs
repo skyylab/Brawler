@@ -128,7 +128,6 @@ public class PlayerMovement : MonoBehaviour {
                 }
                 else
                 {
-
                     _heroScript.PlayIdleAnim();
                 }
 

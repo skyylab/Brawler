@@ -63,9 +63,6 @@ public class BrawlerClass : HeroScript {
         _comboTimer = _brawlerAttackSpeed + 0.2f;
         _comboTimerReset = _comboTimer;
 
-        _fistDamageColliderLeft.SetActive(false);
-        _fistDamageColliderRight.SetActive(false);
-
         _hitPointMax = _hitPoints;
     }
 
@@ -129,31 +126,6 @@ public class BrawlerClass : HeroScript {
         {
             _comboCounter = 0;
         }
-        
-        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") &&
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2") && 
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 3") &&
-            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 4"))
-        {
-            _fistDamageColliderLeft.SetActive(false);
-            _fistDamageColliderRight.SetActive(false);
-            _fistStunColliderLeft.SetActive(false);
-            _fistStunColliderRight.SetActive(false);
-
-            _secondaryAttackActive = false;
-        }
-        else {
-            if (_secondaryAttackActive)
-            {
-                _fistStunColliderLeft.SetActive(true);
-                _fistStunColliderRight.SetActive(true);
-            }
-            else
-            {
-                _fistDamageColliderLeft.SetActive(true);
-                _fistDamageColliderRight.SetActive(true);
-            }
-        }
 
         if (_chargeAttackTime > 0 && _chargeButtonReleased)
         {
@@ -162,42 +134,46 @@ public class BrawlerClass : HeroScript {
     }
 
     public override void Attack() {
-        if (_attackReady == true) {
+
+        if (!_finisherReady)
+        {
+            if (_attackReady == true) {
             
-            _comboTimer = _comboTimerReset;
+                _comboTimer = _comboTimerReset;
 
-            _audio.pitch = Random.Range(0.8f, 1.2f);
+                _audio.pitch = Random.Range(0.8f, 1.2f);
 
-            // TURN ON FISTS!
-            switch (_comboCounter)
-            {
-                case 0:
-                    _animator.Play("Attack 1");
-                    _damage = _brawlerDamage;
-                    _audio.PlayOneShot(_attack1_SFX, _audioVolume);
-                    _fistDamageColliderLeft.SetActive(true);
-                    break;
-                case 1:
-                    _animator.Play("Attack 2");
-                    _damage = _brawlerDamage;
-                    _audio.PlayOneShot(_attack2_SFX, _audioVolume);
-                    _fistDamageColliderRight.SetActive(true);
-                    break;
-                case 2:
-                    _animator.Play("Attack 4");
-                    _damage = _brawlerDamage * 2;
-                    _audio.PlayOneShot(_attack3_SFX, _audioVolume);
-                    _fistDamageColliderLeft.SetActive(true);
-                    _fistDamageColliderRight.SetActive(true);
-                    _comboTimer = 1.2f;
-                    _coolDown = 1.2f;
-                    break;
-                default:
-                    _comboCounter = 0;
-                    _comboTimer = 0f;
-                    break;
+                // TURN ON FISTS!
+                switch (_comboCounter)
+                {
+                    case 0:
+                        _animator.Play("Attack 1");
+                        _damage = _brawlerDamage;
+                        _audio.PlayOneShot(_attack1_SFX, _audioVolume);
+                        break;
+                    case 1:
+                        _animator.Play("Attack 2");
+                        _damage = _brawlerDamage;
+                        _audio.PlayOneShot(_attack2_SFX, _audioVolume);
+                        break;
+                    case 2:
+                        _animator.Play("Attack 4");
+                        _damage = _brawlerDamage * 2;
+                        _audio.PlayOneShot(_attack3_SFX, _audioVolume);
+                        _comboTimer = 1.2f;
+                        _coolDown = 1.2f;
+                        break;
+                    default:
+                        _comboCounter = 0;
+                        _comboTimer = 0f;
+                        break;
+                }
+                _comboCounter++;
             }
-            _comboCounter++;
+        }
+        else {
+            _animator.Play("Finisher");
+            _finisherReady = false;
         }
 
         _attackReady = false;
@@ -206,6 +182,7 @@ public class BrawlerClass : HeroScript {
     public override void SecondaryAttack()
     {
         base.SecondaryAttack();
+        
 
         _secondaryAttackActive = true;
 
@@ -220,34 +197,11 @@ public class BrawlerClass : HeroScript {
             _manaPoints -= _attackManaCost;
 
             _manaRegen = _manaRegenTimerReset;
-            // TURN ON FISTS!
-            switch (_comboCounter)
-            {
-                case 0:
-                    _animator.Play("Attack 1");
-                    _damage = _brawlerDamage;
-                    _audio.PlayOneShot(_attack1_SFX, _audioVolume);
-                    _fistStunColliderLeft.SetActive(true);
-                    break;
-                case 1:
-                    _animator.Play("Attack 2");
-                    _damage = _brawlerDamage;
-                    _audio.PlayOneShot(_attack2_SFX, _audioVolume);
-                    _fistStunColliderRight.SetActive(true);
-                    break;
-                case 2:
-                    _animator.Play("Attack 3");
-                    _damage = _brawlerDamage / 3;
-                    _audio.PlayOneShot(_attack3_SFX, _audioVolume);
-                    _fistStunColliderLeft.SetActive(true);
-                    _fistStunColliderRight.SetActive(true);
-                    _comboTimer = 0.5f;
-                    break;
-                default:
-                    _comboCounter = 0;
-                    _comboTimer = 0f;
-                    break;
-            }
+
+            _animator.Play("Attack 3");
+            _audio.PlayOneShot(_attack3_SFX, _audioVolume);
+            _comboTimer = 0.5f;
+
             _comboCounter++;
         }
     }

@@ -3,7 +3,6 @@ using System.Collections;
 
 public class MageClass : HeroScript {
 
-
     private int _mageDamage = 20;
     private int _mageArmor = 0;
     private float _mageMoveSpeed = 10f;
@@ -135,6 +134,29 @@ public class MageClass : HeroScript {
             GameObject BulletObj = Instantiate(_secondaryProjectile, x.transform.position, x.transform.rotation) as GameObject;
             BulletObj.GetComponent<SecondaryFireballProjectile>().Initialize(_firingDirection, gameObject, _drawObjects);
             x.GetComponent<EnemyScript>().TakeFlatDamage(_damage);
+        }
+    }
+
+
+    public override void PlayWalkAnim()
+    {
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("AttackRight") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") &&
+            !_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage") &&
+            _hitPoints > 0)
+        {
+            _animator.Play("Walk");
+        }
+    }
+
+    public override void PlayIdleAnim()
+    {
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("AttackRight") &&
+           !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") &&
+           !_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage") &&
+           _hitPoints > 0)
+        {
+            _animator.Play("Idle");
         }
     }
 

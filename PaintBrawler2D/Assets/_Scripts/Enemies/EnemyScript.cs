@@ -510,6 +510,21 @@ public abstract class EnemyScript : MonoBehaviour {
         _stunDuration = Duration;
     }
 
+    public void KnockOver() {
+        _invincibleTimer = _invincibleTimerReset;
+
+        if (_moveDirection < 0)
+        {
+            GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * 20000);
+        }
+        else
+        {
+            GetComponent<Rigidbody>().AddForce(new Vector3(1f, 0f, 0f) * -20000);
+        }
+        _currentState = EnemyState.fallen;
+        _animator.Play("Fall");
+    }
+
     public void TakeFlatDamage(int Damage) {
         
         GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;

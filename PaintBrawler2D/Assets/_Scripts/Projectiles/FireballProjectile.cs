@@ -24,9 +24,9 @@ public class FireballProjectile : MonoBehaviour {
     private int _maxObjectsHit = 3;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
-
+        _sprite.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     // Update is called once per frame
@@ -50,16 +50,17 @@ public class FireballProjectile : MonoBehaviour {
         _color = color;
         _firingDirection = Direction;
 
-        size = size / 1.5f;
-
-        transform.localScale *= size;
-
-        _damage = Damage;
-
         if (_firingDirection == 1)
         {
             _sprite.transform.localEulerAngles += new Vector3(0f, 180f, 0f);
         }
+        size = size / 1.5f;
+
+        transform.localScale *= size;
+
+        _sprite.GetComponent<SpriteRenderer>().enabled = true;
+
+        _damage = Damage;
     }
 
     void OnTriggerEnter(Collider other)

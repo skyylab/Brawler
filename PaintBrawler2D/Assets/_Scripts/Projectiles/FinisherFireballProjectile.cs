@@ -56,7 +56,9 @@ public class FinisherFireballProjectile : MonoBehaviour {
     {
         if (other.tag == "Enemy" && other.gameObject == _target)
         {
-            other.transform.gameObject.GetComponent<EnemyScript>().TakeFlatDamage(300);
+            other.GetComponent<EnemyScript>().AccumulateColor(300,
+                                                              _parentScript.GetPrimaryColorString(),
+                                                              _parent);
 
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);

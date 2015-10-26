@@ -83,8 +83,6 @@ public class PrimaryColorSlugger : EnemyScript {
     {
         _attackLanded = false;
         _animator.Play("Berserk");
-        _objectSprites[1].GetComponent<BoxCollider>().enabled = true;
-        _objectSprites[2].GetComponent<BoxCollider>().enabled = true;
     }
 
 

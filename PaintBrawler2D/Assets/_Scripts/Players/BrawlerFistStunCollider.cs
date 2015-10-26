@@ -21,14 +21,13 @@ public class BrawlerFistStunCollider : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if (other.tag == "Enemy") {
-            other.GetComponent<EnemyScript>().Stun(2f);
+            other.GetComponent<EnemyScript>().KnockOver();
 
             Instantiate(_powPrefab, transform.position + transform.right, transform.rotation);
             
             int RandomNumber = Random.Range(0, 3);
             _audio.pitch = Random.Range(0.8f, 1.2f);
-            _audio.PlayOneShot(_hitSFX[RandomNumber], 0.6f);
+            _audio.PlayOneShot(_hitSFX[RandomNumber], 0.3f);
         }
     }
-
 }
