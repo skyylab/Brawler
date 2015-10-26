@@ -169,7 +169,7 @@ public class MageClass : HeroScript {
                                                                 _firingDirection, 
                                                                 gameObject, 
                                                                 1f + _chargeAttackTime, 
-                                                                _damage * ((int)_chargeAttackTime + 1));
+                                                                _damage * ((int)_chargeAttackTime + 2));
         _animator.Play("AttackRight");
 
         _mageAttackSpeed = _attackSpeedReset;

@@ -135,7 +135,7 @@ public class BrawlerClass : HeroScript {
 
     public override void Attack() {
 
-        if (!_finisherReady)
+        if (!_finisherReady && !_animator.GetCurrentAnimatorStateInfo(0).IsName("Finisher"))
         {
             if (_attackReady == true) {
             
@@ -183,26 +183,27 @@ public class BrawlerClass : HeroScript {
     {
         base.SecondaryAttack();
         
-
         _secondaryAttackActive = true;
 
-        if (_attackReady == true && _manaPoints > 0)
-        {
-            _attackReady = false;
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Finisher")) { 
+            if (_attackReady == true && _manaPoints > 0)
+            {
+                _attackReady = false;
 
-            _comboTimer = _comboTimerReset;
+                _comboTimer = _comboTimerReset;
 
-            _audio.pitch = Random.Range(0.8f, 1.2f);
+                _audio.pitch = Random.Range(0.8f, 1.2f);
 
-            _manaPoints -= _attackManaCost;
+                _manaPoints -= _attackManaCost;
 
-            _manaRegen = _manaRegenTimerReset;
+                _manaRegen = _manaRegenTimerReset;
 
-            _animator.Play("Attack 3");
-            _audio.PlayOneShot(_attack3_SFX, _audioVolume);
-            _comboTimer = 0.5f;
+                _animator.Play("Attack 3");
+                _audio.PlayOneShot(_attack3_SFX, _audioVolume);
+                _comboTimer = 0.5f;
 
-            _comboCounter++;
+                _comboCounter++;
+            }
         }
     }
 

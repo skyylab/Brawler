@@ -7,7 +7,7 @@ public class EnterEnemyAquisitionRange : MonoBehaviour {
     private GameObject _parent;
     private EnemyScript _parentScript;
 
-    void Start() {
+    void Awake() {
         _parentScript = _parent.GetComponent<EnemyScript>();
     }
 

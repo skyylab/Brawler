@@ -134,7 +134,7 @@ public class SharpShooterClass : HeroScript {
             !_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootRight") &&
             !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") &&
             !_animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage") &&
-            _hitPoints > 0) { 
+            _hitPoints > 0) {
             _animator.Play("Idle");
         }
     }

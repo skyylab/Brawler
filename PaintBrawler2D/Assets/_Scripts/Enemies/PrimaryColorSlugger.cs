@@ -62,19 +62,9 @@ public class PrimaryColorSlugger : EnemyScript {
             Attack();
         }
 
-        if (_attackTime < 0)
-        {
-            if (!_objectSprites[0].GetComponent<Renderer>().isVisible)
-            {
-                _speedConstant *= -1;
-                _attackTime = 4f;
-                _chaseOffScreenTimer = 1f;
-            }
-        }
-
         if (_chaseOffScreenTimer > 0)
         {
-            Vector3 TargetAhead = new Vector3(transform.position.x, _aquiredTargets[0].transform.position.y, 0f);
+            Vector3 TargetAhead = new Vector3(transform.position.x, 0f, _aquiredTargets[0].transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, TargetAhead, Time.deltaTime * _moveSpeedActual);
         }
     }
@@ -102,6 +92,17 @@ public class PrimaryColorSlugger : EnemyScript {
         else if (moveDirection < 0)
         {
             _objectWholeSprite.transform.localEulerAngles = new Vector2(0f, 180f);
+        }
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other.name == "LeftCollider") {
+            _speedConstant = -2f;
+            _chaseOffScreenTimer = 1;
+        }
+        else if (other.name == "RightCollider") {
+            _speedConstant = 2f;
+            _chaseOffScreenTimer = 1;
         }
     }
 }

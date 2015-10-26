@@ -60,8 +60,10 @@ public class FinisherFireballProjectile : MonoBehaviour {
                                                               _parentScript.GetPrimaryColorString(),
                                                               _parent);
 
+            _sprite.SetActive(false);
+
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
-            Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);
+            Explosion.GetComponent<MageExplosionScript>().Initialize(_parentScript.GetPrimaryColor(), _parentScript.GetPrimaryColorString(), _parent);
             gameObject.GetComponent<SphereCollider>().enabled = false;
         }
     }

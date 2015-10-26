@@ -181,6 +181,7 @@ public abstract class HeroScript : MonoBehaviour {
 
     public GameObject GetCharacterObj() { return _characterObj; }
     public string GetPrimaryColorString() { return _currentPrimaryColor; }
+    public Color GetPrimaryColor() { return _primaryColor; }
     public bool CanActivateSpecial () { return _specialAttackCooldown >= 60; }
     public bool ReturnIsAlive() { return _isAlive; }
 
