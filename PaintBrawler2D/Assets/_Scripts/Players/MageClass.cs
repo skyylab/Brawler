@@ -49,6 +49,7 @@ public class MageClass : HeroScript {
         _attackSpeed = _mageAttackSpeed;
         _manaRegen = _mageManaRegen;
         _animator = _characterObj.GetComponent<Animator>();
+        _mageMoveSpeed = GetComponent<PlayerMovement>().moveSpeed;
     }
 
     // Update is called once per frame
@@ -75,6 +76,15 @@ public class MageClass : HeroScript {
         if (_chargeAttackTime > 0 && _chargeButtonReleased && _mageAttackSpeed < -1)
         {
             UnleashChargeAttack();
+        }
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("AttackRight"))
+        {
+            GetComponent<PlayerMovement>().moveSpeed = 0;
+        }
+        else
+        {
+            GetComponent<PlayerMovement>().moveSpeed = _mageMoveSpeed;
         }
     }
 
@@ -175,4 +185,8 @@ public class MageClass : HeroScript {
         _mageAttackSpeed = _attackSpeedReset;
     }
 
+    public override void AddDamage()
+    {
+        _damage += 5;
+    }
 }

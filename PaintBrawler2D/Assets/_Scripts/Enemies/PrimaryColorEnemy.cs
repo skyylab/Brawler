@@ -28,6 +28,14 @@ public class PrimaryColorEnemy : EnemyScript {
         {
             // PlayStunAnimation
         }
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") ||
+            _animator.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage")) {
+            _moveSpeedActual = 0f;
+        }
+        else {
+            _moveSpeedActual = _moveSpeed;
+        }
     }
 
     public override void Idle() {

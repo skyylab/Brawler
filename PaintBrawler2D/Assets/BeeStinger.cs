@@ -14,9 +14,10 @@ public class BeeStinger : Finisher {
 	}
 
     void OnTriggerEnter(Collider other) {
-        if (other.tag == "FinishingCollider") {
+        if (other.tag == "FinishingCollider" || other.tag == "Enemy") {
             GetComponent<AudioSource>().PlayOneShot(_hit[Random.Range(0, _hit.Length - 1)], 0.3f);
             Instantiate(_hitParticle, transform.position, transform.rotation);
+            GetComponent<BoxCollider>().enabled = false;
         }
     }
 }

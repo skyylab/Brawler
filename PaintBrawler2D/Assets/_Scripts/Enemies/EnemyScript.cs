@@ -27,6 +27,8 @@ public abstract class EnemyScript : MonoBehaviour {
     [SerializeField]
     protected bool _enableFinisher = false;
     [SerializeField]
+    protected GameObject _itemDrop;
+    [SerializeField]
     protected GameObject _healthSlider;
     public enum ColorType
     {
@@ -403,6 +405,14 @@ public abstract class EnemyScript : MonoBehaviour {
             _mainCamera.GetComponent<CameraControls>().EnemyKilled();
             _aquiredTargets[0].GetComponent<HeroScript>().RemoveAttacker(gameObject);
             gameObject.transform.parent = GameObject.Find("UnusedObjects").transform;
+
+            if (_itemDrop != null) {
+                int RandomDrop = Random.Range(0, 10);
+                if (RandomDrop != 1) {
+                    Instantiate(_itemDrop, transform.position, transform.rotation);
+                }
+            }
+
             gameObject.SetActive(false);
         }
     }
@@ -551,12 +561,18 @@ public abstract class EnemyScript : MonoBehaviour {
 
             if (Color == _secondaryColor)
             {
-                _hitPoints -= Damage;
+                int actualDamage = Damage - _armor;
+
+                if (actualDamage > 100) {
+                    actualDamage = 300;
+                }
+
+                _hitPoints -= actualDamage;
                 _healthSlider.GetComponent<Slider>().value = _hitPoints;
                 GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
-                DamageText.GetComponent<DamageText>().Initialize(Damage, Player.GetComponent<HeroScript>().GetPrimaryColorString());
+                DamageText.GetComponent<DamageText>().Initialize(actualDamage, Player.GetComponent<HeroScript>().GetPrimaryColorString());
 
-                _hitKnockOverCounter-= Damage;
+                _hitKnockOverCounter -= actualDamage;
 
                 _animator.Play("TakeDamage");
                 if (_moveDirection < 0)

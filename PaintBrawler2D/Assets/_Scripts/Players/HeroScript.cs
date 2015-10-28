@@ -284,10 +284,11 @@ public abstract class HeroScript : MonoBehaviour {
 
     public void TakeDamage(int Damage, GameObject attacker)
     {
-        _hitPoints -= Damage;
+        int actualDamage = Damage - _armor;
+        _hitPoints -= actualDamage;
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
         GameObject DamageCounter = Instantiate(_damageCounter, transform.position, transform.rotation) as GameObject;
-        DamageCounter.GetComponent<DamageText>().Initialize(Damage, "Black");
+        DamageCounter.GetComponent<DamageText>().Initialize(actualDamage, "Black");
 
         _audio.pitch = Random.Range(0.8f, 1.2f);
         _audio.PlayOneShot(_getHit[Random.Range(0, _getHit.Length)], 0.4f);
@@ -362,5 +363,25 @@ public abstract class HeroScript : MonoBehaviour {
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
         _UIManaBar.GetComponent<Slider>().value = _manaPoints;
         _deathAnimTimer = 1f;
+    }
+
+    //Power Up
+    public void AddHealth() {
+        if (_hitPoints + 25 < _hitPointMax) {
+            _hitPoints += 25;
+        }
+        else {
+            _hitPoints = _hitPointMax;
+        }
+
+        _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
+    }
+    public virtual void AddDamage() {
+    }
+    public void AddSpeed () {
+        GetComponent<PlayerMovement>().moveSpeed += 0.01f;
+    }
+    public void AddDefense() {
+        _armor += 2;
     }
 }

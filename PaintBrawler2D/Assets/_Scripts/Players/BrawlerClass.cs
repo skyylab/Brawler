@@ -6,7 +6,7 @@ public class BrawlerClass : HeroScript {
 
     // Class specific stats
     private int _brawlerDamage = 9;
-    private int _brawlerArmor = 5;
+    private int _brawlerArmor = 2;
     private float _brawlerMoveSpeed = 8f;
     private float _brawlerAttackSpeed = 0.3f;
 
@@ -62,6 +62,8 @@ public class BrawlerClass : HeroScript {
 
         _comboTimer = _brawlerAttackSpeed + 0.2f;
         _comboTimerReset = _comboTimer;
+
+        _brawlerMoveSpeed = GetComponent<PlayerMovement>().moveSpeed;
 
         _hitPointMax = _hitPoints;
     }
@@ -130,6 +132,16 @@ public class BrawlerClass : HeroScript {
         if (_chargeAttackTime > 0 && _chargeButtonReleased)
         {
             UnleashChargeAttack();
+        }
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") ||
+            _animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2"))
+        {
+            GetComponent<PlayerMovement>().moveSpeed = 0;
+        }
+        else
+        {
+            GetComponent<PlayerMovement>().moveSpeed = _brawlerMoveSpeed;
         }
     }
 
@@ -230,5 +242,11 @@ public class BrawlerClass : HeroScript {
     {
         _stunningObj.SetActive(true);
     }
+    
 
+    public override void AddDamage()
+    {
+        _damage += 2;
+        _brawlerDamage += 2;
+    }
 }

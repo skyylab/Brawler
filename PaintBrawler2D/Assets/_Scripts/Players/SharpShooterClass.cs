@@ -5,7 +5,7 @@ public class SharpShooterClass : HeroScript {
 
     // Class specific stats
     private int _sharpshooterDamage = 12;
-    private int _sharpshooterArmor = 2;
+    private int _sharpshooterArmor = 0;
     private float _sharpshooterMoveSpeed = 12f;
     private float _sharpshooterAttackSpeed = 0.35f;
     private float _attackSpeedReset = 0.25f;
@@ -55,6 +55,7 @@ public class SharpShooterClass : HeroScript {
         _specialAttackTimerReset = _specialAttackTimer;
         _specialAttackTimer = 0f;
         _specialAttackSpeedReset = _specialAttackSpeed;
+        _sharpshooterMoveSpeed = GetComponent<PlayerMovement>().moveSpeed;
     }
 
     // Update is called once per frame
@@ -85,6 +86,16 @@ public class SharpShooterClass : HeroScript {
 
         if (_specialAttackTimer < 0) {
             _specialActive = false;
+        }
+
+        if ((_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootLeft") ||
+            _animator.GetCurrentAnimatorStateInfo(0).IsName("ShootRight")) &&
+            _specialActive == false && _chargeAttackTime < 0) {
+            GetComponent<PlayerMovement>().moveSpeed = 0;
+        }
+        else
+        {
+            GetComponent<PlayerMovement>().moveSpeed = _sharpshooterMoveSpeed;
         }
     }
 
@@ -213,5 +224,11 @@ public class SharpShooterClass : HeroScript {
         _animator.Play("ShootRight");
 
         _specialAttackSpeed = _specialAttackSpeedReset;
+    }
+
+
+    public override void AddDamage()
+    {
+        _damage += 1;
     }
 }
