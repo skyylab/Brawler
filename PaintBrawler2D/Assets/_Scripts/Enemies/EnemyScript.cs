@@ -40,6 +40,11 @@ public abstract class EnemyScript : MonoBehaviour {
 
     public ColorType _colorType;
 
+    [SerializeField]
+    private float _swapperTimer = 5f;
+    private float _swapperTimerReset;
+    private int _swapperColorIndex = 0;
+
     public enum ColorHue
     {
         Random,
@@ -277,6 +282,8 @@ public abstract class EnemyScript : MonoBehaviour {
         _animator = _animatedObj.GetComponent<Animator>();
         _moveSpeedActual = _moveSpeed;
         _coolDownSet = _coolDown;
+
+        _swapperTimerReset = _swapperTimer;
     }
 
     public int ReturnColorInt(ColorHue ColorHue) {
@@ -346,6 +353,31 @@ public abstract class EnemyScript : MonoBehaviour {
                     break;
             }
         }
+        else if (ColorType == ColorType.Swapper) {
+            // Setting Player Color
+            _swapperColorIndex++;
+            
+            if (_swapperColorIndex > 2) {
+                _swapperColorIndex = 0;
+            }
+
+            _secondaryColor = _secondaryColorArray[_swapperColorIndex];
+
+            switch (_swapperColorIndex)
+            {
+                case 0:
+                    _currentColor = "Green";
+                    break;
+                case 1:
+                    _currentColor = "Purple";
+                    break;
+                case 2:
+                    _currentColor = "Orange";
+                    break;
+            }
+
+            Debug.Log(_secondaryColor);
+        }
         else
         {
             // Setting Player Color
@@ -383,6 +415,19 @@ public abstract class EnemyScript : MonoBehaviour {
         {
             ManageDeath();
         }
+
+        if (_colorType == ColorType.Swapper) {
+            _swapperTimer -= Time.deltaTime;
+
+            if (_swapperTimer < 0) {
+                ChangeColor();
+                _swapperTimer = _swapperTimerReset;
+            }
+        }
+    }
+
+    public void ChangeColor() {
+        SetInitialColors(_colorType, ColorHue.Random);
     }
 
     public void AddToTargetList(GameObject newTarget) {
