@@ -273,13 +273,24 @@ public abstract class EnemyScript : MonoBehaviour {
 
         SetInitialColors(_colorType, _colorHue);
         // Setting range
-        _aquisitionRange.GetComponent<SphereCollider>().radius = _aquisitionRangeValue;
-        _attackRange.GetComponent<SphereCollider>().radius = _attackRangeValue;
+        if (_aquisitionRange != null) { 
+            _aquisitionRange.GetComponent<SphereCollider>().radius = _aquisitionRangeValue;
+        }
 
-        _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
-        _healthSlider.GetComponent<Slider>().value = _hitPoints;
+        if (_attackRange != null)
+        {
+            _attackRange.GetComponent<SphereCollider>().radius = _attackRangeValue;
+        }
 
-        _animator = _animatedObj.GetComponent<Animator>();
+        if (_healthSlider != null) { 
+            _healthSlider.GetComponent<Slider>().maxValue = _hitPoints;
+            _healthSlider.GetComponent<Slider>().value = _hitPoints;
+        }
+        
+        if (_animatedObj != null) { 
+            _animator = _animatedObj.GetComponent<Animator>();
+        }
+
         _moveSpeedActual = _moveSpeed;
         _coolDownSet = _coolDown;
 
@@ -301,7 +312,7 @@ public abstract class EnemyScript : MonoBehaviour {
             case ColorHue.Orange:
                 return 1;
             case ColorHue.Random:
-                return 2;
+                return -1;
         }
         return -1;
     }
@@ -419,6 +430,10 @@ public abstract class EnemyScript : MonoBehaviour {
         if (_colorType == ColorType.Swapper) {
             _swapperTimer -= Time.deltaTime;
 
+            if (_swapperTimer < 1) {
+                _animator.Play("EnemyChangePrime");
+            }
+
             if (_swapperTimer < 0) {
                 ChangeColor();
                 _swapperTimer = _swapperTimerReset;
@@ -427,7 +442,8 @@ public abstract class EnemyScript : MonoBehaviour {
     }
 
     public void ChangeColor() {
-        SetInitialColors(_colorType, ColorHue.Random);
+        _animator.Play("EnemyChangeAnim");
+        SetInitialColors(ColorType.Swapper, ColorHue.Random);
     }
 
     public void AddToTargetList(GameObject newTarget) {
@@ -448,12 +464,14 @@ public abstract class EnemyScript : MonoBehaviour {
         if (_deathAnimationTimer < 0)
         {
             _mainCamera.GetComponent<CameraControls>().EnemyKilled();
-            _aquiredTargets[0].GetComponent<HeroScript>().RemoveAttacker(gameObject);
+            if (_aquiredTargets.Count > 0) { 
+                _aquiredTargets[0].GetComponent<HeroScript>().RemoveAttacker(gameObject);
+            }
             gameObject.transform.parent = GameObject.Find("UnusedObjects").transform;
 
             if (_itemDrop != null) {
                 int RandomDrop = Random.Range(0, 10);
-                if (RandomDrop != 1) {
+                if (RandomDrop == 1) {
                     Instantiate(_itemDrop, transform.position, transform.rotation);
                 }
             }
@@ -513,7 +531,7 @@ public abstract class EnemyScript : MonoBehaviour {
     {   
         if (_damageCooldown < 0) { 
             // Take Damage if hit by primary color and enemy is primary
-            if (_colorType == ColorType.Secondary)
+            if (_colorType == ColorType.Secondary || _colorType == ColorType.Swapper)
             {
                 if (_pastMixColor == "")
                 {
@@ -544,7 +562,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public void GainStats(float scalingValue, int damageIncrease, int HPIncrease) {
 
         if (_gainStatsTimer < 0) { 
-            if (transform.localScale.x < 2) { 
+            if (transform.localScale.x < 2 && gameObject.name != "Door") { 
                 transform.localScale *= scalingValue;
             }
             _damage += damageIncrease;
@@ -553,6 +571,7 @@ public abstract class EnemyScript : MonoBehaviour {
             _gainStatsTimer = _gainStatsTimerReset;
 
             GameObject Text = Instantiate(_niceText, transform.position + Vector3.left * 2, transform.rotation) as GameObject;
+            _animator.Play("EnemyChangeAnim");
             Text.GetComponent<NiceText>().Initialize("Red", "Bad Color!", 0);
         }
     }
@@ -580,20 +599,12 @@ public abstract class EnemyScript : MonoBehaviour {
         _animator.Play("Fall");
     }
 
-    public void TakeFlatDamage(int Damage) {
+    public void TakeFlatDamage(int Damage, string color) {
         
         GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
-        DamageText.GetComponent<DamageText>().Initialize(Damage, "Red");
+        DamageText.GetComponent<DamageText>().Initialize(Damage, color);
         _hitPoints -= Damage;
         _healthSlider.GetComponent<Slider>().value = _hitPoints;
-
-        if (_hitPoints < 0)
-        {
-            // Die
-            _mainCamera.GetComponent<CameraControls>().EnemyKilled();
-            gameObject.transform.parent = GameObject.Find("UnusedObjects").transform;
-            gameObject.SetActive(false);
-        }
     }
 
     public void TakeDamage(int Damage, Color Color, GameObject Player)
@@ -613,9 +624,8 @@ public abstract class EnemyScript : MonoBehaviour {
                 }
 
                 _hitPoints -= actualDamage;
-                _healthSlider.GetComponent<Slider>().value = _hitPoints;
                 GameObject DamageText = Instantiate(_damageText, transform.position, transform.rotation) as GameObject;
-                DamageText.GetComponent<DamageText>().Initialize(actualDamage, Player.GetComponent<HeroScript>().GetPrimaryColorString());
+                DamageText.GetComponent<DamageText>().Initialize(actualDamage, ReturnColorString(Color));
 
                 _hitKnockOverCounter -= actualDamage;
 

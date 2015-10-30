@@ -73,12 +73,9 @@ public class FireballProjectile : MonoBehaviour {
 
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);
-
-            _objectsHit++;
-
-            if (_objectsHit > _maxObjectsHit) {
-                gameObject.GetComponent<SphereCollider>().enabled = false;
-            }
+            
+            gameObject.GetComponent<SphereCollider>().enabled = false;
+            
         }
     }
 }

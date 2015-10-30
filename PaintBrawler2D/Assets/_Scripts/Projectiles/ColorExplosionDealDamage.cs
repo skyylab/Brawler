@@ -8,7 +8,7 @@ public class ColorExplosionDealDamage : MonoBehaviour {
 
     public void Initialize(int Damage, Color ExplosionColor)
     {
-        _damage = Damage;
+        _damage = 30;
         _explosionColor = ExplosionColor;
         GetComponent<ParticleSystem>().startColor = ExplosionColor;
     }

@@ -43,9 +43,11 @@ public class FinisherBulletScript : Finisher {
     {
         if (other.tag == "Enemy")
         {
-            other.GetComponent<EnemyScript>().AccumulateColor( 300,
-                                                              _parentScript.GetPrimaryColorString(),
-                                                              _parent);
+            //other.GetComponent<EnemyScript>().AccumulateColor( 300,
+            //                                                  _parentScript.GetPrimaryColorString(),
+            //                                                  _parent);
+
+            other.GetComponent<EnemyScript>().TakeFlatDamage(300, _parentScript.GetPrimaryColorString());
 
             Instantiate(_bulletHit, transform.position, transform.rotation);
 

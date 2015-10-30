@@ -24,9 +24,7 @@ public class FinishingCollider : MonoBehaviour {
         }
 
         if (other.tag == "Finisher") {
-            _parent.GetComponent<EnemyScript>().AccumulateColor(300,
-                                                              other.GetComponent<Finisher>().GetParentColor(),
-                                                              other.GetComponent<Finisher>().GetParent());
+            _parent.GetComponent<EnemyScript>().TakeFlatDamage(300, other.GetComponent<Finisher>().GetParentColor());
         }
     }
 

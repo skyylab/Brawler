@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MageClass : HeroScript {
 
-    private int _mageDamage = 20;
+    private int _mageDamage = 40;
     private int _mageArmor = 0;
     private float _mageMoveSpeed = 10f;
     private float _mageAttackSpeed = 0f;
@@ -143,7 +143,7 @@ public class MageClass : HeroScript {
         foreach (GameObject x in AllEnemies) {
             GameObject BulletObj = Instantiate(_secondaryProjectile, x.transform.position, x.transform.rotation) as GameObject;
             BulletObj.GetComponent<SecondaryFireballProjectile>().Initialize(_firingDirection, gameObject, _drawObjects);
-            x.GetComponent<EnemyScript>().TakeFlatDamage(_damage);
+            x.GetComponent<EnemyScript>().TakeFlatDamage(_damage, _currentPrimaryColor);
         }
     }
 

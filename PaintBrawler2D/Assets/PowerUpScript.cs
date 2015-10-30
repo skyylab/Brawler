@@ -5,6 +5,8 @@ public class PowerUpScript : MonoBehaviour {
 
     [SerializeField]
     private GameObject[] _powerUpTypesSprites;
+    [SerializeField]
+    private GameObject _powerUpDescription;
 
     private PowerUpType _powerUpType;
 
@@ -35,18 +37,24 @@ public class PowerUpScript : MonoBehaviour {
     }
 
     void AddPowerUp(GameObject Player) {
+
+        GameObject PowerUp = Instantiate(_powerUpDescription, transform.position, transform.rotation) as GameObject;
         switch (_powerUpType) {
             case PowerUpType.damage:
                 Player.GetComponent<HeroScript>().AddDamage();
+                PowerUp.GetComponent<NiceText>().Initialize("Red", "+" + "Damage!", 2);
                 break;
             case PowerUpType.defense:
                 Player.GetComponent<HeroScript>().AddDefense();
+                PowerUp.GetComponent<NiceText>().Initialize("Blue", "+2 Defense!", 2);
                 break;
             case PowerUpType.health:
                 Player.GetComponent<HeroScript>().AddHealth();
+                PowerUp.GetComponent<NiceText>().Initialize("Green", "+25 Health", 2);
                 break;
             case PowerUpType.moveSpeed:
                 Player.GetComponent<HeroScript>().AddSpeed();
+                PowerUp.GetComponent<NiceText>().Initialize("Yellow", "+10 Speed", 2);
                 break;
         }
         gameObject.SetActive(false);
