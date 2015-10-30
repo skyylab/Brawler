@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Giverspace;
 
 public class BrawlerFistDamageCollider : MonoBehaviour {
 
@@ -25,6 +26,9 @@ public class BrawlerFistDamageCollider : MonoBehaviour {
             other.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetBrawlerDamage(),
                                                               _parentScript.GetPrimaryColorString(),
                                                               _parent);
+
+
+            Log.Metrics.TotalDamageDealt(_parentScript.GetBrawlerDamage(), PlayerNumber.Brawler);
 
             Instantiate(_powPrefab, transform.position + transform.right, transform.rotation);
             

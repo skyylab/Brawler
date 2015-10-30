@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Giverspace;
 
 public abstract class HeroScript : MonoBehaviour {
 
@@ -294,6 +295,8 @@ public abstract class HeroScript : MonoBehaviour {
         _audio.PlayOneShot(_getHit[Random.Range(0, _getHit.Length)], 0.4f);
 
         GetComponent<Rigidbody>().AddForce(Vector3.MoveTowards(transform.position, attacker.transform.position, -500));
+        
+        Log.Metrics.TotalDamageTaken(actualDamage, GetComponent<PlayerMovement>()._playerNumber);
 
         if (_hitPoints > 0) { 
             _animator.Play("TakeDamage");
@@ -325,8 +328,14 @@ public abstract class HeroScript : MonoBehaviour {
                 transform.position = new Vector3(300f, 300f, 300f);
                 gameObject.tag = "Untagged";
                 transform.position = currentPosition;
+
+                if (_isAlive) {
+                    Log.Metrics.Message("Player " + gameObject.name + " has died");
+                }
+
                 _isAlive = false;
                 _playDeathOnce = false;
+
                 _characterObj.SetActive(false);
             }
         }

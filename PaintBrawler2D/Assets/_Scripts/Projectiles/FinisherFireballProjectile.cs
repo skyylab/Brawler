@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Giverspace;
 
 public class FinisherFireballProjectile : MonoBehaviour {
 
@@ -61,6 +62,7 @@ public class FinisherFireballProjectile : MonoBehaviour {
             //                                                  _parent);
 
             other.GetComponent<EnemyScript>().TakeFlatDamage(300, _parentScript.GetPrimaryColorString());
+            Log.Metrics.TotalDamageDealt(_parentScript.GetDamage(), PlayerNumber.Mage);
 
             _sprite.SetActive(false);
 

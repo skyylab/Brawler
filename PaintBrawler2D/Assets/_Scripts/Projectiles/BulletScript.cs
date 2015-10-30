@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Giverspace;
 
 public class BulletScript : MonoBehaviour {
 
@@ -51,6 +52,9 @@ public class BulletScript : MonoBehaviour {
             other.GetComponent<EnemyScript>().AccumulateColor(_parentScript.GetDamage(),
                                                               _parentScript.GetPrimaryColorString(),
                                                               _parent);
+
+            Log.Metrics.TotalDamageDealt(_parentScript.GetDamage(), PlayerNumber.Shooter);
+
             Instantiate(_bulletHit, transform.position, transform.rotation);
 
             if (transform.localEulerAngles.y != 0)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Giverspace;
 
 public class FinisherBulletScript : Finisher {
 
@@ -24,7 +25,7 @@ public class FinisherBulletScript : Finisher {
         if (!GetComponent<AudioSource>().isPlaying) {
             Destroy(gameObject);
         }
-	}
+    }
 
     public void Initialize(Color color, string colorName, int Direction, GameObject parent, GameObject target) {
         _parent = parent;
@@ -46,8 +47,9 @@ public class FinisherBulletScript : Finisher {
             //other.GetComponent<EnemyScript>().AccumulateColor( 300,
             //                                                  _parentScript.GetPrimaryColorString(),
             //                                                  _parent);
-
+            
             other.GetComponent<EnemyScript>().TakeFlatDamage(300, _parentScript.GetPrimaryColorString());
+            Log.Metrics.TotalDamageDealt(300, PlayerNumber.Shooter);
 
             Instantiate(_bulletHit, transform.position, transform.rotation);
 
@@ -67,6 +69,7 @@ public class FinisherBulletScript : Finisher {
 
         if (other.tag == "FinishingCollider") {
 
+            Log.Metrics.TotalDamageDealt(300, PlayerNumber.Shooter);
             GetComponent<SphereCollider>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
             _particles.SetActive(false);

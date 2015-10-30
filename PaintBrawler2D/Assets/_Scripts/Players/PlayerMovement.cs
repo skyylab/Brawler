@@ -2,6 +2,7 @@
 using System.Collections;
 using Rewired;
 using RewiredConstants;
+using Giverspace;
 
 public class PlayerMovement : MonoBehaviour {
 
@@ -35,12 +36,26 @@ public class PlayerMovement : MonoBehaviour {
     private float _chargeThresholdTimer = 0.2f;
     private float _chargeThresholdTimerReset;
 
+    public PlayerNumber _playerNumber;
+
     void Awake()
     {
         // Get the character controller
         _heroScript = GetComponent<HeroScript>();
         _mainCamera = GameObject.FindWithTag("MainCamera");
         _chargeThresholdTimerReset = _chargeThresholdTimer;
+
+        switch(playerId) {
+            case 0:
+                _playerNumber = PlayerNumber.Brawler;
+                break;
+            case 1:
+                _playerNumber = PlayerNumber.Shooter;
+                break;
+            case 2:
+                _playerNumber = PlayerNumber.Mage;
+                break;
+        }
     }
 
     private void Initialize()
@@ -87,6 +102,7 @@ public class PlayerMovement : MonoBehaviour {
             {
                 if (_pressAttack1)
                 {
+                    Log.Metrics.ButtonPressedMessage(ButtonPressed.X, _playerNumber);
                     _chargeThresholdTimer -= Time.deltaTime;
 
                     if (_chargeThresholdTimer < 0) {
@@ -106,16 +122,19 @@ public class PlayerMovement : MonoBehaviour {
 
                 if (_pressAttack2)
                 {
+                    Log.Metrics.ButtonPressedMessage(ButtonPressed.Y, _playerNumber);
                     _heroScript.SecondaryAttack();
                 }
 
                 if (_pressJump)
                 {
+                    Log.Metrics.ButtonPressedMessage(ButtonPressed.A, _playerNumber);
                     _heroScript.Jump();
                 }
 
                 if (_pressSpecial && !_heroScript.GetSpecialStatus() && _heroScript.CanActivateSpecial())
                 {
+                    Log.Metrics.ButtonPressedMessage(ButtonPressed.B, _playerNumber);
                     _heroScript.SpecialAttack();
                 }
 

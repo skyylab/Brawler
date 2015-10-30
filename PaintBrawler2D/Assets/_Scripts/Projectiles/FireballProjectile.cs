@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Giverspace;
 
 public class FireballProjectile : MonoBehaviour {
 
@@ -70,6 +71,9 @@ public class FireballProjectile : MonoBehaviour {
             other.transform.gameObject.GetComponent<EnemyScript>().AccumulateColor(_damage, 
                                                                                    _parentScript.GetPrimaryColorString(),
                                                                                    _parent);
+
+
+            Log.Metrics.TotalDamageDealt(_damage, PlayerNumber.Mage);
 
             GameObject Explosion = Instantiate(_explosion, transform.position, transform.rotation) as GameObject;
             Explosion.GetComponent<MageExplosionScript>().Initialize(_color, _colorName, _parent);

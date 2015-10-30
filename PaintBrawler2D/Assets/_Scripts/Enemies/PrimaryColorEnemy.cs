@@ -106,12 +106,6 @@ public class PrimaryColorEnemy : EnemyScript {
 
         _coolDown -= Time.deltaTime;
 
-        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-        {
-            _objectSprites[1].GetComponent<BoxCollider>().enabled = false;
-            _objectSprites[2].GetComponent<BoxCollider>().enabled = false;
-        }
-
         if (_inAttackRange && _coolDown < 0)
         {
             Attack();
