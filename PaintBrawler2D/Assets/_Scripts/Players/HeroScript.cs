@@ -379,7 +379,7 @@ public abstract class HeroScript : MonoBehaviour {
     }
     public virtual void AddDamage() {
     }
-    public void AddSpeed () {
+    public virtual void AddSpeed () {
         GetComponent<PlayerMovement>().moveSpeed += 0.01f;
     }
     public void AddDefense() {

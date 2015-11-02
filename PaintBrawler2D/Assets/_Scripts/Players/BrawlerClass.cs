@@ -249,4 +249,10 @@ public class BrawlerClass : HeroScript {
         _damage += 2;
         _brawlerDamage += 2;
     }
+
+    public override void AddSpeed()
+    {
+        base.AddSpeed();
+        _brawlerMoveSpeed += 0.01f;
+    }
 }

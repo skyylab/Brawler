@@ -204,10 +204,10 @@ public class SharpShooterClass : HeroScript {
             if (_manaPoints > _attackManaCost) { 
                 _specialActive = true;
                 _specialAttackTimer = _specialAttackTimerReset;
+
+                _manaPoints -= _attackManaCost;
             }
             _sharpshooterAttackSpeed = _attackSpeedReset;
-
-            _manaPoints -= _attackManaCost;
         }
     }
 
@@ -237,5 +237,10 @@ public class SharpShooterClass : HeroScript {
     public override void AddDamage()
     {
         _damage += 1;
+    }
+
+    public override void AddSpeed() {
+        base.AddSpeed();
+        _sharpshooterMoveSpeed += 0.01f;
     }
 }

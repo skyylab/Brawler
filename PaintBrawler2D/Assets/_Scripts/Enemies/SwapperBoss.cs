@@ -11,13 +11,21 @@ public class SwapperBoss : EnemyScript {
 
     public enum BossStates {
         summoning,
-        attacking
+        attacking,
+        berserking
     }
+
+    [SerializeField]
+    private GameObject _enemyUnit;
+    [SerializeField]
+    private BossStates _currentBossState;
 
     void Start()
     {
         _timerTagEnemySwitchReset = _timerTagEnemySwitch;
         _fleeTimer = Random.Range(4f, 7f);
+        _hitKnockOverCountMin = 1000;
+        _hitKnockOverCountMax = 1500;
     }
 
     public override void Update()
@@ -138,8 +146,24 @@ public class SwapperBoss : EnemyScript {
 
     public override void Attack()
     {
-        _attackLanded = false;
-        _animator.CrossFade("Attack", 0.01f);
+
+        switch (_currentBossState) {
+            case BossStates.attacking:
+                _animator.CrossFade("Attack", 0.01f);
+                break;
+            case BossStates.berserking:
+                _animator.Play("Berserk");
+                break;
+            case BossStates.summoning:
+                _animator.Play("Summoning");
+                Vector3 summonSpots = Random.insideUnitSphere/2;
+                summonSpots.y = transform.position.y;
+                Instantiate(_enemyUnit, summonSpots, transform.rotation);
+                break;
+        }
+
+        _currentBossState = (BossStates)Random.Range(0, 3);
+
         _coolDown = _coolDownSet;
     }
 

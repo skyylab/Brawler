@@ -473,8 +473,8 @@ public abstract class EnemyScript : MonoBehaviour {
             gameObject.transform.parent = GameObject.Find("UnusedObjects").transform;
 
             if (_itemDrop != null) {
-                int RandomDrop = Random.Range(0, 10);
-                if (RandomDrop == 1) {
+                int RandomDrop = Random.Range(0, 100);
+                if (RandomDrop < 15) {
                     Instantiate(_itemDrop, transform.position, transform.rotation);
                 }
             }

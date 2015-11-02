@@ -207,4 +207,10 @@ public class MageClass : HeroScript {
             _chargeAttackTime += Time.deltaTime;
         }
     }
+
+    public override void AddSpeed()
+    {
+        base.AddSpeed();
+        _mageMoveSpeed += 0.01f;
+    }
 }
