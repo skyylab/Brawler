@@ -150,4 +150,12 @@ public class PrimaryColorEnemy : EnemyScript {
         _animator.Play("Birth");
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "LeftCollider" || other.name == "RightCollider")
+        {
+            _currentState = EnemyState.chasing;
+        }
+    }
+
 }
