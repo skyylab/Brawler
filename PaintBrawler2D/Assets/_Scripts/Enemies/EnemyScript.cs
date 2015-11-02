@@ -187,6 +187,7 @@ public abstract class EnemyScript : MonoBehaviour {
     private float _gainStatsTimerReset;
     // Virtual functions
     public virtual void Attack(){ }
+    public virtual void Initializing() { }
     // Idle Animations
     public virtual void Idle() { }
     public virtual void SawPlayer() { }
@@ -290,6 +291,8 @@ public abstract class EnemyScript : MonoBehaviour {
         if (_animatedObj != null) { 
             _animator = _animatedObj.GetComponent<Animator>();
         }
+
+        Birth();
 
         _moveSpeedActual = _moveSpeed;
         _coolDownSet = _coolDown;
@@ -832,40 +835,46 @@ public abstract class EnemyScript : MonoBehaviour {
 
     protected void ManageEnemyState()
     {
-        switch (_currentState)
-        {
-            case EnemyState.initializing:
-                _currentState = EnemyState.idle;
-                break;
-            case EnemyState.idle:
-                Idle();
-                break;
-            case EnemyState.sawPlayer:
-                SawPlayer();
-                break;
-            // Move close to the target
-            case EnemyState.chasing:
-                Chasing();
-                break;
-            // Separate - start circling around the target
-            case EnemyState.circling:
-                Circling();
-                break;
-            case EnemyState.attacking:
-                Attacking();
-                break;
-            case EnemyState.fleeing:
-                Fleeing();
-                break;
-            case EnemyState.pulled:
-                Pulling();
-                break;
-            case EnemyState.fallen:
-                Fallen();
-                break;
-            default:
-                break;
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Birth")) { 
+            switch (_currentState)
+            {
+                case EnemyState.initializing:
+                    Initializing();
+                    break;
+                case EnemyState.idle:
+                    Idle();
+                    break;
+                case EnemyState.sawPlayer:
+                    SawPlayer();
+                    break;
+                // Move close to the target
+                case EnemyState.chasing:
+                    Chasing();
+                    break;
+                // Separate - start circling around the target
+                case EnemyState.circling:
+                    Circling();
+                    break;
+                case EnemyState.attacking:
+                    Attacking();
+                    break;
+                case EnemyState.fleeing:
+                    Fleeing();
+                    break;
+                case EnemyState.pulled:
+                    Pulling();
+                    break;
+                case EnemyState.fallen:
+                    Fallen();
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+
+    public virtual void Birth() {
+
     }
 
 }

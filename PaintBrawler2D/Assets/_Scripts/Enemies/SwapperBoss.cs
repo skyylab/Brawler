@@ -2,12 +2,17 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class PrimaryColorEnemy : EnemyScript {
+public class SwapperBoss : EnemyScript {
 
     private float _timerTagEnemySwitch = 10f;
     private float _timerTagEnemySwitchReset;
 
     private float _fleeTimer = 5f;
+
+    public enum BossStates {
+        summoning,
+        attacking
+    }
 
     void Start()
     {
@@ -96,7 +101,7 @@ public class PrimaryColorEnemy : EnemyScript {
         _fleeTimer -= Time.deltaTime;
 
         if (_fleeTimer < 0) {
-            _fleeTimer = Random.Range(4f, 7f);
+            _fleeTimer = Random.Range(1f, 3f);
             _currentState = EnemyState.circling;
         }
         transform.position = Vector3.MoveTowards(transform.position, _aquiredTargets[0].transform.position, Time.deltaTime * -_moveSpeedActual);
@@ -142,12 +147,6 @@ public class PrimaryColorEnemy : EnemyScript {
     {
         base.Fallen();
         _attackRange.SetActive(false);
-    }
-
-    public override void Birth()
-    {
-        base.Birth();
-        _animator.Play("Birth");
     }
 
 }
