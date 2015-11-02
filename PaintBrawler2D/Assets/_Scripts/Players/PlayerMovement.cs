@@ -37,23 +37,25 @@ public class PlayerMovement : MonoBehaviour {
     private float _chargeThresholdTimerReset;
 
     public PlayerNumber _playerNumber;
+    private PersistentCharacterSelect _characterSelect;
 
     void Awake()
     {
         // Get the character controller
         _heroScript = GetComponent<HeroScript>();
         _mainCamera = GameObject.FindWithTag("MainCamera");
+        _characterSelect = GameObject.FindWithTag("PersistentCharSelect").GetComponent<PersistentCharacterSelect>();
         _chargeThresholdTimerReset = _chargeThresholdTimer;
 
-        switch(playerId) {
-            case 0:
-                _playerNumber = PlayerNumber.Brawler;
+        switch (_playerNumber) {
+            case PlayerNumber.Brawler:
+                playerId = _characterSelect.GetBrawler();
                 break;
-            case 1:
-                _playerNumber = PlayerNumber.Shooter;
+            case PlayerNumber.Shooter:
+                playerId = _characterSelect.GetShooter();
                 break;
-            case 2:
-                _playerNumber = PlayerNumber.Mage;
+            case PlayerNumber.Mage:
+                playerId = _characterSelect.GetMage();
                 break;
         }
     }
@@ -132,11 +134,11 @@ public class PlayerMovement : MonoBehaviour {
                     _heroScript.Jump();
                 }
 
-                if (_pressSpecial && !_heroScript.GetSpecialStatus() && _heroScript.CanActivateSpecial())
-                {
-                    Log.Metrics.ButtonPressedMessage(ButtonPressed.B, _playerNumber);
-                    _heroScript.SpecialAttack();
-                }
+                //if (_pressSpecial && !_heroScript.GetSpecialStatus() && _heroScript.CanActivateSpecial())
+                //{
+                //    Log.Metrics.ButtonPressedMessage(ButtonPressed.B, _playerNumber);
+                //    _heroScript.SpecialAttack();
+                //}
 
 
                 // Process movement

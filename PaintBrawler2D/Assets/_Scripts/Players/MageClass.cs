@@ -33,12 +33,14 @@ public class MageClass : HeroScript {
     [SerializeField]
     private GameObject _drawObjects;
 
+    [SerializeField]
+    private GameObject _fireCharge;
+
     public override void Start ()
     {
         base.Start();
         InitializeClass(_playerNumber);
         InitializeStats();
-
 	}
 
     public void InitializeStats()
@@ -76,6 +78,10 @@ public class MageClass : HeroScript {
         if (_chargeAttackTime > 0 && _chargeButtonReleased && _mageAttackSpeed < -1)
         {
             UnleashChargeAttack();
+        }
+
+        if (_fireCharge.transform.localScale.x > 0 && _chargeButtonReleased) {
+            _fireCharge.transform.localScale += new Vector3(1f, 1f, 1f) * -0.01f;
         }
 
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("AttackRight"))
@@ -188,5 +194,17 @@ public class MageClass : HeroScript {
     public override void AddDamage()
     {
         _damage += 5;
+    }
+
+    public override void ChargeAttack()
+    {
+        float MaxSize = 1f;
+        float ChargeSpeed = 0.01f;
+        _chargeButtonReleased = false;
+
+        if (_fireCharge.transform.localScale.x < MaxSize) { 
+            _fireCharge.transform.localScale += new Vector3(1f, 1f, 1f) * ChargeSpeed;
+            _chargeAttackTime += Time.deltaTime;
+        }
     }
 }

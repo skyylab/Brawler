@@ -619,7 +619,7 @@ public abstract class EnemyScript : MonoBehaviour {
             {
                 int actualDamage = Damage - _armor;
 
-                if (actualDamage > 100) {
+                if (actualDamage > 250) {
                     actualDamage = 300;
                 }
 

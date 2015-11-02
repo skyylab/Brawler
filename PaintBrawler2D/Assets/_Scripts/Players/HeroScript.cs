@@ -53,13 +53,13 @@ public abstract class HeroScript : MonoBehaviour {
     protected int _manaRegenValue = 1;
 
     [SerializeField]
-    private ParticleSystem _chargeParticleEffects;
+    protected ParticleSystem _chargeParticleEffects;
     [SerializeField]
-    private ParticleSystem _chargeParticleEffects2;
+    protected ParticleSystem _chargeParticleEffects2;
     [SerializeField]
-    private float _chargeTimerMax = 3f;
+    protected float _chargeTimerMax = 3f;
     [SerializeField]
-    private float _chargeTimerMaxReset = 3f;
+    protected float _chargeTimerMaxReset = 3f;
 
     [SerializeField]
     protected float _chargeAttackTime;
@@ -150,15 +150,7 @@ public abstract class HeroScript : MonoBehaviour {
 
     public virtual void Attack() { }
     public virtual void ChargeAttack() {
-        float MaxSize = 6f;
-        _chargeButtonReleased = false;
-
-        _chargeParticleEffects2.startSize = 1f;
-
-        if (_chargeParticleEffects.startSize < MaxSize) { 
-            _chargeParticleEffects.startSize += 0.05f;
-            _chargeAttackTime += Time.deltaTime;
-        }
+        
     }
 
     public virtual void ResetChargeAttack()

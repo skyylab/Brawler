@@ -34,7 +34,7 @@ public class ReviveScript : MonoBehaviour {
         _playerReviving = true;
         if (other.tag == "Player")
         {
-            _reviveThreshold++;
+            _reviveThreshold += 2;
             _reviveBar.GetComponent<Slider>().value = _reviveThreshold;
         }
 

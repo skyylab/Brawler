@@ -129,10 +129,10 @@ public class BrawlerClass : HeroScript {
             _comboCounter = 0;
         }
 
-        if (_chargeAttackTime > 0 && _chargeButtonReleased)
-        {
-            UnleashChargeAttack();
-        }
+        //if (_chargeAttackTime > 0 && _chargeButtonReleased)
+        //{
+        //    UnleashChargeAttack();
+        //}
 
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 1") ||
             _animator.GetCurrentAnimatorStateInfo(0).IsName("Attack 2"))

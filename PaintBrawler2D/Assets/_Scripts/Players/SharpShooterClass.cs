@@ -180,26 +180,33 @@ public class SharpShooterClass : HeroScript {
     {
         if (_attackReady == true)
         {
-            if (_fireLeft)
-            {
-                _animator.Play("ShootLeft");
-                GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
-                BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-                Instantiate(_secondaryMuzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
-                
-                _sharpshooterAttackSpeed = _attackSpeedReset;
-                _fireLeft = false;
+            //if (_fireLeft)
+            //{
+            //    _animator.Play("ShootLeft");
+            //    GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
+            //    BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+            //    Instantiate(_secondaryMuzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
+
+            //    _sharpshooterAttackSpeed = _attackSpeedReset;
+            //    _fireLeft = false;
+            //}
+            //else
+            //{
+            //    _animator.Play("ShootRight");
+            //    GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+            //    BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+            //    Instantiate(_secondaryMuzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
+
+            //    _sharpshooterAttackSpeed = _attackSpeedReset;
+            //    _fireLeft = true;
+            //}
+
+            if (_manaPoints > _attackManaCost) { 
+                _specialActive = true;
+                _specialAttackTimer = _specialAttackTimerReset;
             }
-            else
-            {
-                _animator.Play("ShootRight");
-                GameObject BulletObj = Instantiate(_secondaryBullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
-                BulletObj.GetComponent<SecondaryBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-                Instantiate(_secondaryMuzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
-                
-                _sharpshooterAttackSpeed = _attackSpeedReset;
-                _fireLeft = true;
-            }
+            _sharpshooterAttackSpeed = _attackSpeedReset;
+
             _manaPoints -= _attackManaCost;
         }
     }

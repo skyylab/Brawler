@@ -23,9 +23,9 @@ public class AnimatedSquigglyLines : MonoBehaviour {
 	    if (_changeInterval < 0) {
             GetComponent<SpriteRenderer>().sprite = _allSpriteLoop[_iterator];
             _changeInterval = _changeIntervalReset;
+            _iterator++;
         }
-
-        _iterator++;
+        
 
         if (_iterator >= _allSpriteLoop.Length) {
             _iterator = 0;

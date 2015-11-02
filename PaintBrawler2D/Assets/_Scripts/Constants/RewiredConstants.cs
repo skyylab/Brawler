@@ -51,6 +51,12 @@ namespace RewiredConstants {
             /// Type: Button
             /// </summary>
             public const int SpecialAttack = 5;
+
+            /// <summary>
+            /// Descriptive Name: Start
+            /// Type: Button
+            /// </summary>
+            public const int Start = 6;
         }
     }
 }
