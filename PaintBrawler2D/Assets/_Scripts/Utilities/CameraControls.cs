@@ -13,6 +13,11 @@ public class CameraControls : MonoBehaviour {
     [SerializeField]
     private int EnemyCountOnScreen;
 
+    [SerializeField]
+    private GameObject _restartScreen;
+    private float _restartCountdown = 2f;
+    private bool _restartDisplayOn = false;
+
     private float _yAxisOffset = 0f;
     private float _zAxisOffset = 0f;
 
@@ -22,6 +27,14 @@ public class CameraControls : MonoBehaviour {
 
     public void AddPlayers (GameObject Player) {
         Players.Add(Player);
+    }
+
+    public int PlayerCount() {
+        return Players.Count;
+    }
+
+    public bool RestartDisplayed() {
+        return _restartDisplayOn;
     }
 
     public void SetCameraLock(bool Set) { _cameraLock = Set; }
@@ -54,6 +67,17 @@ public class CameraControls : MonoBehaviour {
             NewCamPosition.z += _zAxisOffset;
             NewCamPosition.x = transform.position.x;
             transform.position = Vector3.Slerp(transform.position, NewCamPosition, Time.deltaTime * 2);
+        }
+
+        if(PlayerCount() <= 0) {
+            _restartCountdown -= Time.deltaTime;
+            if (_restartCountdown < 0) {
+                _restartScreen.SetActive(true);
+            }
+
+            if (_restartCountdown < -0.2f) {
+                _restartDisplayOn = true;
+            }
         }
     }
 

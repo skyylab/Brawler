@@ -91,7 +91,7 @@ public class SharpShooterClass : HeroScript {
         if ((_animator.GetCurrentAnimatorStateInfo(0).IsName("ShootLeft") ||
             _animator.GetCurrentAnimatorStateInfo(0).IsName("ShootRight")) &&
             _specialActive == false && _chargeAttackTime < 0) {
-            GetComponent<PlayerMovement>().moveSpeed = 0;
+            GetComponent<PlayerMovement>().moveSpeed = _sharpshooterMoveSpeed/3;
         }
         else
         {

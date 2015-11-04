@@ -154,6 +154,15 @@ public class PlayerMovement : MonoBehaviour {
 
             }
         }
+
+        if (_mainCamera.GetComponent<CameraControls>().PlayerCount() <= 0 && _mainCamera.GetComponent<CameraControls>().RestartDisplayed()) {
+            Debug.Log("I AM ZERO");
+            if (_pressAttack1) {
+                Debug.Log("PRESSED");
+                Application.LoadLevel(Application.loadedLevel);
+            }
+        }
+        
     }
 
     private void ProcessMovement() {
