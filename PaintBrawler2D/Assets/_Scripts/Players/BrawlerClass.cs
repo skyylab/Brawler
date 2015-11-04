@@ -92,11 +92,15 @@ public class BrawlerClass : HeroScript {
             _coolDown -= Time.deltaTime;
         }
 
-        if (_coolDown < 0) {
+        if (_coolDown < 0 && !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
             _attackReady = true;
             _coolDown = _attackSpeed;
         }
         
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
+            _attackReady = false;
+        }
+
         ManageCombo();
         ManageDeath();
         ManageMana();

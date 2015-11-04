@@ -66,7 +66,7 @@ public class MageClass : HeroScript {
     private void ManageAttack()
     {
         _mageAttackSpeed -= Time.deltaTime;
-        if (_mageAttackSpeed < 0)
+        if (_mageAttackSpeed < 0 && !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
         {
             _attackReady = true;
         }

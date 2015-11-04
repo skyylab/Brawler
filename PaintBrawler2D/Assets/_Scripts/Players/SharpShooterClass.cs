@@ -69,7 +69,7 @@ public class SharpShooterClass : HeroScript {
         _sharpshooterAttackSpeed -= Time.deltaTime;
         _specialAttackSpeed -= Time.deltaTime;
         _specialAttackTimer -= Time.deltaTime;
-        if (_sharpshooterAttackSpeed < 0) {
+        if (_sharpshooterAttackSpeed < 0 && !_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
             _attackReady = true;
         }
         else {

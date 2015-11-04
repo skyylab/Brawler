@@ -25,7 +25,6 @@ public class CameraControls : MonoBehaviour {
 
     public void RemovePlayers(GameObject Player) {
         playerCount--;
-        Debug.Log(playerCount);
     }
 
     public void AddPlayers (GameObject Player) {
