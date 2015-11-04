@@ -21,16 +21,19 @@ public class CameraControls : MonoBehaviour {
     private float _yAxisOffset = 0f;
     private float _zAxisOffset = 0f;
 
+    private int playerCount = 3;
+
     public void RemovePlayers(GameObject Player) {
-        Players.Remove(Player);
+        playerCount--;
+        Debug.Log(playerCount);
     }
 
     public void AddPlayers (GameObject Player) {
-        Players.Add(Player);
+        playerCount++;
     }
 
     public int PlayerCount() {
-        return Players.Count;
+        return playerCount;
     }
 
     public bool RestartDisplayed() {

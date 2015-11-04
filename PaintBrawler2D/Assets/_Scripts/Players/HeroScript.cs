@@ -308,7 +308,9 @@ public abstract class HeroScript : MonoBehaviour {
 
             if (_deathAnimTimer < 0) {
                 _deadPlayer.SetActive(true);
-                _mainCamera.GetComponent<CameraControls>().RemovePlayers(gameObject);
+                if (_isAlive) { 
+                    _mainCamera.GetComponent<CameraControls>().RemovePlayers(gameObject);
+                }
                 GameObject [] AllEnemies = GameObject.FindGameObjectsWithTag("Enemy");
 
                 foreach (GameObject x in AllEnemies) {
