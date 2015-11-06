@@ -134,6 +134,14 @@ public abstract class HeroScript : MonoBehaviour {
     private AudioClip[] _getHit;
     protected AudioSource _audio;
 
+    [SerializeField]
+    private GameObject[] _spriteObjects;
+
+    [SerializeField]
+    private Vector3[] _resetPosition;
+    [SerializeField]
+    private Quaternion[] _resetRotation;
+
 
     public bool GetSpecialStatus() { return _specialActive; }
     public void SetFinisher (bool Set, GameObject FinisherObj) { _finisherReady = Set; _finisherObj = FinisherObj; }
@@ -143,6 +151,9 @@ public abstract class HeroScript : MonoBehaviour {
             return false;
         }
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Death")) {
+            return false;
+        }
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Revive")) {
             return false;
         }
         return true;
@@ -254,6 +265,11 @@ public abstract class HeroScript : MonoBehaviour {
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
         _UIManaBar.GetComponent<Slider>().maxValue = _manaPoints;
         _UIManaBar.GetComponent<Slider>().value = _manaPoints;
+
+        for (int i = 0; i < _spriteObjects.Length; i++) {
+            _resetPosition[i] = _spriteObjects[i].transform.position;
+            _resetRotation[i] = _spriteObjects[i].transform.rotation;
+        }
     }
 
     public void ManageFlipSprite(Vector3 Direction) {
@@ -309,9 +325,9 @@ public abstract class HeroScript : MonoBehaviour {
     protected void ManageDeath() {
         if (_hitPoints <= 0)
         {
-            _deathAnimTimer -= Time.deltaTime;
             _moveSpeed = 0;
             _animator.Play("Death");
+            _deathAnimTimer -= Time.deltaTime;
 
             if (_deathAnimTimer < 0) {
                 _deadPlayer.SetActive(true);
@@ -370,9 +386,17 @@ public abstract class HeroScript : MonoBehaviour {
         _isAlive = true;
         _deadPlayer.SetActive(false);
         _characterObj.SetActive(true);
+        _animator.Play("Revive");
         _UIHealthBar.GetComponent<Slider>().value = _hitPoints;
         _UIManaBar.GetComponent<Slider>().value = _manaPoints;
         _deathAnimTimer = 1f;
+
+
+        for (int i = 0; i < _spriteObjects.Length; i++)
+        {
+            _spriteObjects[i].transform.position = _resetPosition[i];
+            _spriteObjects[i].transform.rotation = _resetRotation[i];
+        }
     }
 
     //Power Up
