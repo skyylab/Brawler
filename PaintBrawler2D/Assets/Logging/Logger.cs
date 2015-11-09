@@ -36,7 +36,9 @@ namespace Giverspace {
             PlayerPosRot,
             InputPressed,
             DamageDealt,
-            DamageTaken
+            DamageTaken,
+            PlayerDeath,
+            EnterArea
             // TODO: add more entries if you need more message types
         }
 
@@ -136,7 +138,7 @@ namespace Giverspace {
                         w.Write('{');
                         WriteTimeStampWith(w);
                         w.Write(',');
-                        WriteTypeWith("playernum", w);
+                        WriteTypeWith("playerinputpressed", w);
                         w.Write(',');
                         WriteFieldWith("p", Player, w);
                         w.Write(',');
@@ -149,7 +151,7 @@ namespace Giverspace {
                         w.Write('{');
                         WriteTimeStampWith(w);
                         w.Write(',');
-                        WriteTypeWith("playernum", w);
+                        WriteTypeWith("playerdamagedealt", w);
                         w.Write(',');
                         WriteFieldWith("p", Player, w);
                         w.Write(',');
@@ -162,7 +164,7 @@ namespace Giverspace {
                         w.Write('{');
                         WriteTimeStampWith(w);
                         w.Write(',');
-                        WriteTypeWith("playernum", w);
+                        WriteTypeWith("playerdamagetaken", w);
                         w.Write(',');
                         WriteFieldWith("p", Player, w);
                         w.Write(',');

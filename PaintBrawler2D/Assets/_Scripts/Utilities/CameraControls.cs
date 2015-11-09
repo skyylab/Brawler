@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Giverspace;
 
 public class CameraControls : MonoBehaviour {
 
@@ -22,6 +23,8 @@ public class CameraControls : MonoBehaviour {
     private float _zAxisOffset = 0f;
 
     private int playerCount = 3;
+
+    private int _sectionCount = 1;
 
     public void RemovePlayers(GameObject Player) {
         playerCount--;
@@ -101,6 +104,8 @@ public class CameraControls : MonoBehaviour {
             _cameraLock = true;
             other.gameObject.GetComponent<EnemyHolder>().ActivateEnemies();
             other.gameObject.SetActive(false);
+            Log.Metrics.Message("Entered Section " + _sectionCount.ToString());
+            _sectionCount++;
         }
     }
 

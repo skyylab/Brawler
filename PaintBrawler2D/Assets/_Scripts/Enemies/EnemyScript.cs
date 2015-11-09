@@ -870,6 +870,12 @@ public abstract class EnemyScript : MonoBehaviour {
                 default:
                     break;
             }
+            GetComponent<SphereCollider>().enabled = true;
+            GetComponent<BoxCollider>().enabled = false;
+        }
+        else {
+            GetComponent<SphereCollider>().enabled = false;
+            GetComponent<BoxCollider>().enabled = false;
         }
     }
 

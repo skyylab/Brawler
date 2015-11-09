@@ -29,7 +29,6 @@ public class PowerUpScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void OnTriggerEnter(Collider other) {
-        Debug.Log(_powerUpType);
 
         if (other.tag == "Player") {
             AddPowerUp(other.gameObject);
