@@ -353,7 +353,7 @@ public abstract class HeroScript : MonoBehaviour {
                 _isAlive = false;
                 _playDeathOnce = false;
 
-                _characterObj.SetActive(false);
+                //_characterObj.SetActive(false);
             }
         }
     }
