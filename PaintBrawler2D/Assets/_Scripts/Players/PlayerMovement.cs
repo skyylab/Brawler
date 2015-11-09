@@ -104,7 +104,6 @@ public class PlayerMovement : MonoBehaviour {
             {
                 if (_pressAttack1)
                 {
-                    Log.Metrics.ButtonPressedMessage(ButtonPressed.X, _playerNumber);
                     _chargeThresholdTimer -= Time.deltaTime;
 
                     if (_chargeThresholdTimer < 0) {
