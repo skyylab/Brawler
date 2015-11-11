@@ -12,5 +12,9 @@ public class GameMaster : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.F1)) {
             Application.LoadLevel(Application.loadedLevel);
         }
+
+        if (Input.GetKeyDown(KeyCode.F2)) {
+            Application.LoadLevel(0);
+        }
 	}
 }
