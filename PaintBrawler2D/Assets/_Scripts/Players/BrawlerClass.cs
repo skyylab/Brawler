@@ -191,7 +191,6 @@ public class BrawlerClass : HeroScript {
             _animator.Play("Finisher");
             _finisherReady = false;
         }
-
         _attackReady = false;
     }
 

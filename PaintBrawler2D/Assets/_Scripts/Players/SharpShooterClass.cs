@@ -100,41 +100,41 @@ public class SharpShooterClass : HeroScript {
     }
 
     public override void Attack() {
-        if (!_finisherReady) {
-            if (_attackReady == true) {
+        //if (!_finisherReady) {
+        if (_attackReady == true) {
 
-                if (_fireLeft)
-                {
-                    _animator.Play("ShootLeft");
-                    GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
-                    BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-                    Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
+            if (_fireLeft)
+            {
+                _animator.Play("ShootLeft");
+                GameObject BulletObj = Instantiate(_bullet, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation) as GameObject;
+                BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+                Instantiate(_muzzleFlash, _firingPointLeft.transform.position, _firingPointLeft.transform.rotation);
 
-                    _sharpshooterAttackSpeed = _attackSpeedReset;
-                    _fireLeft = false;
-                }
-                else
-                {
-                    _animator.Play("ShootRight");
-                    GameObject BulletObj = Instantiate(_bullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
-                    BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
-                    Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
+                _sharpshooterAttackSpeed = _attackSpeedReset;
+                _fireLeft = false;
+            }
+            else
+            {
+                _animator.Play("ShootRight");
+                GameObject BulletObj = Instantiate(_bullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+                BulletObj.GetComponent<BulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject);
+                Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
 
-                    _sharpshooterAttackSpeed = _attackSpeedReset;
-                    _fireLeft = true;
-                }
+                _sharpshooterAttackSpeed = _attackSpeedReset;
+                _fireLeft = true;
             }
         }
-        else {
-            _animator.Play("ShootRight");
+        //}
+        //else {
+        //    _animator.Play("ShootRight");
 
-            GameObject BulletObj = Instantiate(_finisherBullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
-            BulletObj.GetComponent<FinisherBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject, _finisherObj);
-            Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
+        //    GameObject BulletObj = Instantiate(_finisherBullet, _firingPointRight.transform.position, _firingPointRight.transform.rotation) as GameObject;
+        //    BulletObj.GetComponent<FinisherBulletScript>().Initialize(_primaryColorArray[_playerNumber - 1], _primaryColorString[_playerNumber - 1], _firingDirection, gameObject, _finisherObj);
+        //    Instantiate(_muzzleFlash, _firingPointRight.transform.position, _firingPointRight.transform.rotation);
 
-            _sharpshooterAttackSpeed = _attackSpeedReset;
-            _finisherReady = false;
-        }
+        //    _sharpshooterAttackSpeed = _attackSpeedReset;
+        //    _finisherReady = false;
+        //}
     }
 
 

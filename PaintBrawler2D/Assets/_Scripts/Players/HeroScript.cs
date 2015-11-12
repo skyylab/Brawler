@@ -214,13 +214,13 @@ public abstract class HeroScript : MonoBehaviour {
             }
         }
 
-        if (_finisherReady) {
-            _finishTextUI.SetActive(true);
-        }
-        else
-        {
-            _finishTextUI.SetActive(false);
-        }
+        //if (_finisherReady) {
+        //    _finishTextUI.SetActive(true);
+        //}
+        //else
+        //{
+        //    _finishTextUI.SetActive(false);
+        //}
 
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
             GetComponent<BoxCollider>().enabled = true;
